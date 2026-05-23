@@ -10,9 +10,13 @@ type PricedListing = ApartmentListing & { price: number };
 interface PriceMarker {
   key: string;
   price: number;
+  minPrice: number;
+  maxPrice: number;
+  distinctPriceCount: number;
   listings: PricedListing[];
-  lane: number;
 }
+
+const MARKER_MERGE_DISTANCE = 13;
 
 function createMarkers(
   summary: ListingAreaSummary,
@@ -36,20 +40,33 @@ function createMarkers(
       grouped.set(listing.price, samePrice);
     });
 
-  const laneEnds: number[] = [];
-  return [...grouped.entries()].map(([price, samePrice]) => {
-    const point = position(price);
-    let lane = laneEnds.findIndex((endPoint) => point - endPoint >= 11);
-    if (lane === -1) lane = laneEnds.length;
-    laneEnds[lane] = point;
+  const markers: PriceMarker[] = [];
+  [...grouped.entries()].forEach(([price, samePrice]) => {
+    const previous = markers[markers.length - 1];
+    if (previous && position(price) - position(previous.price) < MARKER_MERGE_DISTANCE) {
+      const mergedListings = [...previous.listings, ...samePrice];
+      const averagePrice = mergedListings.reduce((total, listing) => total + listing.price, 0) / mergedListings.length;
+      markers[markers.length - 1] = {
+        key: `${summary.complex_id}:${summary.area_group}:${previous.minPrice}-${price}`,
+        price: averagePrice,
+        minPrice: previous.minPrice,
+        maxPrice: price,
+        distinctPriceCount: previous.distinctPriceCount + 1,
+        listings: mergedListings,
+      };
+      return;
+    }
 
-    return {
+    markers.push({
       key: `${summary.complex_id}:${summary.area_group}:${price}`,
       price,
+      minPrice: price,
+      maxPrice: price,
+      distinctPriceCount: 1,
       listings: samePrice,
-      lane,
-    };
+    });
   });
+  return markers;
 }
 
 export function PriceRangeSummary({
@@ -76,14 +93,13 @@ export function PriceRangeSummary({
       <h2 className="text-base font-bold">{title}</h2>
       <p className="mt-1 text-[11px] leading-5 text-slate-400">
         {interactive
-          ? '점 하나가 실제 매물 호가입니다. 점을 누르면 가격과 매물 정보를 확인할 수 있습니다.'
+          ? '가까운 호가는 숫자 점 하나로 묶어 표시합니다. 점을 누르면 정확한 가격을 확인할 수 있습니다.'
           : '막대는 최저~최고 호가, 세로 표시는 중앙값입니다.'}
       </p>
       <div className="mt-5 space-y-5">
         {summaries.map((summary) => {
           const color = summary.complex_color;
           const markers = listings ? createMarkers(summary, listings, position) : [];
-          const laneCount = Math.max(1, ...markers.map((marker) => marker.lane + 1));
           const activeMarker = markers.find((marker) => marker.key === selectedMarkerKey);
 
           return (
@@ -93,7 +109,7 @@ export function PriceRangeSummary({
                 <p className="shrink-0 text-slate-500">{summary.listing_count}건</p>
               </div>
               {interactive ? (
-                <div className="relative mt-3" style={{ height: `${42 + laneCount * 30}px` }}>
+                <div className="relative mt-3 h-[70px]">
                   <span className="absolute bottom-2 left-0 right-0 h-2 rounded-full bg-slate-100" />
                   <span
                     className="absolute bottom-2 h-2 rounded-full opacity-30"
@@ -117,11 +133,11 @@ export function PriceRangeSummary({
                       }`}
                       style={{
                         left: `${position(marker.price)}%`,
-                        bottom: `${24 + marker.lane * 30}px`,
+                        bottom: '24px',
                         backgroundColor: color,
                       }}
                       onClick={() => setSelectedMarkerKey(activeMarker?.key === marker.key ? null : marker.key)}
-                      aria-label={`${summary.complex_name} ${formatPrice(marker.price)} 매물 ${marker.listings.length}건 보기`}
+                      aria-label={`${summary.complex_name} ${formatPrice(marker.minPrice)}${marker.maxPrice !== marker.minPrice ? `부터 ${formatPrice(marker.maxPrice)}` : ''} 매물 ${marker.listings.length}건 보기`}
                     >
                       {marker.listings.length > 1 ? marker.listings.length : <span className="h-2.5 w-2.5 rounded-full bg-white" />}
                     </button>
@@ -151,13 +167,23 @@ export function PriceRangeSummary({
               {activeMarker && (
                 <div className="mt-3 rounded-2xl bg-slate-50 p-3">
                   <div className="flex items-center justify-between gap-3">
-                    <strong className="metric-number text-sm text-brand-700">{formatPrice(activeMarker.price)}</strong>
-                    <span className="text-[11px] font-semibold text-slate-500">{activeMarker.listings.length}건</span>
+                    <strong className="metric-number text-sm text-brand-700">
+                      {activeMarker.minPrice === activeMarker.maxPrice
+                        ? formatPrice(activeMarker.minPrice)
+                        : `${formatPrice(activeMarker.minPrice)} ~ ${formatPrice(activeMarker.maxPrice)}`}
+                    </strong>
+                    <span className="text-[11px] font-semibold text-slate-500">
+                      {activeMarker.distinctPriceCount > 1 ? `${activeMarker.distinctPriceCount}개 호가 · ` : ''}
+                      {activeMarker.listings.length}건
+                    </span>
                   </div>
-                  <div className="mt-2 space-y-1.5 text-xs text-slate-600">
-                    {activeMarker.listings.map((listing) => (
-                      <p key={listing.id} className="flex justify-between gap-3">
-                        <span>{listing.building_no ?? '동 미입력'} · {listing.floor_text ?? '층 미입력'} · {listing.direction ?? '방향 미입력'}</span>
+                  <div className="mt-2 max-h-44 space-y-1.5 overflow-y-auto text-xs text-slate-600">
+                    {[...activeMarker.listings].sort((a, b) => a.price - b.price).map((listing) => (
+                      <p key={listing.id} className="flex justify-between gap-2">
+                        <span className="flex min-w-0 gap-2">
+                          <strong className="shrink-0 text-slate-800">{formatPrice(listing.price)}</strong>
+                          <span className="truncate">{listing.building_no ?? '동 미입력'} · {listing.floor_text ?? '층 미입력'} · {listing.direction ?? '방향 미입력'}</span>
+                        </span>
                         <span className="shrink-0 text-slate-400">{formatDate(listing.verified_date)}</span>
                       </p>
                     ))}

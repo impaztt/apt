@@ -77,7 +77,7 @@ export function DashboardPage() {
               <div className="flex items-center justify-between">
                 <div>
                   <h2 className="text-lg font-bold">평형별 단지 호가 범위</h2>
-                  <p className="mt-1 text-sm text-slate-500">각 점은 실제 호가입니다. 점을 눌러 정확한 가격과 매물을 확인하세요.</p>
+                  <p className="mt-1 text-sm text-slate-500">숫자 점은 가까운 호가를 묶은 매물 수입니다. 눌러 정확한 가격을 확인하세요.</p>
                 </div>
               </div>
               {areaOptions.map((option) => {
