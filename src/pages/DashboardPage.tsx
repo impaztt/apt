@@ -1,8 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { TrendingUp } from 'lucide-react';
-import { ListingDotsDisclosure } from '../features/comparisons/components/ListingDotsDisclosure';
-import { PriceDistributionMatrix } from '../features/comparisons/components/PriceDistributionMatrix';
 import { PriceRangeSummary } from '../features/comparisons/components/PriceRangeSummary';
 import { summarizeListings } from '../features/listings/statistics';
 import type { AreaSelection } from '../features/listings/types';
@@ -54,7 +52,7 @@ export function DashboardPage() {
     <div className="space-y-5 sm:space-y-7">
       <PageHeader
         title={activeGroup?.name ?? '호가 분포 대시보드'}
-        description="평형별 가격 구간에 매물이 몇 건 몰려 있는지 단지별로 비교합니다."
+        description="평형별 실제 매물 호가의 위치와 범위를 단지별로 비교합니다."
         action={
           <select
             className="field-control mt-0 w-full sm:min-w-[240px]"
@@ -78,48 +76,31 @@ export function DashboardPage() {
             <section className="space-y-4">
               <div className="flex items-center justify-between">
                 <div>
-                  <h2 className="text-lg font-bold">평형별 가격대 분포</h2>
-                  <p className="mt-1 text-sm text-slate-500">셀 색과 건수로 어느 가격대에 매물이 몰리는지 확인하세요.</p>
+                  <h2 className="text-lg font-bold">평형별 단지 호가 범위</h2>
+                  <p className="mt-1 text-sm text-slate-500">각 점은 실제 호가입니다. 점을 눌러 정확한 가격과 매물을 확인하세요.</p>
                 </div>
               </div>
               {areaOptions.map((option) => {
                 const areaSummaries = summarizeListings(listings, complexes, option.key, complexIds);
                 return (
                   <div key={option.key} className="space-y-3">
-                    <PriceDistributionMatrix
-                      listings={listings}
-                      complexes={complexes}
-                      complexIds={complexIds}
-                      areaGroup={option.key}
-                      title={option.label}
-                      trendsLink={`/trends?area=${encodeURIComponent(option.key)}`}
-                    />
-                    <PriceRangeSummary summaries={areaSummaries} title={`${option.label} 단지별 호가 범위`} />
+                    <PriceRangeSummary summaries={areaSummaries} listings={listings} title={`${option.label} 단지별 호가 범위`} />
                   </div>
                 );
               })}
             </section>
           ) : (
             <>
-              <PriceDistributionMatrix
-                listings={listings}
-                complexes={complexes}
-                complexIds={complexIds}
-                areaGroup={areaGroup}
-                title={`${scopeLabel} 가격대별 매물 분포`}
-                trendsLink={`/trends?area=${encodeURIComponent(areaGroup)}`}
-              />
-              <PriceRangeSummary summaries={summaries} />
-              <ListingDotsDisclosure listings={listings} complexes={complexes} complexIds={complexIds} areaGroup={areaGroup} />
+              <PriceRangeSummary summaries={summaries} listings={listings} title={`${scopeLabel} 단지별 실제 호가`} />
             </>
           )}
 
           <section className="space-y-3">
             <div className="grid grid-cols-2 gap-2.5 lg:grid-cols-4">
               <MetricCard label="비교 단지" value={`${complexIds.length}개`} note={`매매 매물 ${saleListings.length}건`} />
-              <MetricCard label={`${scopeLabel} 매물`} value={`${selectedListings.length}건`} note="가격 구간 분포 기준" />
+              <MetricCard label={`${scopeLabel} 매물`} value={`${selectedListings.length}건`} note="표시된 실제 호가 수" />
               {areaGroup === 'all' ? (
-                <MetricCard label="등록 평형" value={`${areaOptions.length}개`} note="평형별 분포 확인" />
+                <MetricCard label="등록 평형" value={`${areaOptions.length}개`} note="평형별 범위 확인" />
               ) : (
                 <MetricCard label={`${scopeLabel} 최저가`} value={formatPrice(lowest)} tone="blue" note="현재 관측 최저 호가" />
               )}
