@@ -16,6 +16,7 @@ export interface ParsedComplexData {
   listings: ApartmentListing[];
   groupNames: string[];
   source: Record<string, unknown>;
+  inputFormat: 'dashboard' | 'collected-items';
 }
 
 const modules = import.meta.glob('../../data/complexes/*.json', {
@@ -47,6 +48,12 @@ function optionalNumber(value: unknown): number | null {
   return null;
 }
 
+function normalizedDate(value: unknown): string | null {
+  const date = optionalText(value);
+  if (!date) return null;
+  return /^\d{4}[./-]\d{2}[./-]\d{2}$/.test(date) ? date.replace(/[./]/g, '-') : date;
+}
+
 function timestamp(value: string): string {
   return value.length === 10 ? `${value}T00:00:00.000Z` : value;
 }
@@ -57,11 +64,14 @@ function dealType(value: unknown, label: string): DealType {
 }
 
 function floorGroup(value: unknown): FloorGroup {
-  return value === '저층' || value === '중층' || value === '고층' ? value : null;
+  if (value === '저층' || value === '저') return '저층';
+  if (value === '중층' || value === '중') return '중층';
+  if (value === '고층' || value === '고') return '고층';
+  return null;
 }
 
-function classifiedFloorGroup(value: unknown, floor: number | null): FloorGroup {
-  const explicit = floorGroup(value);
+function classifiedFloorGroup(value: unknown, floor: number | null, floorText?: unknown): FloorGroup {
+  const explicit = floorGroup(value) ?? floorGroup(optionalText(floorText)?.split('/')[0]);
   if (explicit || floor === null) return explicit;
   if (floor <= 5) return '저층';
   if (floor >= 18) return '고층';
@@ -79,11 +89,115 @@ function dataFileName(pathOrName: string, id: string): string {
   return name?.endsWith('.json') ? name : `${id}.json`;
 }
 
-export function parseComplexDataFile(raw: unknown, pathOrName = '입력 JSON'): ParsedComplexData {
-  const source = recordValue(raw, pathOrName);
+function koreanPriceText(value: unknown): number | null {
+  const text = optionalText(value);
+  if (!text) return null;
+  const cleaned = text.replace(/[,\s원]/g, '');
+  if (cleaned.includes('/')) return null;
+
+  const eokMatch = cleaned.match(/^(\d+(?:\.\d+)?)억(.*)$/);
+  if (eokMatch) {
+    const eok = Number(eokMatch[1]);
+    const remainder = eokMatch[2] ? Number(eokMatch[2]) : 0;
+    return Number.isFinite(eok) && Number.isFinite(remainder) ? eok * 100_000_000 + remainder * 10_000 : null;
+  }
+
+  const manwon = Number(cleaned);
+  return Number.isFinite(manwon) ? manwon * 10_000 : null;
+}
+
+function collectedListing(row: Record<string, unknown>, index: number, id: string, sourceTextType: string | null): Record<string, unknown> {
+  const type = dealType(row.deal_type, `입력 JSON 매물 ${index + 1}`);
+  const rowId = typeof row.id === 'string' || typeof row.id === 'number' ? String(row.id) : String(index + 1);
+  const floorText = optionalText(row.floor_text);
+
+  return {
+    id: `${id}-listing-${rowId}`,
+    building_no: optionalText(row.building_no) ?? optionalText(row.building),
+    deal_type: type,
+    price:
+      type === '매매'
+        ? optionalNumber(row.price) ?? koreanPriceText(row.sale_price_text) ?? koreanPriceText(row.price_text)
+        : type === '전세'
+          ? optionalNumber(row.price) ?? koreanPriceText(row.jeonse_price_text) ?? koreanPriceText(row.price_text)
+          : null,
+    deposit: type === '월세' ? optionalNumber(row.deposit) ?? koreanPriceText(row.deposit_text) : null,
+    monthly_rent: type === '월세' ? optionalNumber(row.monthly_rent) ?? koreanPriceText(row.monthly_rent_text) : null,
+    area_pyeong: optionalNumber(row.area_pyeong) ?? optionalNumber(row.supply_area_pyeong),
+    exclusive_area_pyeong: optionalNumber(row.exclusive_area_pyeong),
+    floor_text: floorText,
+    floor: optionalNumber(row.floor),
+    total_floor: optionalNumber(row.total_floor),
+    floor_group: classifiedFloorGroup(row.floor_group ?? row.floor, optionalNumber(row.floor), floorText),
+    direction: optionalText(row.direction),
+    verified_date: normalizedDate(row.verified_date),
+    agent_name: optionalText(row.agent_name),
+    agent_count: optionalNumber(row.agent_count) ?? optionalNumber(row.registered_agent_count),
+    source: optionalText(row.source) ?? optionalText(row.platform) ?? sourceTextType,
+    description: optionalText(row.description),
+    is_favorite: row.is_favorite === true,
+    is_duplicate_candidate: false,
+  };
+}
+
+function normalizeComplexSource(
+  submitted: Record<string, unknown>,
+  label: string,
+  existingSource?: Record<string, unknown> | null,
+): { source: Record<string, unknown>; inputFormat: ParsedComplexData['inputFormat'] } {
+  if (!Array.isArray(submitted.items)) return { source: submitted, inputFormat: 'dashboard' };
+
+  const id = optionalText(submitted.id) ?? optionalText(existingSource?.id);
+  if (!id) {
+    throw new Error(`${label}: 새 단지로 저장하려면 id 값을 입력해야 합니다. 기존 단지 수정은 단지 목록의 매물 수정 버튼에서 진행해 주세요.`);
+  }
+
+  const name = optionalText(submitted.name) ?? optionalText(submitted.complex_name) ?? optionalText(existingSource?.name);
+  if (!name) throw new Error(`${label}: complex_name 값은 필수입니다.`);
+
+  const sourceTextType = optionalText(submitted.source_text_type);
+  const listings = submitted.items.map((value, index) =>
+    collectedListing(recordValue(value, `${label} 매물 ${index + 1}`), index, id, sourceTextType),
+  );
+  const verifiedDates = listings
+    .map((listing) => optionalText(listing.verified_date))
+    .filter((date): date is string => date !== null)
+    .sort();
+  const latestDate = verifiedDates[verifiedDates.length - 1];
+  const comparisonGroups = submitted.comparison_groups ?? existingSource?.comparison_groups;
+  if (!Array.isArray(comparisonGroups) || !comparisonGroups.length) {
+    throw new Error(`${label}: 신규 단지 JSON에는 comparison_groups 배열을 입력해 주세요.`);
+  }
+
+  return {
+    source: {
+      ...(existingSource ?? {}),
+      id,
+      name,
+      region: submitted.region ?? existingSource?.region,
+      address: submitted.address ?? existingSource?.address,
+      built_year: submitted.built_year ?? existingSource?.built_year,
+      household_count: submitted.household_count ?? existingSource?.household_count,
+      brand: submitted.brand ?? existingSource?.brand,
+      updated_at: normalizedDate(submitted.updated_at) ?? latestDate ?? normalizedDate(existingSource?.updated_at) ?? new Date().toISOString().slice(0, 10),
+      comparison_groups: comparisonGroups,
+      listings,
+    },
+    inputFormat: 'collected-items',
+  };
+}
+
+export function parseComplexDataFile(
+  raw: unknown,
+  pathOrName = '입력 JSON',
+  existingSource?: Record<string, unknown> | null,
+): ParsedComplexData {
+  const submitted = recordValue(raw, pathOrName);
+  const normalized = normalizeComplexSource(submitted, pathOrName, existingSource);
+  const source = normalized.source;
   const id = requiredText(source.id, 'id', pathOrName);
   const name = requiredText(source.name, 'name', pathOrName);
-  const updatedAt = requiredText(source.updated_at, 'updated_at', pathOrName);
+  const updatedAt = normalizedDate(requiredText(source.updated_at, 'updated_at', pathOrName)) as string;
   const fileName = dataFileName(pathOrName, id);
   const groupNames = textArray(source.comparison_groups, 'comparison_groups', pathOrName);
   if (!Array.isArray(source.listings)) throw new Error(`${fileName}: listings는 배열이어야 합니다.`);
@@ -131,10 +245,10 @@ export function parseComplexDataFile(raw: unknown, pathOrName = '입력 JSON'): 
       floor_text: optionalText(row.floor_text) ?? (floor !== null && totalFloor !== null ? `${floor}/${totalFloor}층` : null),
       floor,
       total_floor: totalFloor,
-      floor_group: classifiedFloorGroup(row.floor_group, floor),
+      floor_group: classifiedFloorGroup(row.floor_group, floor, row.floor_text),
       direction: optionalText(row.direction),
-      verified_date: optionalText(row.verified_date),
-      registered_date: optionalText(row.registered_date),
+      verified_date: normalizedDate(row.verified_date),
+      registered_date: normalizedDate(row.registered_date),
       agent_name: optionalText(row.agent_name),
       agent_count: optionalNumber(row.agent_count),
       source: optionalText(row.source),
@@ -156,7 +270,7 @@ export function parseComplexDataFile(raw: unknown, pathOrName = '입력 JSON'): 
     return listing;
   });
 
-  return { fileName, complex, listings, groupNames, source };
+  return { fileName, complex, listings, groupNames, source, inputFormat: normalized.inputFormat };
 }
 
 export function loadStaticDataset(): StaticDataset {

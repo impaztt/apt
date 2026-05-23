@@ -53,6 +53,19 @@ export function ComplexDataInputPage() {
   const [saving, setSaving] = useState(false);
   const [commitUrl, setCommitUrl] = useState<string | null>(null);
 
+  function parseInput(text: string, fileName?: string) {
+    const input = JSON.parse(text) as unknown;
+    let existingSource = requestedComplexId ? getStaticComplexSource(requestedComplexId) : null;
+    if (!existingSource && input && typeof input === 'object' && !Array.isArray(input)) {
+      const inputName = typeof (input as Record<string, unknown>).complex_name === 'string'
+        ? (input as Record<string, unknown>).complex_name as string
+        : null;
+      const matchingComplex = inputName ? complexes.find((complex) => complex.name === inputName.trim()) : null;
+      existingSource = matchingComplex ? getStaticComplexSource(matchingComplex.id) : null;
+    }
+    return parseComplexDataFile(input, fileName, existingSource);
+  }
+
   useEffect(() => {
     if (!requestedComplexId) return;
     const source = getStaticComplexSource(requestedComplexId);
@@ -78,11 +91,15 @@ export function ComplexDataInputPage() {
 
   function validate(text = jsonText, fileName?: string) {
     try {
-      const result = parseComplexDataFile(JSON.parse(text) as unknown, fileName);
+      const result = parseInput(text, fileName);
       setPreview(result);
       setHasError(false);
       setCommitUrl(null);
-      setNotice(`${result.fileName} 파일이 유효합니다. 매물 ${result.listings.length}건을 읽었습니다.`);
+      setNotice(
+        result.inputFormat === 'collected-items'
+          ? `${result.complex.name}의 수집 JSON을 변환했습니다. 매물 ${result.listings.length}건을 읽었으며, 저장 시 대시보드 형식으로 반영됩니다.`
+          : `${result.fileName} 파일이 유효합니다. 매물 ${result.listings.length}건을 읽었습니다.`,
+      );
     } catch (caught) {
       setPreview(null);
       setHasError(true);
@@ -131,7 +148,7 @@ export function ComplexDataInputPage() {
 
     let nextPreview: ParsedComplexData;
     try {
-      nextPreview = parseComplexDataFile(JSON.parse(jsonText) as unknown);
+      nextPreview = parseInput(jsonText);
       setPreview(nextPreview);
     } catch (caught) {
       setHasError(true);
@@ -164,6 +181,7 @@ export function ComplexDataInputPage() {
   }
 
   const summaries = preview ? summarizeListings(preview.listings, [preview.complex]) : [];
+  const isExistingPreview = preview ? complexes.some((complex) => complex.id === preview.complex.id) : Boolean(requestedComplexId);
 
   return (
     <div className="space-y-6">
@@ -176,8 +194,8 @@ export function ComplexDataInputPage() {
         title={requestedComplexId ? '단지 매물 수정' : '새 단지 JSON 입력'}
         description={
           requestedComplexId
-            ? '선택한 단지의 현재 JSON을 불러왔습니다. listings 배열을 수정하고 저장하면 됩니다.'
-            : '신규 단지 하나와 해당 매물 전체를 담은 JSON을 입력해 저장합니다.'
+            ? '수집한 매물 JSON의 complex_name과 items 형식을 그대로 붙여넣어 저장할 수 있습니다.'
+            : '새 단지를 추가하거나, 기존 단지명과 일치하는 수집 JSON을 붙여넣어 매물을 갱신합니다.'
         }
       />
 
@@ -185,18 +203,23 @@ export function ComplexDataInputPage() {
         <p className="text-sm font-semibold text-brand-700">{requestedComplexId ? '기존 단지 수정 순서' : '신규 단지 추가 순서'}</p>
         {requestedComplexId ? (
           <ol className="mt-3 space-y-2 text-sm leading-6 text-slate-600">
-            <li>1. 아래 JSON에서 <code className="rounded bg-white px-1.5 py-0.5 text-xs">listings</code> 배열을 실제 매물 목록으로 교체합니다.</li>
-            <li>2. <strong>JSON 검증 및 미리보기</strong>로 평형별 가격이 맞는지 확인합니다.</li>
-            <li>3. 관리자 저장 키를 입력하고 <strong>수정 내용 저장</strong>을 누릅니다.</li>
-            <li>4. 재배포 후 단지 상세와 대시보드에서 변경 내용을 확인합니다.</li>
+            <li>1. 아래 내용을 전체 선택한 뒤, 정리한 <code className="rounded bg-white px-1.5 py-0.5 text-xs">complex_name / items</code> JSON을 그대로 붙여넣습니다.</li>
+            <li>2. <code className="rounded bg-white px-1.5 py-0.5 text-xs">price_text</code>, <code className="rounded bg-white px-1.5 py-0.5 text-xs">supply_area_pyeong</code>, 날짜와 층 정보는 저장 형식으로 자동 변환됩니다.</li>
+            <li>3. <strong>JSON 검증 및 미리보기</strong>로 평형별 매매 가격이 맞는지 확인합니다.</li>
+            <li>4. 관리자 저장 키를 입력하고 <strong>수정 내용 저장</strong>을 누릅니다.</li>
+            <li>5. 재배포 후 단지 상세와 대시보드에서 변경 내용을 확인합니다.</li>
           </ol>
         ) : (
           <ol className="mt-3 space-y-2 text-sm leading-6 text-slate-600">
-            <li>1. `id`, `name`, 비교 그룹과 <code className="rounded bg-white px-1.5 py-0.5 text-xs">listings</code> 배열을 입력합니다.</li>
-            <li>2. 검증 후 관리자 저장 키로 <strong>새 단지 저장</strong>을 누릅니다.</li>
-            <li>3. 재배포 후 단지 목록과 비교 화면에 새 단지가 표시됩니다.</li>
+            <li>1. 기존 단지 매물을 수정할 때는 <code className="rounded bg-white px-1.5 py-0.5 text-xs">complex_name / items</code> JSON을 그대로 붙여넣습니다. 단지명이 일치하면 자동으로 수정 대상으로 인식합니다.</li>
+            <li>2. 새 단지는 <code className="rounded bg-white px-1.5 py-0.5 text-xs">id</code>와 <code className="rounded bg-white px-1.5 py-0.5 text-xs">comparison_groups</code>도 포함해 입력합니다.</li>
+            <li>3. 검증 후 관리자 저장 키로 저장을 누릅니다.</li>
+            <li>4. 재배포 후 단지 목록과 비교 화면에 추가 또는 수정 내용이 표시됩니다.</li>
           </ol>
         )}
+        <p className="mt-4 rounded-2xl bg-white px-4 py-3 text-xs leading-5 text-slate-500">
+          대시보드 가격 비교는 매매 매물만 계산합니다. 입력한 전세와 월세 매물은 단지 상세 목록에서 함께 확인할 수 있습니다.
+        </p>
       </Card>
 
       <Card>
@@ -248,7 +271,7 @@ export function ComplexDataInputPage() {
       </Card>
 
       <Card>
-        <h2 className="text-base font-semibold">{requestedComplexId ? '수정 내용 저장' : '신규 단지 저장'}</h2>
+        <h2 className="text-base font-semibold">{isExistingPreview ? '수정 내용 저장' : '신규 단지 저장'}</h2>
         <p className="mt-2 text-sm leading-6 text-slate-500">
           관리자 저장 키는 GitHub 토큰이 아니라 Cloudflare에 설정한 별도 비밀번호입니다. GitHub 토큰은 서버 Secret에만 보관됩니다.
         </p>
@@ -263,7 +286,7 @@ export function ComplexDataInputPage() {
           />
           <Button disabled={!preview || saving} onClick={() => void handleGitHubSave()}>
             <span className="flex items-center justify-center gap-2">
-              <Save className="h-4 w-4" /> {saving ? '저장 중...' : requestedComplexId ? '수정 내용 저장' : '새 단지 저장'}
+              <Save className="h-4 w-4" /> {saving ? '저장 중...' : isExistingPreview ? '수정 내용 저장' : '새 단지 저장'}
             </span>
           </Button>
         </div>
