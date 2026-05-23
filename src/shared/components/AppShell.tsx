@@ -1,5 +1,6 @@
 import { BarChart3, Building2, FileJson, Layers3, MoreHorizontal, Palette, Scale, TrendingUp } from 'lucide-react';
 import { NavLink, Outlet } from 'react-router-dom';
+import { KakaoBrowserNotice } from './KakaoBrowserNotice';
 
 const desktopNavigation = [
   { to: '/', label: '대시보드', icon: BarChart3, end: true },
@@ -47,6 +48,7 @@ function Navigation({ mobile = false }: { mobile?: boolean }) {
 export function AppShell() {
   return (
     <div className="min-h-screen bg-canvas">
+      <KakaoBrowserNotice />
       <aside className="fixed inset-y-0 left-0 hidden w-64 border-r border-slate-100 bg-white px-5 py-7 lg:block">
         <div className="px-3">
           <p className="text-xs font-semibold text-brand-600">APT PRICE COMPARE</p>
