@@ -52,7 +52,7 @@ function generatedComplexId(name: string): string {
 }
 
 export function ComplexDataInputPage() {
-  const { complexes, groups } = useAppData();
+  const { complexes, groups, displaySettings } = useAppData();
   const [searchParams] = useSearchParams();
   const requestedComplexId = searchParams.get('complexId');
   const [jsonText, setJsonText] = useState(sampleJson);
@@ -93,7 +93,7 @@ export function ComplexDataInputPage() {
         };
       }
     }
-    return parseComplexDataFile(preparedInput, fileName, existingSource);
+    return parseComplexDataFile(preparedInput, fileName, existingSource, displaySettings);
   }
 
   useEffect(() => {
@@ -108,7 +108,7 @@ export function ComplexDataInputPage() {
     setSelectedComplexId(requestedComplexId);
     setJsonText(nextText);
     try {
-      const result = parseComplexDataFile(source, `${requestedComplexId}.json`);
+      const result = parseComplexDataFile(source, `${requestedComplexId}.json`, null, displaySettings);
       setPreview(result);
       setHasError(false);
       setNotice(`${result.complex.name}의 현재 JSON을 불러왔습니다. listings 내용을 수정한 뒤 저장하세요.`);

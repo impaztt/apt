@@ -15,11 +15,13 @@ export function HistoryDistributionPlot({
   complexId,
   areaGroup,
   complexName,
+  color,
 }: {
   snapshots: ListingSnapshot[];
   complexId: string;
   areaGroup: AreaGroup;
   complexName: string;
+  color: string;
 }) {
   const rows = snapshots
     .filter((snapshot) => snapshot.complex_id === complexId)
@@ -61,7 +63,7 @@ export function HistoryDistributionPlot({
               </div>
               {buckets.map((bucket) => {
                 const count = getBucketCount(row.listings, bucket);
-                const background = count === 0 ? '#f8fafc' : count === 1 ? '#bfdbfe' : count === 2 ? '#60a5fa' : '#2563eb';
+                const background = count === 0 ? '#f8fafc' : `${color}${count === 1 ? '33' : count === 2 ? '88' : 'ff'}`;
                 return (
                   <div key={bucket.min} className="flex items-center justify-center border-l border-slate-100 p-1.5">
                     <span className={`flex h-10 w-full items-center justify-center rounded-xl text-sm font-bold ${count >= 3 ? 'text-white' : count ? 'text-slate-700' : 'text-slate-300'}`} style={{ backgroundColor: background }}>

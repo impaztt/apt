@@ -1,4 +1,4 @@
-import { BarChart3, Building2, FileJson, Layers3, MoreHorizontal, Scale, TrendingUp } from 'lucide-react';
+import { BarChart3, Building2, FileJson, Layers3, MoreHorizontal, Palette, Scale, TrendingUp } from 'lucide-react';
 import { NavLink, Outlet } from 'react-router-dom';
 
 const desktopNavigation = [
@@ -6,6 +6,7 @@ const desktopNavigation = [
   { to: '/complexes', label: '단지', icon: Building2 },
   { to: '/data/input', label: 'JSON 입력', icon: FileJson },
   { to: '/groups', label: '그룹', icon: Layers3 },
+  { to: '/settings/display', label: '표시 설정', icon: Palette },
   { to: '/compare', label: '비교', icon: Scale },
   { to: '/trends', label: '변화', icon: TrendingUp },
 ];

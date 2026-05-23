@@ -15,6 +15,10 @@ export interface ApartmentListing {
   exclusive_area_m2: number | null;
   area_pyeong: number;
   exclusive_area_pyeong: number;
+  display_area_key?: string | null;
+  display_area_pyeong?: number | null;
+  display_exclusive_area_m2?: number | null;
+  display_area_label?: string | null;
   area_type: string | null;
   floor_text: string | null;
   floor: number | null;
@@ -39,6 +43,7 @@ export type ListingInput = Omit<ApartmentListing, 'id' | 'created_at' | 'updated
 export interface ListingAreaSummary {
   complex_id: string;
   complex_name: string;
+  complex_color: string;
   area_group: AreaGroup;
   area_pyeong: number;
   exclusive_area_pyeong: number;
@@ -65,6 +70,7 @@ export interface ListingSnapshot {
 export interface ListingTrendPoint {
   complex_id: string;
   complex_name: string;
+  complex_color: string;
   area_group: AreaGroup;
   area_label: string;
   captured_date: string;

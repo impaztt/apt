@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { Building2, FileJson, Layers3 } from 'lucide-react';
+import { Building2, FileJson, Layers3, Palette } from 'lucide-react';
 import { Card } from '../shared/components/Card';
 import { PageHeader } from '../shared/components/PageHeader';
 
@@ -7,6 +7,7 @@ const items = [
   { to: '/complexes', icon: Building2, title: '단지 관리', description: '단지별 최신 매물 조회, 수정, 삭제' },
   { to: '/data/input', icon: FileJson, title: 'JSON 입력', description: '수집일을 선택해 매물 데이터 저장' },
   { to: '/groups', icon: Layers3, title: '비교 그룹', description: '현재 비교 대상 단지 구성 확인' },
+  { to: '/settings/display', icon: Palette, title: '표시 설정', description: '단지 색상과 평형 그룹 기준 수정' },
 ];
 
 export function ManagementPage() {

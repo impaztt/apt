@@ -107,6 +107,7 @@ export function TrendPage() {
                   complexId={selectedComplexId}
                   areaGroup={areaGroup}
                   complexName={selectedComplex.name}
+                  color={selectedComplex.color}
                 />
               )}
               <div className="grid gap-4 xl:grid-cols-2">

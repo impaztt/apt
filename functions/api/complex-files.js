@@ -1,5 +1,6 @@
 const COMPLEX_DIRECTORY = 'src/data/complexes';
 const SNAPSHOT_DIRECTORY = 'src/data/snapshots';
+const DISPLAY_SETTINGS_PATH = 'src/data/display-settings.json';
 const DEFAULT_OWNER = 'impaztt';
 const DEFAULT_REPO = 'apt';
 const DEFAULT_BRANCH = 'main';
@@ -67,6 +68,51 @@ function validateComplexData(data) {
       errors.push(`${label}: 월세는 보증금과 월세를 입력해 주세요.`);
     }
   });
+  return errors;
+}
+
+function validateDisplaySettings(data) {
+  const errors = [];
+  if (!data || typeof data !== 'object' || Array.isArray(data)) return ['표시 설정 데이터가 올바르지 않습니다.'];
+  if (!text(data.updated_at)) errors.push('표시 설정 updated_at 값은 필수입니다.');
+  if (!data.complex_colors || typeof data.complex_colors !== 'object' || Array.isArray(data.complex_colors)) {
+    errors.push('complex_colors는 객체여야 합니다.');
+  } else {
+    Object.entries(data.complex_colors).forEach(([id, color]) => {
+      if (!/^#[0-9a-f]{6}$/i.test(text(color))) errors.push(`${id}: 색상은 #RRGGBB 형식이어야 합니다.`);
+    });
+  }
+  if (!Array.isArray(data.area_groups)) {
+    errors.push('area_groups는 배열이어야 합니다.');
+    return errors;
+  }
+  const ranges = [];
+  const ids = new Set();
+  data.area_groups.forEach((rule, index) => {
+    const label = `평형 규칙 ${index + 1}`;
+    if (!rule || typeof rule !== 'object' || Array.isArray(rule)) {
+      errors.push(`${label}은 객체여야 합니다.`);
+      return;
+    }
+    if (!text(rule.id)) {
+      errors.push(`${label}: id 값을 입력해 주세요.`);
+    } else if (ids.has(text(rule.id))) {
+      errors.push(`${label}: id 값은 중복될 수 없습니다.`);
+    } else {
+      ids.add(text(rule.id));
+    }
+    const min = number(rule.source_area_pyeong_min);
+    const max = number(rule.source_area_pyeong_max);
+    if (!min || min <= 0 || !max || max <= 0) errors.push(`${label}: 원본 공급평 범위는 0보다 커야 합니다.`);
+    if (min && max && min > max) errors.push(`${label}: 최소평은 최대평보다 클 수 없습니다.`);
+    if (!number(rule.display_area_pyeong) || rule.display_area_pyeong <= 0) errors.push(`${label}: 표시 평형은 0보다 커야 합니다.`);
+    if (!number(rule.exclusive_area_m2) || rule.exclusive_area_m2 <= 0) errors.push(`${label}: 전용면적은 0보다 커야 합니다.`);
+    if (min && max) ranges.push({ min, max, label });
+  });
+  ranges.sort((a, b) => a.min - b.min);
+  for (let index = 1; index < ranges.length; index += 1) {
+    if (ranges[index].min <= ranges[index - 1].max) errors.push('평형 규칙의 원본 공급평 범위는 서로 겹칠 수 없습니다.');
+  }
   return errors;
 }
 
@@ -225,6 +271,19 @@ async function saveSnapshot(context, body) {
   });
 }
 
+async function saveDisplaySettings(context, body) {
+  const settings = body.settings;
+  const errors = validateDisplaySettings(settings);
+  if (errors.length) return json({ message: errors.join(' ') }, 400);
+  const saved = await putFile(context, DISPLAY_SETTINGS_PATH, settings, 'Update dashboard display settings');
+  if (saved.error) return json({ message: saved.error }, 502);
+  return json({
+    message: '표시 설정을 GitHub에 저장했습니다. Cloudflare 재배포 후 색상과 평형 그룹이 분석 화면에 반영됩니다.',
+    filePath: DISPLAY_SETTINGS_PATH,
+    commitUrl: saved.commitUrl,
+  });
+}
+
 async function saveComplexFile(context) {
   const unauthorized = await authorize(context);
   if (unauthorized) return unauthorized;
@@ -234,7 +293,9 @@ async function saveComplexFile(context) {
   } catch {
     return json({ message: '요청 JSON을 읽을 수 없습니다.' }, 400);
   }
-  return body?.operation === 'save_snapshot' ? saveSnapshot(context, body) : saveLegacyComplex(context, body);
+  if (body?.operation === 'save_snapshot') return saveSnapshot(context, body);
+  if (body?.operation === 'save_display_settings') return saveDisplaySettings(context, body);
+  return saveLegacyComplex(context, body);
 }
 
 async function deleteComplexFile(context) {

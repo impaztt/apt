@@ -5,8 +5,6 @@ import { formatPrice } from '../../../shared/utils/price';
 import { getAreaGroup } from '../../../shared/utils/area';
 import { Card } from '../../../shared/components/Card';
 
-const COLORS = ['#3182f6', '#8b5cf6', '#16a34a', '#f97316'];
-
 type PricedListing = ApartmentListing & { price: number };
 
 interface PriceMarker {
@@ -82,8 +80,8 @@ export function PriceRangeSummary({
           : '막대는 최저~최고 호가, 세로 표시는 중앙값입니다.'}
       </p>
       <div className="mt-5 space-y-5">
-        {summaries.map((summary, index) => {
-          const color = COLORS[index % COLORS.length];
+        {summaries.map((summary) => {
+          const color = summary.complex_color;
           const markers = listings ? createMarkers(summary, listings, position) : [];
           const laneCount = Math.max(1, ...markers.map((marker) => marker.lane + 1));
           const activeMarker = markers.find((marker) => marker.key === selectedMarkerKey);

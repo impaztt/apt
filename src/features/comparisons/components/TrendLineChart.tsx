@@ -3,8 +3,6 @@ import type { ListingTrendPoint } from '../../listings/types';
 import { formatPrice } from '../../../shared/utils/price';
 import { Card } from '../../../shared/components/Card';
 
-const COLORS = ['#3182f6', '#16a34a', '#8b5cf6', '#f97316', '#db2777'];
-
 type Metric = 'median_price' | 'min_price' | 'listing_count';
 
 export function TrendLineChart({
@@ -19,6 +17,7 @@ export function TrendLineChart({
   title: string;
 }) {
   const names = new Map(points.map((point) => [point.complex_id, point.complex_name]));
+  const colors = new Map(points.map((point) => [point.complex_id, point.complex_color]));
   const rows = [...new Set(points.map((point) => point.captured_date))].map((date) => {
     const row: Record<string, string | number | null> = { date: date.slice(5).replace('-', '.') };
     complexIds.forEach((complexId) => {
@@ -33,9 +32,9 @@ export function TrendLineChart({
     <Card className="p-4 sm:p-6">
       <h2 className="text-base font-semibold">{title}</h2>
       <div className="mt-4 flex gap-3 overflow-x-auto pb-1 text-[11px] text-slate-500">
-        {complexIds.map((complexId, index) => (
+        {complexIds.map((complexId) => (
           <span key={complexId} className="flex shrink-0 items-center gap-1.5">
-            <span className="h-2.5 w-2.5 rounded-full" style={{ backgroundColor: COLORS[index % COLORS.length] }} />
+            <span className="h-2.5 w-2.5 rounded-full" style={{ backgroundColor: colors.get(complexId) ?? '#3182f6' }} />
             {names.get(complexId) ?? complexId}
           </span>
         ))}
@@ -57,13 +56,13 @@ export function TrendLineChart({
                 names.get(key) ?? key,
               ]}
             />
-            {complexIds.map((complexId, index) => (
+            {complexIds.map((complexId) => (
               <Line
                 key={complexId}
                 type="monotone"
                 dataKey={complexId}
                 connectNulls={false}
-                stroke={COLORS[index % COLORS.length]}
+                stroke={colors.get(complexId) ?? '#3182f6'}
                 strokeWidth={2.5}
                 dot={{ r: 4 }}
               />

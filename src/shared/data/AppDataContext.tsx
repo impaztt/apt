@@ -2,6 +2,7 @@ import { createContext, useContext, useMemo, type PropsWithChildren } from 'reac
 import type { ApartmentComplex } from '../../features/complexes/types';
 import type { ComparisonGroup, ComparisonGroupComplex } from '../../features/comparisons/types';
 import type { ApartmentListing, ListingSnapshot } from '../../features/listings/types';
+import type { DisplaySettings } from '../../features/settings/types';
 import { loadStaticDataset } from './staticData';
 
 interface AppDataValue {
@@ -11,6 +12,7 @@ interface AppDataValue {
   latestCapturedDates: Record<string, string>;
   groups: ComparisonGroup[];
   memberships: ComparisonGroupComplex[];
+  displaySettings: DisplaySettings;
   loading: boolean;
   error: string | null;
 }
@@ -30,6 +32,7 @@ export function AppDataProvider({ children }: PropsWithChildren) {
         latestCapturedDates: {},
         groups: [],
         memberships: [],
+        displaySettings: { updated_at: '', complex_colors: {}, area_groups: [] },
         loading: false,
         error: caught instanceof Error ? caught.message : 'JSON 데이터를 불러오지 못했습니다.',
       };

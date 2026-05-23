@@ -9,15 +9,30 @@ export interface AreaOption {
   label: string;
 }
 
-export function getAreaGroup(listing: Pick<ApartmentListing, 'area_pyeong' | 'exclusive_area_pyeong'>): AreaGroup {
-  return `${listing.area_pyeong}|${listing.exclusive_area_pyeong}`;
+type ListingAreaValues = Pick<
+  ApartmentListing,
+  'area_pyeong' | 'exclusive_area_pyeong' | 'display_area_key' | 'display_area_pyeong' | 'display_area_label'
+>;
+
+export function getAreaGroup(listing: ListingAreaValues): AreaGroup {
+  return listing.display_area_key
+    ? listing.display_area_key
+    : `${listing.area_pyeong}|${listing.exclusive_area_pyeong}`;
 }
 
 export function formatAreaLabel(areaPyeong: number, exclusiveAreaPyeong: number): string {
   return `${areaPyeong}평형 (전용 ${exclusiveAreaPyeong}평)`;
 }
 
-export function getAreaOption(listing: Pick<ApartmentListing, 'area_pyeong' | 'exclusive_area_pyeong'>): AreaOption {
+export function getAreaOption(listing: ListingAreaValues): AreaOption {
+  if (listing.display_area_key && listing.display_area_label && listing.display_area_pyeong) {
+    return {
+      key: listing.display_area_key,
+      areaPyeong: listing.display_area_pyeong,
+      exclusiveAreaPyeong: listing.exclusive_area_pyeong,
+      label: listing.display_area_label,
+    };
+  }
   return {
     key: getAreaGroup(listing),
     areaPyeong: listing.area_pyeong,

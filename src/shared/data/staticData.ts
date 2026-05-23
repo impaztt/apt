@@ -1,6 +1,8 @@
 import type { ApartmentComplex } from '../../features/complexes/types';
 import type { ComparisonGroup, ComparisonGroupComplex } from '../../features/comparisons/types';
 import type { ApartmentListing, DealType, FloorGroup, ListingInput, ListingSnapshot } from '../../features/listings/types';
+import type { AreaDisplayRule, DisplaySettings } from '../../features/settings/types';
+import { fallbackComplexColor, formatDisplayAreaLabel } from '../../features/settings/display';
 import { validateListingInput, isPossibleDuplicate } from '../../features/listings/validation';
 
 export interface StaticDataset {
@@ -10,6 +12,7 @@ export interface StaticDataset {
   latestCapturedDates: Record<string, string>;
   groups: ComparisonGroup[];
   memberships: ComparisonGroupComplex[];
+  displaySettings: DisplaySettings;
 }
 
 export interface ParsedComplexData {
@@ -27,6 +30,11 @@ const modules = import.meta.glob('../../data/complexes/*.json', {
 }) as Record<string, unknown>;
 
 const snapshotModules = import.meta.glob('../../data/snapshots/**/*.json', {
+  eager: true,
+  import: 'default',
+}) as Record<string, unknown>;
+
+const displaySettingsModules = import.meta.glob('../../data/display-settings.json', {
   eager: true,
   import: 'default',
 }) as Record<string, unknown>;
@@ -53,6 +61,69 @@ function optionalNumber(value: unknown): number | null {
     return Number(value.replace(/,/g, ''));
   }
   return null;
+}
+
+function positiveNumber(value: unknown, field: string): number {
+  const result = optionalNumber(value);
+  if (result === null || result <= 0) throw new Error(`표시 설정: ${field}은 0보다 커야 합니다.`);
+  return result;
+}
+
+export function parseDisplaySettings(raw: unknown): DisplaySettings {
+  const source = recordValue(raw, '표시 설정');
+  const colors = recordValue(source.complex_colors ?? {}, '표시 설정 complex_colors');
+  const complexColors = Object.fromEntries(
+    Object.entries(colors)
+      .filter(([, color]) => typeof color === 'string' && /^#[0-9a-f]{6}$/i.test(color))
+      .map(([id, color]) => [id, String(color)]),
+  );
+  if (!Array.isArray(source.area_groups)) throw new Error('표시 설정: area_groups는 배열이어야 합니다.');
+  const areaGroups: AreaDisplayRule[] = source.area_groups.map((value, index) => {
+    const row = recordValue(value, `표시 설정 평형 규칙 ${index + 1}`);
+    const min = positiveNumber(row.source_area_pyeong_min, '원본 공급평 최소');
+    const max = positiveNumber(row.source_area_pyeong_max, '원본 공급평 최대');
+    if (min > max) throw new Error('표시 설정: 원본 공급평 최소값은 최대값보다 클 수 없습니다.');
+    return {
+      id: requiredText(row.id, 'id', `표시 설정 평형 규칙 ${index + 1}`),
+      source_area_pyeong_min: min,
+      source_area_pyeong_max: max,
+      display_area_pyeong: positiveNumber(row.display_area_pyeong, '표시 평형'),
+      exclusive_area_m2: positiveNumber(row.exclusive_area_m2, '전용면적'),
+    };
+  });
+  const sortedGroups = [...areaGroups].sort((a, b) => a.source_area_pyeong_min - b.source_area_pyeong_min);
+  if (new Set(sortedGroups.map((group) => group.id)).size !== sortedGroups.length) {
+    throw new Error('표시 설정: 평형 규칙 ID는 중복될 수 없습니다.');
+  }
+  for (let index = 1; index < sortedGroups.length; index += 1) {
+    if (sortedGroups[index].source_area_pyeong_min <= sortedGroups[index - 1].source_area_pyeong_max) {
+      throw new Error('표시 설정: 원본 공급평 범위는 서로 겹칠 수 없습니다.');
+    }
+  }
+  return {
+    updated_at: normalizedDate(source.updated_at) ?? new Date().toISOString().slice(0, 10),
+    complex_colors: complexColors,
+    area_groups: sortedGroups,
+  };
+}
+
+function currentDisplaySettings(): DisplaySettings {
+  const raw = Object.values(displaySettingsModules)[0] ?? { updated_at: '2026-05-24', complex_colors: {}, area_groups: [] };
+  return parseDisplaySettings(raw);
+}
+
+function applyAreaDisplayRule(listing: ApartmentListing, settings: DisplaySettings): ApartmentListing {
+  const rule = settings.area_groups.find(
+    (item) => listing.area_pyeong >= item.source_area_pyeong_min && listing.area_pyeong <= item.source_area_pyeong_max,
+  );
+  if (!rule) return listing;
+  return {
+    ...listing,
+    display_area_key: rule.id,
+    display_area_pyeong: rule.display_area_pyeong,
+    display_exclusive_area_m2: rule.exclusive_area_m2,
+    display_area_label: formatDisplayAreaLabel(rule),
+  };
 }
 
 function normalizedDate(value: unknown): string | null {
@@ -199,6 +270,7 @@ export function parseComplexDataFile(
   raw: unknown,
   pathOrName = '입력 JSON',
   existingSource?: Record<string, unknown> | null,
+  displaySettings?: DisplaySettings,
 ): ParsedComplexData {
   const submitted = recordValue(raw, pathOrName);
   const normalized = normalizeComplexSource(submitted, pathOrName, existingSource);
@@ -228,6 +300,7 @@ export function parseComplexDataFile(
     infrastructure_note: optionalText(source.infrastructure_note),
     memo: optionalText(source.memo),
     data_file: fileName,
+    color: displaySettings?.complex_colors[id] ?? fallbackComplexColor(0),
     created_at: timestamp(updatedAt),
     updated_at: timestamp(updatedAt),
   };
@@ -275,7 +348,7 @@ export function parseComplexDataFile(
       updated_at: timestamp(updatedAt),
     };
     observed.push(listing);
-    return listing;
+    return displaySettings ? applyAreaDisplayRule(listing, displaySettings) : listing;
   });
 
   return { fileName, complex, listings, groupNames, source, inputFormat: normalized.inputFormat };
@@ -285,6 +358,7 @@ function parseSnapshotFile(
   raw: unknown,
   path: string,
   complexFiles: Map<string, ParsedComplexData>,
+  displaySettings: DisplaySettings,
 ): ListingSnapshot | null {
   const source = recordValue(raw, path);
   const complexId = requiredText(source.complex_id, 'complex_id', path);
@@ -304,6 +378,7 @@ function parseSnapshotFile(
     },
     path,
     base.source,
+    displaySettings,
   );
 
   return {
@@ -316,7 +391,17 @@ function parseSnapshotFile(
 }
 
 export function loadStaticDataset(): StaticDataset {
-  const parsedFiles = Object.entries(modules).map(([path, data]) => parseComplexDataFile(data, path));
+  const displaySettings = currentDisplaySettings();
+  const parsedFiles = Object.entries(modules).map(([path, data], index) => {
+    const parsed = parseComplexDataFile(data, path, null, displaySettings);
+    return {
+      ...parsed,
+      complex: {
+        ...parsed.complex,
+        color: displaySettings.complex_colors[parsed.complex.id] ?? fallbackComplexColor(index),
+      },
+    };
+  });
   const duplicates = parsedFiles
     .map((file) => file.complex.id)
     .filter((id, index, ids) => ids.indexOf(id) !== index);
@@ -324,7 +409,7 @@ export function loadStaticDataset(): StaticDataset {
 
   const complexFiles = new Map(parsedFiles.map((file) => [file.complex.id, file]));
   const storedSnapshots = Object.entries(snapshotModules)
-    .map(([path, data]) => parseSnapshotFile(data, path, complexFiles))
+    .map(([path, data]) => parseSnapshotFile(data, path, complexFiles, displaySettings))
     .filter((snapshot): snapshot is ListingSnapshot => snapshot !== null);
   const snapshotsByComplex = new Map<string, ListingSnapshot[]>();
   for (const snapshot of storedSnapshots) {
@@ -382,7 +467,12 @@ export function loadStaticDataset(): StaticDataset {
     ),
     groups,
     memberships,
+    displaySettings,
   };
+}
+
+export function getStaticDisplaySettings(): DisplaySettings {
+  return currentDisplaySettings();
 }
 
 export function getStaticComplexSource(complexId: string): Record<string, unknown> | null {

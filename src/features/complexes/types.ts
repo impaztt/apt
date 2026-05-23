@@ -16,6 +16,7 @@ export interface ApartmentComplex {
   infrastructure_note: string | null;
   memo: string | null;
   data_file: string | null;
+  color: string;
   created_at: string;
   updated_at: string;
 }

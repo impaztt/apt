@@ -7,7 +7,7 @@ import { Button } from '../shared/components/Button';
 import { Card } from '../shared/components/Card';
 import { EmptyState, ErrorState, LoadingState } from '../shared/components/States';
 import { useAppData } from '../shared/data/AppDataContext';
-import { getAreaGroup } from '../shared/utils/area';
+import { getAreaGroup, getAreaOption } from '../shared/utils/area';
 import { formatDate, isStaleDate } from '../shared/utils/date';
 import { formatPrice } from '../shared/utils/price';
 import { DeleteComplexDialog } from '../features/complexes/components/DeleteComplexDialog';
@@ -189,7 +189,7 @@ export function ComplexDetailPage() {
                     </div>
                     <p className="metric-number mt-4 text-2xl font-bold">{formatPrice(listing.price ?? listing.deposit)}</p>
                     <p className="mt-3 text-sm text-slate-500">
-                      {listing.building_no ?? '-'} · {listing.area_pyeong}평형 (전용 {listing.exclusive_area_pyeong}평) ·{' '}
+                      {listing.building_no ?? '-'} · {getAreaOption(listing).label} ·{' '}
                       {listing.floor_text ?? listing.floor_group ?? '-'}
                     </p>
                     <p className="mt-2 text-xs text-slate-400">

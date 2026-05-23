@@ -8,13 +8,6 @@ import { getAreaGroup } from '../../../shared/utils/area';
 import { formatPrice } from '../../../shared/utils/price';
 import { Card } from '../../../shared/components/Card';
 
-const COLORS = [
-  ['#eff6ff', '#bfdbfe', '#60a5fa', '#2563eb'],
-  ['#f5f3ff', '#ddd6fe', '#a78bfa', '#7c3aed'],
-  ['#ecfdf5', '#bbf7d0', '#4ade80', '#16a34a'],
-  ['#fff7ed', '#fed7aa', '#fb923c', '#ea580c'],
-];
-
 function shortName(value: string): string {
   return value.length > 6 ? `${value.slice(0, 6)}…` : value;
 }
@@ -71,9 +64,9 @@ export function PriceDistributionMatrix({
             </span>
           ))}
         </div>
-        {summaries.map((summary, index) => {
+        {summaries.map((summary) => {
           const rowListings = relevant.filter((listing) => listing.complex_id === summary.complex_id);
-          const palette = COLORS[index % COLORS.length];
+          const color = summary.complex_color;
           return (
             <div
               key={summary.complex_id}
@@ -91,7 +84,7 @@ export function PriceDistributionMatrix({
                   <div key={bucket.min} className="flex items-center justify-center border-l border-slate-100 p-1.5">
                     <span
                       className={`flex h-10 w-full items-center justify-center rounded-xl text-sm font-bold ${level >= 3 ? 'text-white' : level === 0 ? 'text-slate-300' : 'text-slate-700'}`}
-                      style={{ backgroundColor: level === 0 ? '#f8fafc' : palette[level] }}
+                      style={{ backgroundColor: level === 0 ? '#f8fafc' : `${color}${level === 1 ? '33' : level === 2 ? '88' : 'ff'}` }}
                     >
                       {count || '-'}
                     </span>

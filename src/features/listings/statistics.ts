@@ -7,7 +7,7 @@ import type {
   ListingTrendPoint,
   SnapshotChangeSummary,
 } from './types';
-import { getAreaGroup } from '../../shared/utils/area';
+import { getAreaGroup, getAreaOption } from '../../shared/utils/area';
 
 function median(values: number[]): number {
   const sorted = [...values].sort((a, b) => a - b);
@@ -41,6 +41,7 @@ export function summarizeListings(
     .map(([key, group]) => {
       const [complexId, groupName] = key.split(':');
       const pricedListings = group as Array<ApartmentListing & { price: number }>;
+      const areaOption = getAreaOption(pricedListings[0]);
       const prices = pricedListings.map((listing) => listing.price);
       const pricePerPyeong =
         pricedListings.reduce((total, listing) => total + listing.price / listing.area_pyeong, 0) /
@@ -56,10 +57,11 @@ export function summarizeListings(
       return {
         complex_id: complexId,
         complex_name: complexMap.get(complexId)?.name ?? '삭제된 단지',
+        complex_color: complexMap.get(complexId)?.color ?? '#3182f6',
         area_group: groupName,
-        area_pyeong: pricedListings[0].area_pyeong,
+        area_pyeong: areaOption.areaPyeong,
         exclusive_area_pyeong: pricedListings[0].exclusive_area_pyeong,
-        area_label: `${pricedListings[0].area_pyeong}평형 (전용 ${pricedListings[0].exclusive_area_pyeong}평)`,
+        area_label: areaOption.label,
         listing_count: pricedListings.length,
         min_price: minListing.price,
         max_price: maxListing.price,
@@ -98,6 +100,7 @@ export function summarizeSnapshotHistory(
       summarizeListings(snapshot.listings, complexes, areaGroup, [snapshot.complex_id]).map((summary) => ({
         complex_id: summary.complex_id,
         complex_name: summary.complex_name,
+        complex_color: summary.complex_color,
         area_group: summary.area_group,
         area_label: summary.area_label,
         captured_date: snapshot.captured_date,
