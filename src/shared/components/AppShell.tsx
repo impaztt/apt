@@ -1,7 +1,7 @@
-import { BarChart3, Building2, FileJson, Layers3, Scale, TrendingUp } from 'lucide-react';
+import { BarChart3, Building2, FileJson, Layers3, MoreHorizontal, Scale, TrendingUp } from 'lucide-react';
 import { NavLink, Outlet } from 'react-router-dom';
 
-const navigation = [
+const desktopNavigation = [
   { to: '/', label: '대시보드', icon: BarChart3, end: true },
   { to: '/complexes', label: '단지', icon: Building2 },
   { to: '/data/input', label: 'JSON 입력', icon: FileJson },
@@ -10,9 +10,17 @@ const navigation = [
   { to: '/trends', label: '변화', icon: TrendingUp },
 ];
 
+const mobileNavigation = [
+  { to: '/', label: '대시보드', icon: BarChart3, end: true },
+  { to: '/compare', label: '비교', icon: Scale },
+  { to: '/trends', label: '변화', icon: TrendingUp },
+  { to: '/manage', label: '관리', icon: MoreHorizontal },
+];
+
 function Navigation({ mobile = false }: { mobile?: boolean }) {
+  const navigation = mobile ? mobileNavigation : desktopNavigation;
   return (
-    <nav className={mobile ? 'grid grid-cols-6 px-1' : 'space-y-1'}>
+    <nav className={mobile ? 'grid grid-cols-4 px-3' : 'space-y-1'}>
       {navigation.map(({ to, label, icon: Icon, end }) => (
         <NavLink
           key={to}
@@ -61,7 +69,7 @@ export function AppShell() {
         </span>
       </header>
 
-      <main className="mx-auto max-w-6xl px-4 pb-28 pt-6 sm:px-6 lg:ml-64 lg:px-10 lg:pb-10 lg:pt-9">
+      <main className="mx-auto max-w-6xl px-3.5 pb-24 pt-5 sm:px-6 sm:pt-6 lg:ml-64 lg:px-10 lg:pb-10 lg:pt-9">
         <Outlet />
       </main>
 

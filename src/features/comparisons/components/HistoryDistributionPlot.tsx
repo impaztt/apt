@@ -36,57 +36,69 @@ export function HistoryDistributionPlot({
   const prices = rows.flatMap((row) => row.listings.map((listing) => listing.price));
   const minimum = Math.min(...prices);
   const maximum = Math.max(...prices);
-  const padding = Math.max((maximum - minimum) * 0.08, 20_000_000);
+  const padding = Math.max((maximum - minimum) * 0.06, 10_000_000);
   const domainMin = Math.max(0, minimum - padding);
   const domainMax = maximum + padding;
-  const width = 820;
-  const labelWidth = 120;
-  const chartWidth = 610;
-  const rowHeight = 54;
-  const top = 40;
-  const height = top + rows.length * rowHeight + 32;
-  const x = (price: number) => labelWidth + ((price - domainMin) / (domainMax - domainMin || 1)) * chartWidth;
-  const ticks = Array.from({ length: 5 }, (_, index) => domainMin + ((domainMax - domainMin) * index) / 4);
+  const position = (price: number) => `${((price - domainMin) / (domainMax - domainMin || 1)) * 100}%`;
+  const ticks = Array.from({ length: 4 }, (_, index) => domainMin + ((domainMax - domainMin) * index) / 3);
 
   return (
-    <Card>
-      <h2 className="text-base font-semibold">{complexName} 날짜별 분포 이동</h2>
-      <p className="mt-1 text-xs text-slate-400">점들이 왼쪽으로 이동하거나 늘어나면 저가 매물의 증가 여부를 확인할 수 있습니다.</p>
-      <div className="mt-5 overflow-x-auto">
-        <svg viewBox={`0 0 ${width} ${height}`} className="min-w-[680px]">
-          {ticks.map((tick) => (
-            <g key={tick}>
-              <line x1={x(tick)} x2={x(tick)} y1={25} y2={height - 25} stroke="#e2e8f0" strokeDasharray="3 4" />
-              <text x={x(tick)} y={15} textAnchor="middle" fill="#94a3b8" fontSize="11">
-                {(tick / 100_000_000).toFixed(1)}억
-              </text>
-            </g>
-          ))}
-          {rows.map((row, index) => {
-            const y = top + index * rowHeight + 18;
-            const sortedPrices = row.listings.map((listing) => listing.price).sort((a, b) => a - b);
-            const center = median(sortedPrices);
-            const counts = new Map<number, number>();
-            return (
-              <g key={row.date}>
-                <text x={0} y={y + 4} fill="#475569" fontSize="12" fontWeight="600">
-                  {row.date.slice(5).replace('-', '.')} ({row.listings.length}건)
-                </text>
-                <line x1={x(sortedPrices[0])} x2={x(sortedPrices[sortedPrices.length - 1])} y1={y} y2={y} stroke="#93c5fd" strokeWidth="6" strokeLinecap="round" />
-                <rect x={x(center) - 5} y={y - 5} width="10" height="10" fill="#3182f6" transform={`rotate(45 ${x(center)} ${y})`} />
+    <Card className="p-4 sm:p-6">
+      <h2 className="truncate text-base font-semibold">{complexName} 분포 이동</h2>
+      <p className="mt-1 text-[11px] leading-5 text-slate-400">날짜별 점의 위치와 개수 변화로 호가 이동을 확인합니다.</p>
+      <div className="relative mt-5 h-6">
+        {ticks.map((tick, index) => (
+          <span
+            key={tick}
+            className={`absolute text-[10px] text-slate-400 ${index === 0 ? '' : index === ticks.length - 1 ? '-translate-x-full' : '-translate-x-1/2'}`}
+            style={{ left: position(tick) }}
+          >
+            {(tick / 100_000_000).toFixed(1)}억
+          </span>
+        ))}
+      </div>
+      <div className="space-y-3">
+        {rows.map((row) => {
+          const sortedPrices = row.listings.map((listing) => listing.price).sort((a, b) => a - b);
+          const center = median(sortedPrices);
+          const occurrences = new Map<number, number>();
+          const countByPrice = new Map<number, number>();
+          row.listings.forEach((listing) => countByPrice.set(listing.price, (countByPrice.get(listing.price) ?? 0) + 1));
+          const maxStack = Math.max(...countByPrice.values());
+          return (
+            <div key={row.date} className="rounded-2xl bg-slate-50 p-3">
+              <div className="flex justify-between text-xs">
+                <span className="font-semibold text-slate-700">{row.date.replace(/-/g, '.')}</span>
+                <span className="text-slate-500">{row.listings.length}건 · 중앙 {formatPrice(center)}</span>
+              </div>
+              <div className="relative mt-2" style={{ height: `${Math.max(45, 39 + (maxStack - 1) * 10)}px` }}>
+                {ticks.map((tick) => (
+                  <span key={tick} className="absolute bottom-0 top-0 border-l border-dashed border-slate-200" style={{ left: position(tick) }} />
+                ))}
+                <span
+                  className="absolute bottom-[12px] h-[5px] rounded-full"
+                  style={{ left: position(sortedPrices[0]), right: `calc(100% - ${position(sortedPrices[sortedPrices.length - 1])})`, backgroundColor: '#93c5fd' }}
+                />
+                <span
+                  className="absolute bottom-[9px] h-[11px] w-[11px] -translate-x-1/2 rotate-45 bg-brand-600"
+                  style={{ left: position(center) }}
+                />
                 {row.listings.map((listing) => {
-                  const stack = counts.get(listing.price) ?? 0;
-                  counts.set(listing.price, stack + 1);
+                  const stack = occurrences.get(listing.price) ?? 0;
+                  occurrences.set(listing.price, stack + 1);
                   return (
-                    <circle key={listing.id} cx={x(listing.price)} cy={y - 12 - stack * 9} r="4.5" fill="#3182f6">
-                      <title>{formatPrice(listing.price)} · {listing.building_no ?? ''}</title>
-                    </circle>
+                    <span
+                      key={listing.id}
+                      title={formatPrice(listing.price)}
+                      className="absolute h-2.5 w-2.5 -translate-x-1/2 rounded-full border border-white bg-brand-600"
+                      style={{ left: position(listing.price), bottom: `${27 + stack * 10}px` }}
+                    />
                   );
                 })}
-              </g>
-            );
-          })}
-        </svg>
+              </div>
+            </div>
+          );
+        })}
       </div>
     </Card>
   );

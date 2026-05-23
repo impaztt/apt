@@ -43,12 +43,12 @@ export function TrendPage() {
   if (!groups.length) return <EmptyState title="비교 그룹이 없습니다" description="먼저 단지 데이터를 등록해 주세요." />;
 
   return (
-    <div className="space-y-7">
+    <div className="space-y-5 sm:space-y-7">
       <PageHeader
         title="호가 변화"
         description="매일 저장한 수집 기준일별 스냅샷으로 중앙값, 최저 호가, 매물 수와 가격 분포 이동을 확인합니다."
         action={
-          <select className="field-control mt-0 min-w-[240px]" value={group?.id ?? ''} onChange={(event) => setGroupId(event.target.value)}>
+          <select className="field-control mt-0 w-full sm:min-w-[240px]" value={group?.id ?? ''} onChange={(event) => setGroupId(event.target.value)}>
             {groups.map((item) => (
               <option key={item.id} value={item.id}>
                 {item.name}
@@ -58,7 +58,7 @@ export function TrendPage() {
         }
       />
 
-      <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
+      <div className="grid grid-cols-2 gap-2.5 lg:grid-cols-4">
         <MetricCard label="수집일 수" value={`${uniqueDates.length}일`} note="저장된 기준일" />
         <MetricCard label="최초 수집일" value={formatDate(uniqueDates[0] ?? null)} note="기간 시작" />
         <MetricCard label="최근 수집일" value={formatDate(uniqueDates[uniqueDates.length - 1] ?? null)} note="기간 종료" />
@@ -67,7 +67,7 @@ export function TrendPage() {
 
       {areaOptions.length ? (
         <>
-          <Card className="bg-brand-50 shadow-none">
+          <Card className="bg-brand-50 p-4 shadow-none sm:p-6">
             <p className="text-sm font-semibold text-brand-700">분석할 평형 선택</p>
             <p className="mt-2 text-sm text-slate-500">기간 변화는 동일 평형만 비교합니다. 아래에서 평형을 선택하세요.</p>
             <div className="mt-4">
@@ -109,7 +109,7 @@ export function TrendPage() {
                 {changes.length ? (
                   <div className="grid gap-4 lg:grid-cols-2">
                     {changes.map((change) => (
-                    <Card key={change.complex_id}>
+                    <Card key={change.complex_id} className="p-4 sm:p-6">
                       <div className="flex flex-wrap items-start justify-between gap-2">
                         <div>
                           <p className="text-sm font-semibold">{change.complex_name}</p>

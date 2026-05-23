@@ -51,13 +51,13 @@ export function DashboardPage() {
   if (!groups.length) return <EmptyState title="비교 그룹이 없습니다" description="비교할 단지를 JSON에 등록해 주세요." />;
 
   return (
-    <div className="space-y-7">
+    <div className="space-y-5 sm:space-y-7">
       <PageHeader
         title={activeGroup?.name ?? '호가 분포 대시보드'}
         description="같은 평형의 매물 한 건 한 건을 점으로 표시해 단지별 호가 범위와 가격 집중 구간을 비교합니다."
         action={
           <select
-            className="field-control mt-0 min-w-[240px]"
+            className="field-control mt-0 w-full sm:min-w-[240px]"
             value={activeGroup?.id ?? ''}
             onChange={(event) => setSelectedGroupId(event.target.value)}
           >
@@ -70,18 +70,18 @@ export function DashboardPage() {
         }
       />
 
-      <Card className={`shadow-none ${differingDates ? 'border border-amber-100 bg-amber-50' : 'bg-brand-50'}`}>
+      <Card className={`p-4 shadow-none sm:p-6 ${differingDates ? 'border border-amber-100 bg-amber-50' : 'bg-brand-50'}`}>
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
             <p className="text-sm font-semibold text-slate-700">현재 비교 데이터 기준일</p>
-            <p className="mt-2 text-xs leading-6 text-slate-500">
-              {complexIds
-                .map((id) => {
-                  const complex = complexes.find((item) => item.id === id);
-                  return `${complex?.name ?? id} ${formatDate(latestCapturedDates[id] ?? null)}`;
-                })
-                .join(' · ')}
-            </p>
+            <div className="mt-3 space-y-1.5 text-xs text-slate-500">
+              {complexIds.map((id) => (
+                <p key={id} className="flex justify-between gap-3">
+                  <span className="truncate">{complexes.find((item) => item.id === id)?.name ?? id}</span>
+                  <span className="shrink-0">{formatDate(latestCapturedDates[id] ?? null)}</span>
+                </p>
+              ))}
+            </div>
             {differingDates && <p className="mt-1 text-xs font-semibold text-amber-700">단지별 최신 수집일이 다릅니다. 동일 일자 비교는 호가 변화 화면에서 확인하세요.</p>}
           </div>
           <Link to="/trends" className="inline-flex items-center gap-2 rounded-2xl bg-white px-4 py-3 text-sm font-semibold text-brand-700">
@@ -92,10 +92,14 @@ export function DashboardPage() {
 
       <AreaTabs value={areaGroup} options={areaOptions} onChange={setAreaGroup} />
 
-      <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
+      <div className="grid grid-cols-2 gap-2.5 lg:grid-cols-4">
         <MetricCard label="비교 단지" value={`${complexIds.length}개`} note={`매매 매물 ${saleListings.length}건`} />
         <MetricCard label={`${scopeLabel} 매물`} value={`${selectedListings.length}건`} note="점 그래프 표시 건수" />
-        <MetricCard label={`${scopeLabel} 최저가`} value={formatPrice(lowest)} tone="blue" note="현재 관측 최저 호가" />
+        {areaGroup === 'all' ? (
+          <MetricCard label="등록 평형" value={`${areaOptions.length}개`} note="평형별 분포 확인" />
+        ) : (
+          <MetricCard label={`${scopeLabel} 최저가`} value={formatPrice(lowest)} tone="blue" note="현재 관측 최저 호가" />
+        )}
         <MetricCard label="최신 수집일" value={formatDate(latestCapturedDate)} note="업로드 기준일" />
       </div>
 

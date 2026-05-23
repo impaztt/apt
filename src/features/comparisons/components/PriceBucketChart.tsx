@@ -1,4 +1,4 @@
-import { Bar, BarChart, CartesianGrid, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
+import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 import type { ApartmentComplex } from '../../complexes/types';
 import type { ApartmentListing, AreaGroup } from '../../listings/types';
 import { getAreaGroup } from '../../../shared/utils/area';
@@ -42,17 +42,24 @@ export function PriceBucketChart({
   }
 
   return (
-    <Card>
+    <Card className="p-4 sm:p-6">
       <h2 className="text-base font-semibold">가격대별 매물 집중도</h2>
       <p className="mt-1 text-xs text-slate-400">5,000만원 구간별로 어느 단지의 매물이 모여 있는지 확인합니다.</p>
-      <div className="mt-5 h-64">
+      <div className="mt-4 flex gap-3 overflow-x-auto pb-1 text-[11px] text-slate-500">
+        {complexIds.map((id, index) => (
+          <span key={id} className="flex shrink-0 items-center gap-1.5">
+            <span className="h-2.5 w-2.5 rounded-full" style={{ backgroundColor: COLORS[index % COLORS.length] }} />
+            {names.get(id) ?? id}
+          </span>
+        ))}
+      </div>
+      <div className="mt-3 h-52 sm:h-64">
         <ResponsiveContainer width="100%" height="100%">
           <BarChart data={data} margin={{ left: -26, right: 4 }}>
             <CartesianGrid stroke="#edf1f7" vertical={false} />
             <XAxis dataKey="name" fontSize={10} stroke="#94a3b8" />
             <YAxis allowDecimals={false} fontSize={11} stroke="#94a3b8" />
             <Tooltip formatter={(value: number, key: string) => [`${value}건`, names.get(key) ?? key]} />
-            <Legend formatter={(value) => names.get(String(value)) ?? value} wrapperStyle={{ fontSize: 11 }} />
             {complexIds.map((id, index) => (
               <Bar key={id} dataKey={id} stackId="count" fill={COLORS[index % COLORS.length]} radius={index === complexIds.length - 1 ? [5, 5, 0, 0] : undefined} />
             ))}

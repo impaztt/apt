@@ -1,4 +1,4 @@
-import { Line, LineChart, CartesianGrid, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
+import { Line, LineChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 import type { ListingTrendPoint } from '../../listings/types';
 import { formatPrice } from '../../../shared/utils/price';
 import { Card } from '../../../shared/components/Card';
@@ -30,9 +30,17 @@ export function TrendLineChart({
   if (!rows.length) return null;
 
   return (
-    <Card>
+    <Card className="p-4 sm:p-6">
       <h2 className="text-base font-semibold">{title}</h2>
-      <div className="mt-5 h-64">
+      <div className="mt-4 flex gap-3 overflow-x-auto pb-1 text-[11px] text-slate-500">
+        {complexIds.map((complexId, index) => (
+          <span key={complexId} className="flex shrink-0 items-center gap-1.5">
+            <span className="h-2.5 w-2.5 rounded-full" style={{ backgroundColor: COLORS[index % COLORS.length] }} />
+            {names.get(complexId) ?? complexId}
+          </span>
+        ))}
+      </div>
+      <div className="mt-3 h-52 sm:h-64">
         <ResponsiveContainer width="100%" height="100%">
           <LineChart data={rows} margin={{ left: metric === 'listing_count' ? -22 : -10, right: 10 }}>
             <CartesianGrid stroke="#edf1f7" vertical={false} />
@@ -49,7 +57,6 @@ export function TrendLineChart({
                 names.get(key) ?? key,
               ]}
             />
-            <Legend formatter={(value) => names.get(String(value)) ?? value} wrapperStyle={{ fontSize: 11 }} />
             {complexIds.map((complexId, index) => (
               <Line
                 key={complexId}

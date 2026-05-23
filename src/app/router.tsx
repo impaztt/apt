@@ -10,6 +10,7 @@ const ComplexDataInputPage = lazy(() => import('../pages/ComplexDataInputPage').
 const GroupManagementPage = lazy(() => import('../pages/GroupManagementPage').then((module) => ({ default: module.GroupManagementPage })));
 const ComparisonPage = lazy(() => import('../pages/ComparisonPage').then((module) => ({ default: module.ComparisonPage })));
 const TrendPage = lazy(() => import('../pages/TrendPage').then((module) => ({ default: module.TrendPage })));
+const ManagementPage = lazy(() => import('../pages/ManagementPage').then((module) => ({ default: module.ManagementPage })));
 const NotFoundPage = lazy(() => import('../pages/NotFoundPage').then((module) => ({ default: module.NotFoundPage })));
 
 function suspend(element: ReactNode) {
@@ -29,6 +30,7 @@ export const router = createBrowserRouter([
       { path: '/groups', element: suspend(<GroupManagementPage />) },
       { path: '/compare', element: suspend(<ComparisonPage />) },
       { path: '/trends', element: suspend(<TrendPage />) },
+      { path: '/manage', element: suspend(<ManagementPage />) },
       { path: '*', element: suspend(<NotFoundPage />) },
     ],
   },

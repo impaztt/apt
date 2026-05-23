@@ -35,91 +35,87 @@ export function ListingDistributionPlot({
 
   const minimum = Math.min(...priced.map((listing) => listing.price));
   const maximum = Math.max(...priced.map((listing) => listing.price));
-  const padding = Math.max((maximum - minimum) * 0.08, 20_000_000);
+  const padding = Math.max((maximum - minimum) * 0.06, 10_000_000);
   const domainMin = Math.max(0, minimum - padding);
   const domainMax = maximum + padding;
-  const width = 820;
-  const labelWidth = 188;
-  const chartWidth = 560;
-  const rowHeight = 66;
-  const top = 42;
-  const height = top + summaries.length * rowHeight + 38;
-  const x = (price: number) => labelWidth + ((price - domainMin) / (domainMax - domainMin || 1)) * chartWidth;
-  const ticks = Array.from({ length: 5 }, (_, index) => domainMin + ((domainMax - domainMin) * index) / 4);
+  const position = (price: number) => `${((price - domainMin) / (domainMax - domainMin || 1)) * 100}%`;
+  const ticks = Array.from({ length: 4 }, (_, index) => domainMin + ((domainMax - domainMin) * index) / 3);
 
   return (
-    <Card>
-      <div className="flex flex-wrap items-start justify-between gap-2">
-        <div>
+    <Card className="p-4 sm:p-6">
+      <div className="flex items-start justify-between gap-2">
+        <div className="min-w-0">
           <h2 className="text-base font-semibold">{title}</h2>
-          <p className="mt-1 text-xs text-slate-400">점 하나는 매물 1건이며, 선은 최저~최고 호가, 마름모는 중앙값입니다.</p>
+          <p className="mt-1 text-[11px] leading-5 text-slate-400">점=매물 1건 · 선=가격 범위 · ◆=중앙값</p>
         </div>
-        <span className="rounded-full bg-brand-50 px-3 py-1 text-xs font-semibold text-brand-700">총 {priced.length}건</span>
+        <span className="shrink-0 rounded-full bg-brand-50 px-2.5 py-1 text-xs font-semibold text-brand-700">{priced.length}건</span>
       </div>
-      <div className="mt-5 overflow-x-auto">
-        <svg viewBox={`0 0 ${width} ${height}`} className="min-w-[700px]">
-          {ticks.map((tick) => (
-            <g key={tick}>
-              <line x1={x(tick)} x2={x(tick)} y1={26} y2={height - 28} stroke="#e2e8f0" strokeDasharray="3 4" />
-              <text x={x(tick)} y={16} textAnchor="middle" fill="#94a3b8" fontSize="11">
-                {(tick / 100_000_000).toFixed(1)}억
-              </text>
-            </g>
-          ))}
-          {summaries.map((summary, rowIndex) => {
-            const y = top + rowIndex * rowHeight + 20;
-            const rowListings = priced.filter((listing) => listing.complex_id === summary.complex_id);
-            const priceCounts = new Map<number, number>();
-            const color = COLORS[rowIndex % COLORS.length];
-            return (
-              <g key={summary.complex_id}>
-                <text x={0} y={y - 6} fill="#0f172a" fontSize="12" fontWeight="600">
-                  {summary.complex_name.length > 13 ? `${summary.complex_name.slice(0, 13)}...` : summary.complex_name}
-                </text>
-                <text x={0} y={y + 13} fill="#64748b" fontSize="11">
-                  {summary.listing_count}건 {summary.listing_count === 1 ? '(표본 부족)' : ''} · 중앙 {formatPrice(summary.median_price)}
-                </text>
-                <line
-                  x1={x(summary.min_price)}
-                  x2={x(summary.max_price)}
-                  y1={y}
-                  y2={y}
-                  stroke={color}
-                  strokeOpacity="0.4"
-                  strokeWidth="6"
-                  strokeLinecap="round"
+
+      <div className="relative mt-5 h-6">
+        {ticks.map((tick, index) => (
+          <span
+            key={tick}
+            className={`absolute text-[10px] font-medium text-slate-400 ${index === 0 ? '' : index === ticks.length - 1 ? '-translate-x-full' : '-translate-x-1/2'}`}
+            style={{ left: position(tick) }}
+          >
+            {(tick / 100_000_000).toFixed(1)}억
+          </span>
+        ))}
+      </div>
+
+      <div className="space-y-4">
+        {summaries.map((summary, rowIndex) => {
+          const rowListings = priced.filter((listing) => listing.complex_id === summary.complex_id);
+          const priceCounts = new Map<number, number>();
+          const occurrences = new Map<number, number>();
+          rowListings.forEach((listing) => priceCounts.set(listing.price, (priceCounts.get(listing.price) ?? 0) + 1));
+          const maxStack = Math.max(...priceCounts.values());
+          const color = COLORS[rowIndex % COLORS.length];
+          return (
+            <div key={summary.complex_id} className="rounded-2xl bg-slate-50 px-3 py-3">
+              <div className="flex items-start justify-between gap-2">
+                <p className="truncate text-xs font-semibold text-slate-700">{summary.complex_name}</p>
+                <p className={`shrink-0 text-[11px] font-semibold ${summary.listing_count === 1 ? 'text-amber-600' : 'text-slate-500'}`}>
+                  {summary.listing_count}건{summary.listing_count === 1 ? ' · 표본 부족' : ''}
+                </p>
+              </div>
+              <div className="relative mt-2" style={{ height: `${Math.max(50, 43 + (maxStack - 1) * 11)}px` }}>
+                {ticks.map((tick) => (
+                  <span
+                    key={tick}
+                    className="absolute bottom-0 top-0 border-l border-dashed border-slate-200"
+                    style={{ left: position(tick) }}
+                  />
+                ))}
+                <span
+                  className="absolute bottom-[14px] h-[5px] rounded-full opacity-35"
+                  style={{ left: position(summary.min_price), right: `calc(100% - ${position(summary.max_price)})`, backgroundColor: color }}
                 />
-                <rect
-                  x={x(summary.median_price) - 5}
-                  y={y - 5}
-                  width="10"
-                  height="10"
-                  fill={color}
-                  transform={`rotate(45 ${x(summary.median_price)} ${y})`}
+                <span
+                  className="absolute bottom-[11px] h-[11px] w-[11px] -translate-x-1/2 rotate-45"
+                  style={{ left: position(summary.median_price), backgroundColor: color }}
                 />
                 {rowListings.map((listing) => {
-                  const stackIndex = priceCounts.get(listing.price) ?? 0;
-                  priceCounts.set(listing.price, stackIndex + 1);
+                  const stack = occurrences.get(listing.price) ?? 0;
+                  occurrences.set(listing.price, stack + 1);
                   return (
-                    <circle
+                    <span
                       key={listing.id}
-                      cx={x(listing.price)}
-                      cy={y - 13 - stackIndex * 10}
-                      r="5"
-                      fill={color}
-                      stroke="white"
-                      strokeWidth="1.5"
-                    >
-                      <title>
-                        {summary.complex_name} {listing.building_no ?? ''} · {formatPrice(listing.price)} · {listing.floor_text ?? '층 미입력'}
-                      </title>
-                    </circle>
+                      title={`${summary.complex_name} ${listing.building_no ?? ''} ${formatPrice(listing.price)}`}
+                      className="absolute h-2.5 w-2.5 -translate-x-1/2 rounded-full border border-white shadow-sm"
+                      style={{ left: position(listing.price), bottom: `${29 + stack * 11}px`, backgroundColor: color }}
+                    />
                   );
                 })}
-              </g>
-            );
-          })}
-        </svg>
+              </div>
+              <div className="mt-1 flex justify-between text-[11px] text-slate-500">
+                <span>최저 <strong className="font-semibold text-brand-700">{formatPrice(summary.min_price)}</strong></span>
+                <span>중앙 <strong className="font-semibold text-slate-700">{formatPrice(summary.median_price)}</strong></span>
+                <span>최고 <strong className="font-semibold text-slate-700">{formatPrice(summary.max_price)}</strong></span>
+              </div>
+            </div>
+          );
+        })}
       </div>
     </Card>
   );
