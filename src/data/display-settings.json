@@ -1,6 +1,9 @@
 {
-  "updated_at": "2026-05-24",
-  "complex_colors": {},
+  "updated_at": "2026-05-23",
+  "complex_colors": {
+    "hwaseo-prugio-edu": "#008044",
+    "complex-o5pt65": "#db0000"
+  },
   "area_groups": [
     {
       "id": "area-25-59",
