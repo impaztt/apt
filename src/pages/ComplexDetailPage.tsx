@@ -10,6 +10,7 @@ import { useAppData } from '../shared/data/AppDataContext';
 import { getAreaGroup } from '../shared/utils/area';
 import { formatDate, isStaleDate } from '../shared/utils/date';
 import { formatPrice } from '../shared/utils/price';
+import { DeleteComplexDialog } from '../features/complexes/components/DeleteComplexDialog';
 
 export function ComplexDetailPage() {
   const { complexId } = useParams();
@@ -57,13 +58,16 @@ export function ComplexDetailPage() {
               {complex.legal_dong_code && <span className="rounded-full bg-slate-50 px-3 py-2">법정동 {complex.legal_dong_code}</span>}
             </div>
           </div>
-          <Link to={`/data/input?complexId=${complex.id}`}>
-            <Button variant="secondary">
-              <span className="flex items-center gap-2">
-                <FileJson className="h-4 w-4" /> 이 단지 매물 수정
-              </span>
-            </Button>
-          </Link>
+          <div className="flex items-center gap-4">
+            <Link to={`/data/input?complexId=${complex.id}`}>
+              <Button variant="secondary">
+                <span className="flex items-center gap-2">
+                  <FileJson className="h-4 w-4" /> 이 단지 매물 수정
+                </span>
+              </Button>
+            </Link>
+            <DeleteComplexDialog complex={complex} />
+          </div>
         </div>
       </Card>
 

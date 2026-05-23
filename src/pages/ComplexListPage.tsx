@@ -6,6 +6,7 @@ import { PageHeader } from '../shared/components/PageHeader';
 import { EmptyState, ErrorState, LoadingState } from '../shared/components/States';
 import { useAppData } from '../shared/data/AppDataContext';
 import { formatDate } from '../shared/utils/date';
+import { DeleteComplexDialog } from '../features/complexes/components/DeleteComplexDialog';
 
 export function ComplexListPage() {
   const { complexes, listings, loading, error } = useAppData();
@@ -33,7 +34,7 @@ export function ComplexListPage() {
         <p className="text-sm font-semibold text-brand-700">매물 수정 방법</p>
         <p className="mt-2 text-sm leading-6 text-slate-600">
           아래 단지의 <strong>매물 수정</strong>을 누른 뒤 JSON의 <code className="rounded bg-white px-1.5 py-0.5 text-xs">listings</code>
-          부분을 바꾸고 저장하세요. GitHub 저장과 재배포는 화면에서 처리됩니다.
+          부분을 바꾸고 저장하세요. 단지 전체를 제거할 때는 <strong>단지 삭제</strong>를 누르세요. GitHub 저장과 재배포는 화면에서 처리됩니다.
         </p>
       </Card>
 
@@ -64,7 +65,7 @@ export function ComplexListPage() {
                   <p className="text-xs text-slate-500">
                     매물 {related.length}건 · 최근 확인 {formatDate(latestDate)}
                   </p>
-                  <div className="flex items-center gap-3">
+                  <div className="flex flex-wrap items-center gap-3">
                     <Link
                       to={`/data/input?complexId=${complex.id}`}
                       className="inline-flex items-center gap-1 text-sm font-semibold text-brand-600"
@@ -74,6 +75,7 @@ export function ComplexListPage() {
                     <Link to={`/complexes/${complex.id}`} className="inline-flex items-center gap-1 text-sm font-semibold text-slate-500">
                       상세 <ArrowRight className="h-4 w-4" />
                     </Link>
+                    <DeleteComplexDialog complex={complex} />
                   </div>
                 </div>
               </Card>

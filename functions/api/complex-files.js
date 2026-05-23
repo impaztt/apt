@@ -101,7 +101,7 @@ function githubHeaders(token) {
   };
 }
 
-async function saveComplexFile(context) {
+async function authorize(context) {
   const adminKey = context.request.headers.get('X-Admin-Key') ?? '';
   if (!(await matchesSecret(adminKey, context.env.ADMIN_SAVE_KEY))) {
     return json({ message: '관리자 저장 키가 올바르지 않습니다.' }, 401);
@@ -110,6 +110,22 @@ async function saveComplexFile(context) {
   if (!context.env.GITHUB_TOKEN) {
     return json({ message: 'Cloudflare에 GITHUB_TOKEN Secret이 설정되지 않았습니다.' }, 500);
   }
+  return null;
+}
+
+function repositoryRequest(context, id) {
+  const filePath = `${DATA_DIRECTORY}/${id}.json`;
+  const owner = context.env.GITHUB_OWNER || DEFAULT_OWNER;
+  const repo = context.env.GITHUB_REPO || DEFAULT_REPO;
+  const branch = context.env.GITHUB_BRANCH || DEFAULT_BRANCH;
+  const apiUrl = `https://api.github.com/repos/${encodeURIComponent(owner)}/${encodeURIComponent(repo)}/contents/${filePath}`;
+  const headers = githubHeaders(context.env.GITHUB_TOKEN);
+  return { filePath, branch, apiUrl, headers };
+}
+
+async function saveComplexFile(context) {
+  const unauthorized = await authorize(context);
+  if (unauthorized) return unauthorized;
 
   let data;
   try {
@@ -122,12 +138,7 @@ async function saveComplexFile(context) {
   if (errors.length) return json({ message: errors.join(' ') }, 400);
 
   const id = text(data.id);
-  const filePath = `${DATA_DIRECTORY}/${id}.json`;
-  const owner = context.env.GITHUB_OWNER || DEFAULT_OWNER;
-  const repo = context.env.GITHUB_REPO || DEFAULT_REPO;
-  const branch = context.env.GITHUB_BRANCH || DEFAULT_BRANCH;
-  const apiUrl = `https://api.github.com/repos/${encodeURIComponent(owner)}/${encodeURIComponent(repo)}/contents/${filePath}`;
-  const headers = githubHeaders(context.env.GITHUB_TOKEN);
+  const { filePath, branch, apiUrl, headers } = repositoryRequest(context, id);
   const currentResponse = await fetch(`${apiUrl}?ref=${encodeURIComponent(branch)}`, { headers });
 
   let sha;
@@ -162,9 +173,55 @@ async function saveComplexFile(context) {
   });
 }
 
-export function onRequest(context) {
-  if (context.request.method !== 'POST') {
-    return json({ message: 'POST 요청만 지원합니다.' }, 405);
+async function deleteComplexFile(context) {
+  const unauthorized = await authorize(context);
+  if (unauthorized) return unauthorized;
+
+  let data;
+  try {
+    data = await context.request.json();
+  } catch {
+    return json({ message: '삭제할 단지 정보를 읽을 수 없습니다.' }, 400);
   }
-  return saveComplexFile(context);
+  const id = text(data.id);
+  const name = text(data.name) || id;
+  if (!/^[a-z0-9][a-z0-9-]*$/.test(id)) {
+    return json({ message: '삭제할 단지 id가 올바르지 않습니다.' }, 400);
+  }
+
+  const { filePath, branch, apiUrl, headers } = repositoryRequest(context, id);
+  const currentResponse = await fetch(`${apiUrl}?ref=${encodeURIComponent(branch)}`, { headers });
+  if (currentResponse.status === 404) {
+    return json({ message: '삭제할 단지 JSON 파일을 찾지 못했습니다.' }, 404);
+  }
+  if (!currentResponse.ok) {
+    const failure = await currentResponse.json().catch(() => null);
+    return json({ message: failure?.message ?? '기존 GitHub 파일을 조회하지 못했습니다.' }, 502);
+  }
+  const current = await currentResponse.json();
+  const deleteResponse = await fetch(apiUrl, {
+    method: 'DELETE',
+    headers,
+    body: JSON.stringify({
+      message: `Delete complex data for ${name}`,
+      branch,
+      sha: current.sha,
+    }),
+  });
+  const deleteResult = await deleteResponse.json().catch(() => null);
+  if (!deleteResponse.ok) {
+    return json({ message: deleteResult?.message ?? 'GitHub에서 단지 JSON 파일을 삭제하지 못했습니다.' }, 502);
+  }
+
+  return json({
+    message: `${name} 단지를 삭제했습니다. Cloudflare 재배포 후 목록과 대시보드에서 사라집니다.`,
+    filePath,
+    commitUrl: deleteResult?.commit?.html_url ?? null,
+  });
+}
+
+export function onRequest(context) {
+  if (context.request.method === 'POST') return saveComplexFile(context);
+  if (context.request.method === 'DELETE') return deleteComplexFile(context);
+  return json({ message: 'POST 또는 DELETE 요청만 지원합니다.' }, 405);
 }
