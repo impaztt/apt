@@ -1,7 +1,6 @@
 import { useMemo, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { ArrowLeft, Plus, Trash2 } from 'lucide-react';
-import { deleteListing } from '../features/listings/api';
+import { ArrowLeft, FileJson } from 'lucide-react';
 import { summarizeListings } from '../features/listings/statistics';
 import type { AreaGroup, DealType, FloorGroup } from '../features/listings/types';
 import { Button } from '../shared/components/Button';
@@ -14,7 +13,7 @@ import { formatPrice } from '../shared/utils/price';
 
 export function ComplexDetailPage() {
   const { complexId } = useParams();
-  const { complexes, listings, loading, error, reload } = useAppData();
+  const { complexes, listings, loading, error } = useAppData();
   const [areaFilter, setAreaFilter] = useState<AreaGroup | ''>('');
   const [dealFilter, setDealFilter] = useState<DealType | ''>('매매');
   const [floorFilter, setFloorFilter] = useState<FloorGroup | ''>('');
@@ -34,12 +33,6 @@ export function ComplexDetailPage() {
         .sort((a, b) => (a.price ?? Number.MAX_SAFE_INTEGER) - (b.price ?? Number.MAX_SAFE_INTEGER)),
     [relatedListings, dealFilter, areaFilter, floorFilter, directionFilter, maxPriceEok],
   );
-
-  async function handleDelete(id: string) {
-    if (!window.confirm('이 매물을 삭제하시겠습니까?')) return;
-    await deleteListing(id);
-    await reload();
-  }
 
   if (loading) return <LoadingState />;
   if (error) return <ErrorState message={error} />;
@@ -64,10 +57,10 @@ export function ComplexDetailPage() {
               {complex.legal_dong_code && <span className="rounded-full bg-slate-50 px-3 py-2">법정동 {complex.legal_dong_code}</span>}
             </div>
           </div>
-          <Link to={`/listings/new?complexId=${complex.id}`}>
-            <Button>
+          <Link to="/data/input">
+            <Button variant="secondary">
               <span className="flex items-center gap-2">
-                <Plus className="h-4 w-4" /> 매물 등록
+                <FileJson className="h-4 w-4" /> JSON 교체 안내
               </span>
             </Button>
           </Link>
@@ -171,14 +164,6 @@ export function ComplexDetailPage() {
                       {listing.direction ?? '방향 미입력'} · 확인 {formatDate(listing.verified_date)} · {listing.source ?? '출처 미입력'}
                     </p>
                   </div>
-                  <button
-                    type="button"
-                    aria-label="매물 삭제"
-                    className="h-fit rounded-xl p-2 text-slate-300 hover:bg-red-50 hover:text-red-600"
-                    onClick={() => void handleDelete(listing.id)}
-                  >
-                    <Trash2 className="h-4 w-4" />
-                  </button>
                 </div>
               </Card>
             ))}

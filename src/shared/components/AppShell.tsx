@@ -1,19 +1,17 @@
-import { BarChart3, Building2, ClipboardPlus, Layers3, Scale, Upload } from 'lucide-react';
+import { BarChart3, Building2, FileJson, Layers3, Scale } from 'lucide-react';
 import { NavLink, Outlet } from 'react-router-dom';
-import { isSupabaseConfigured } from '../supabase/client';
 
 const navigation = [
   { to: '/', label: '대시보드', icon: BarChart3, end: true },
   { to: '/complexes', label: '단지', icon: Building2 },
-  { to: '/listings/new', label: '매물 등록', icon: ClipboardPlus },
-  { to: '/listings/bulk', label: '일괄 입력', icon: Upload },
+  { to: '/data/input', label: 'JSON 입력', icon: FileJson },
   { to: '/groups', label: '그룹', icon: Layers3 },
   { to: '/compare', label: '비교', icon: Scale },
 ];
 
 function Navigation({ mobile = false }: { mobile?: boolean }) {
   return (
-    <nav className={mobile ? 'grid grid-cols-6 px-1' : 'space-y-1'}>
+    <nav className={mobile ? 'grid grid-cols-5 px-1' : 'space-y-1'}>
       {navigation.map(({ to, label, icon: Icon, end }) => (
         <NavLink
           key={to}
@@ -43,12 +41,8 @@ export function AppShell() {
         <div className="px-3">
           <p className="text-xs font-semibold text-brand-600">APT PRICE COMPARE</p>
           <p className="mt-2 text-xl font-bold tracking-tight">단지비교랩</p>
-          <span
-            className={`mt-4 inline-flex rounded-full px-2.5 py-1 text-xs font-medium ${
-              isSupabaseConfigured ? 'bg-emerald-50 text-emerald-700' : 'bg-brand-50 text-brand-700'
-            }`}
-          >
-            {isSupabaseConfigured ? 'Supabase 연결됨' : '데모 저장소'}
+          <span className="mt-4 inline-flex rounded-full bg-brand-50 px-2.5 py-1 text-xs font-medium text-brand-700">
+            JSON 파일 데이터
           </span>
         </div>
         <div className="mt-10">
@@ -62,7 +56,7 @@ export function AppShell() {
           <p className="text-sm font-bold">호가 분석 대시보드</p>
         </div>
         <span className="rounded-full bg-brand-50 px-2.5 py-1 text-[11px] font-semibold text-brand-700">
-          {isSupabaseConfigured ? 'LIVE' : 'DEMO'}
+          JSON
         </span>
       </header>
 

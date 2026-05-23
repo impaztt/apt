@@ -25,6 +25,7 @@ export function DashboardPage() {
     .map((membership) => membership.complex_id);
   const summaries = summarizeListings(listings, complexes, areaGroup, complexIds);
   const relevantListings = listings.filter((listing) => complexIds.includes(listing.complex_id));
+  const containsSampleData = relevantListings.some((listing) => listing.source === '샘플 데이터');
   const areaListingCount = summaries.reduce((total, summary) => total + summary.listing_count, 0);
   const lowest = summaries.length ? Math.min(...summaries.map((summary) => summary.min_price)) : null;
   const highest = summaries.length ? Math.max(...summaries.map((summary) => summary.max_price)) : null;
@@ -50,7 +51,7 @@ export function DashboardPage() {
     <div className="space-y-7">
       <PageHeader
         title={activeGroup?.name ?? '단지 비교 대시보드'}
-        description="현재 입력된 매매 호가를 전용면적별로 비교합니다. 호가는 실거래 가격이 아닙니다."
+        description="단지별 JSON 파일에 저장된 매매 호가를 전용면적별로 비교합니다. 호가는 실거래 가격이 아닙니다."
         action={
           <select
             className="field-control mt-0 min-w-[240px]"
@@ -65,6 +66,16 @@ export function DashboardPage() {
           </select>
         }
       />
+
+      {containsSampleData && (
+        <Card className="border border-amber-100 bg-amber-50 shadow-none">
+          <p className="text-sm font-semibold text-amber-800">현재 샘플 JSON 데이터가 표시되고 있습니다.</p>
+          <p className="mt-2 text-sm leading-6 text-amber-700">
+            실제 분석 전 <code className="rounded bg-white px-1.5 py-0.5 text-xs">src/data/complexes/*.json</code> 파일을
+            실제 매물 데이터로 교체해 주세요.
+          </p>
+        </Card>
+      )}
 
       <AreaTabs value={areaGroup} onChange={setAreaGroup} />
 
@@ -126,7 +137,7 @@ export function DashboardPage() {
       ) : (
         <EmptyState
           title={`전용 ${areaGroup}㎡ 매물이 없습니다`}
-          description="매물 등록 또는 JSON 일괄 입력에서 해당 면적의 매매 호가를 추가해 주세요."
+          description="단지 JSON 파일에 해당 면적의 매매 호가를 추가한 뒤 재배포해 주세요."
         />
       )}
     </div>

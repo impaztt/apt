@@ -6,8 +6,6 @@ export interface ComparisonGroup {
   updated_at: string;
 }
 
-export type ComparisonGroupInput = Pick<ComparisonGroup, 'name' | 'description'>;
-
 export interface ComparisonGroupComplex {
   id: string;
   group_id: string;

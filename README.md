@@ -1,16 +1,15 @@
 # 단지비교랩
 
-사용자가 입력한 아파트 매매 호가를 단지와 전용면적별로 비교하는 모바일 우선 React MVP입니다. 실거래가 API 연동은 다음 단계로 남겨 두고, 현재 버전은 수기 입력 및 JSON 일괄 입력 데이터를 중심으로 동작합니다.
+단지별 JSON 파일에 저장된 아파트 매매 호가를 평형별로 비교하는 모바일 우선 React 웹서비스입니다. 데이터베이스나 서버 없이 정적 파일을 빌드에 포함하므로 Cloudflare Pages에서 그대로 배포할 수 있습니다.
 
 ## 포함 기능
 
-- 단지 등록, 수정, 삭제 및 상세 조회
-- 매물 단건 등록, JSON 미리보기/일괄 등록, 삭제
-- 거래유형별 필수값 검사 및 중복 의심 매물 자동 표시
-- 비교 그룹 생성, 단지 추가 및 제거
-- 전용면적 그룹별 최저가, 최고가, 평균가, 중앙값, 매물 수 계산
-- 가격 범위, 평균 호가, 가격 분포 Recharts 차트
-- 모바일 하단 내비게이션과 데스크톱 사이드바 UI
+- 단지별 JSON 파일 자동 수집 및 필수값 검증
+- 대시보드와 단지 상세 조회
+- 비교 그룹별 전용면적 탭 비교
+- 최저가, 최고가, 평균가, 중앙값, 평당가, 매물 수 계산
+- 가격 범위, 평균 호가, 가격 분포 차트
+- JSON 붙여넣기/업로드 검증, 미리보기, 파일 다운로드 화면
 
 ## 실행
 
@@ -19,26 +18,53 @@ npm install
 npm run dev
 ```
 
-환경변수가 없으면 브라우저 `localStorage`에 제공되는 데모 데이터로 즉시 동작합니다. Supabase 프로젝트와 연결하려면 `.env.example`을 기준으로 `.env`를 만들고 값을 입력합니다.
+## 데이터 파일 구조
 
-```env
-VITE_SUPABASE_URL=your-project-url
-VITE_SUPABASE_ANON_KEY=your-anon-key
+단지 하나당 파일 하나를 [src/data/complexes](./src/data/complexes) 폴더에 둡니다. Vite가 폴더의 `.json` 파일을 자동으로 읽으므로 새 단지를 추가할 때 별도 인덱스 파일은 필요하지 않습니다.
+
+```json
+{
+  "id": "hwaseo-prugio-edu",
+  "name": "화서역푸르지오더에듀포레",
+  "region": "수원시 장안구 정자동",
+  "address": "경기도 수원시 장안구 정자동",
+  "built_year": 2009,
+  "household_count": 2571,
+  "brand": "푸르지오",
+  "updated_at": "2026-05-23",
+  "comparison_groups": ["화서역·정자동 대형단지 비교"],
+  "listings": [
+    {
+      "building_no": "108동",
+      "deal_type": "매매",
+      "price": 670000000,
+      "exclusive_area_m2": 59,
+      "floor": 2,
+      "total_floor": 25,
+      "direction": "남동향",
+      "verified_date": "2026-05-23",
+      "source": "네이버부동산"
+    }
+  ]
+}
 ```
 
-## Supabase 설정
+필수 단지 필드는 `id`, `name`, `updated_at`, `comparison_groups`, `listings`입니다. 매매 매물의 필수 필드는 `deal_type`, `price`, `exclusive_area_m2`입니다.
 
-1. Supabase SQL Editor에서 [001_initial_schema.sql](./supabase/migrations/001_initial_schema.sql)을 실행합니다.
-2. 프로젝트 루트의 `.env`에 URL과 anon key를 설정합니다.
-3. 앱을 재시작하면 좌측 배지 또는 모바일 헤더가 `Supabase 연결됨`/`LIVE`로 표시됩니다.
+같은 그룹에서 비교할 단지들은 각 파일의 `comparison_groups`에 동일한 그룹명을 넣습니다. 한 단지가 여러 그룹에 포함될 수도 있습니다.
 
-마이그레이션에는 `apartment_actual_transactions`와 실거래 요약 뷰도 2차 개발을 위해 준비되어 있습니다. 현재 앱은 `apartment_complexes`, `apartment_listings`, `comparison_groups`, `comparison_group_complexes`를 사용합니다.
+## 실제 데이터 반영 방법
 
-## 배포
+1. 웹의 `JSON 입력` 메뉴에서 단지 전체 JSON을 붙여넣거나 파일을 불러옵니다.
+2. `JSON 검증 및 미리보기`로 형식과 가격 계산 결과를 확인합니다.
+3. `JSON 파일 다운로드`로 파일을 생성합니다.
+4. 신규 단지는 다운로드한 파일을 `src/data/complexes/`에 추가합니다.
+5. 기존 단지는 동일한 `id`의 JSON 파일 내용을 교체합니다.
+6. GitHub에 푸시하면 Cloudflare Pages가 다시 빌드하고 화면 데이터가 갱신됩니다.
 
-`npm run build`의 결과물은 `dist/`에 생성됩니다. Vercel 배포 시 상세 경로 새로고침을 위한 SPA rewrite가 [vercel.json](./vercel.json)에 포함되어 있습니다. Cloudflare Pages에서는 Vite 빌드 명령과 `dist` 출력 디렉터리를 지정하면 됩니다.
+정적 웹페이지 자체는 Git 저장소의 파일을 직접 쓰거나 전체 사용자에게 즉시 반영할 수 없습니다. 별도 DB 없이 운영하는 경우 파일 변경과 재배포가 데이터 저장 절차입니다.
 
-Cloudflare Pages 설정값:
+## Cloudflare Pages
 
 ```text
 Framework preset: React (Vite)
@@ -47,39 +73,12 @@ Build output directory: dist
 Root directory: /
 ```
 
-Vite 8은 Node.js `^20.19.0 || >=22.12.0`을 요구합니다. Cloudflare Pages 빌드에서도 안정적으로 같은 범위를 사용하도록 프로젝트 루트의 `.node-version`을 `22.16.0`으로 고정했습니다.
-
-## 보안 주의
-
-초기 MVP SQL은 로그인 없이 데이터를 입력할 수 있도록 anon 역할에 CRUD 정책을 허용합니다. 외부 공개 전에는 Supabase Auth 기반 관리자 권한을 적용하고 공개 쓰기 정책을 교체해야 합니다. 공공데이터 API 키도 추후 Edge Function 또는 서버 배치에만 보관해야 합니다.
-
-## JSON 입력 형식
-
-등록된 단지의 `complex_name` 또는 `complex_id`를 포함한 배열을 입력합니다.
-
-```json
-[
-  {
-    "complex_name": "화서역푸르지오더에듀포레",
-    "building_no": "108동",
-    "deal_type": "매매",
-    "price": 670000000,
-    "exclusive_area_m2": 59,
-    "floor": 2,
-    "total_floor": 25,
-    "direction": "남동향",
-    "verified_date": "2026-05-23",
-    "source": "네이버부동산"
-  }
-]
-```
-
-필수값은 `complex_name`/`complex_id`, `deal_type`, `price`, `exclusive_area_m2`입니다. 같은 단지, 동, 전용면적, 가격, 층/층구분, 방향에 유사 확인일이 겹치면 저장 시 `중복 의심`으로 표시합니다.
+Vite 8은 Node.js `^20.19.0 || >=22.12.0`을 요구합니다. 프로젝트 루트의 `.node-version`은 Cloudflare 빌드 Node를 `22.16.0`으로 고정합니다. 환경변수는 필요하지 않습니다.
 
 ## 주요 경로
 
-- `src/pages`: 화면 단위 컴포넌트
-- `src/features/*/api.ts`: Supabase 또는 데모 저장소 CRUD
-- `src/features/listings/statistics.ts`: 평형 요약 계산
-- `src/shared/data/AppDataContext.tsx`: 화면 공통 데이터 갱신
-- `supabase/migrations`: 데이터베이스 스키마와 뷰
+- `src/data/complexes/*.json`: 실제 단지 및 매물 데이터 원본
+- `src/shared/data/staticData.ts`: JSON 파일 로딩과 검증
+- `src/pages/ComplexDataInputPage.tsx`: JSON 파일 생성/미리보기
+- `src/pages/DashboardPage.tsx`: 메인 대시보드
+- `src/pages/ComparisonPage.tsx`: 평형별 비교 화면

@@ -1,0 +1,49 @@
+{
+  "id": "cheoncheon-prugio",
+  "name": "천천푸르지오",
+  "region": "수원시 장안구 천천동",
+  "address": "경기도 수원시 장안구 천천동",
+  "legal_dong_code": "41111",
+  "built_year": 2009,
+  "household_count": 2571,
+  "brand": "푸르지오",
+  "builder": "대우건설",
+  "memo": "샘플 JSON 데이터입니다. 실제 매물로 교체해 주세요.",
+  "updated_at": "2026-05-23",
+  "comparison_groups": ["화서역·정자동 대형단지 비교"],
+  "listings": [
+    {
+      "building_no": "401동",
+      "deal_type": "매매",
+      "price": 770000000,
+      "exclusive_area_m2": 84,
+      "floor": 4,
+      "total_floor": 25,
+      "direction": "남동향",
+      "verified_date": "2026-05-23",
+      "source": "샘플 데이터"
+    },
+    {
+      "building_no": "407동",
+      "deal_type": "매매",
+      "price": 815000000,
+      "exclusive_area_m2": 84,
+      "floor": 10,
+      "total_floor": 25,
+      "direction": "남향",
+      "verified_date": "2026-05-23",
+      "source": "샘플 데이터"
+    },
+    {
+      "building_no": "410동",
+      "deal_type": "매매",
+      "price": 860000000,
+      "exclusive_area_m2": 84,
+      "floor": 19,
+      "total_floor": 25,
+      "direction": "남서향",
+      "verified_date": "2026-05-23",
+      "source": "샘플 데이터"
+    }
+  ]
+}

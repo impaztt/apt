@@ -1,0 +1,82 @@
+{
+  "id": "hwaseo-prugio-edu",
+  "name": "화서역푸르지오더에듀포레",
+  "region": "수원시 장안구 정자동",
+  "address": "경기도 수원시 장안구 정자동",
+  "legal_dong_code": "41111",
+  "built_year": 2009,
+  "household_count": 2571,
+  "brand": "푸르지오",
+  "builder": "대우건설",
+  "memo": "샘플 JSON 데이터입니다. 실제 매물로 교체해 주세요.",
+  "updated_at": "2026-05-23",
+  "comparison_groups": ["화서역·정자동 대형단지 비교"],
+  "listings": [
+    {
+      "building_no": "108동",
+      "deal_type": "매매",
+      "price": 670000000,
+      "exclusive_area_m2": 59,
+      "floor": 2,
+      "total_floor": 25,
+      "direction": "남동향",
+      "verified_date": "2026-05-23",
+      "source": "샘플 데이터"
+    },
+    {
+      "building_no": "110동",
+      "deal_type": "매매",
+      "price": 710000000,
+      "exclusive_area_m2": 59,
+      "floor": 14,
+      "total_floor": 25,
+      "direction": "남향",
+      "verified_date": "2026-05-23",
+      "source": "샘플 데이터"
+    },
+    {
+      "building_no": "112동",
+      "deal_type": "매매",
+      "price": 780000000,
+      "exclusive_area_m2": 84,
+      "floor": 4,
+      "total_floor": 25,
+      "direction": "남동향",
+      "verified_date": "2026-05-23",
+      "source": "샘플 데이터"
+    },
+    {
+      "building_no": "113동",
+      "deal_type": "매매",
+      "price": 830000000,
+      "exclusive_area_m2": 84,
+      "floor": 12,
+      "total_floor": 25,
+      "direction": "남향",
+      "verified_date": "2026-05-23",
+      "source": "샘플 데이터"
+    },
+    {
+      "building_no": "115동",
+      "deal_type": "매매",
+      "price": 880000000,
+      "exclusive_area_m2": 84,
+      "floor": 21,
+      "total_floor": 25,
+      "direction": "남서향",
+      "verified_date": "2026-05-23",
+      "source": "샘플 데이터"
+    },
+    {
+      "building_no": "117동",
+      "deal_type": "매매",
+      "price": 1050000000,
+      "exclusive_area_m2": 113,
+      "floor": 11,
+      "total_floor": 25,
+      "direction": "남향",
+      "verified_date": "2026-05-23",
+      "source": "샘플 데이터"
+    }
+  ]
+}

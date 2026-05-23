@@ -15,8 +15,7 @@ export interface ApartmentComplex {
   school_note: string | null;
   infrastructure_note: string | null;
   memo: string | null;
+  data_file: string | null;
   created_at: string;
   updated_at: string;
 }
-
-export type ComplexInput = Omit<ApartmentComplex, 'id' | 'created_at' | 'updated_at'>;
