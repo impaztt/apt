@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
-import { ListingCountChart } from '../features/comparisons/components/ListingCountChart';
-import { ListingDistributionPlot } from '../features/comparisons/components/ListingDistributionPlot';
-import { PriceBucketChart } from '../features/comparisons/components/PriceBucketChart';
+import { ListingDotsDisclosure } from '../features/comparisons/components/ListingDotsDisclosure';
+import { PriceDistributionMatrix } from '../features/comparisons/components/PriceDistributionMatrix';
+import { PriceRangeSummary } from '../features/comparisons/components/PriceRangeSummary';
 import { getRelativeRate, summarizeListings } from '../features/listings/statistics';
 import type { AreaSelection } from '../features/listings/types';
 import { AreaTabs } from '../shared/components/AreaTabs';
@@ -45,7 +45,7 @@ export function ComparisonPage() {
     <div className="space-y-5 sm:space-y-7">
       <PageHeader
         title="단지별 비교"
-        description="평형을 고르면 실제 매물 분포와 표본 수를 중심으로 단지를 비교합니다."
+        description="평형을 고르면 가격 구간별 매물 건수와 호가 범위를 단지별로 비교합니다."
         action={
           <select className="field-control mt-0 w-full sm:min-w-[240px]" value={group?.id ?? ''} onChange={(event) => setGroupId(event.target.value)}>
             {groups.map((item) => (
@@ -66,13 +66,14 @@ export function ComparisonPage() {
             <p className="mt-2 text-xs leading-5 text-slate-500">평형마다 가격 축이 다르므로 각 카드 안에서 단지별 분포를 비교하세요. 동일 평형끼리의 비교가 기준입니다.</p>
           </Card>
           {areaOptions.map((option) => (
-            <ListingDistributionPlot
+            <PriceDistributionMatrix
               key={option.key}
               listings={listings}
               complexes={complexes}
               complexIds={complexIds}
               areaGroup={option.key}
               title={option.label}
+              trendsLink={`/trends?area=${encodeURIComponent(option.key)}`}
             />
           ))}
         </section>
@@ -93,18 +94,17 @@ export function ComparisonPage() {
             </div>
           </Card>
 
-          <ListingDistributionPlot
+          <PriceDistributionMatrix
             listings={listings}
             complexes={complexes}
             complexIds={complexIds}
             areaGroup={areaGroup}
-            title={`${scopeLabel} 호가 분포`}
+            title={`${scopeLabel} 가격대별 매물 분포`}
+            trendsLink={`/trends?area=${encodeURIComponent(areaGroup)}`}
           />
 
-          <div className="grid gap-4 xl:grid-cols-2">
-            <PriceBucketChart listings={listings} complexes={complexes} complexIds={complexIds} areaGroup={areaGroup} />
-            <ListingCountChart summaries={summaries} complexes={complexes} />
-          </div>
+          <PriceRangeSummary summaries={summaries} />
+          <ListingDotsDisclosure listings={listings} complexes={complexes} complexIds={complexIds} areaGroup={areaGroup} />
 
           <section>
             <h2 className="mb-3 text-base font-bold">단지별 중심 가격</h2>

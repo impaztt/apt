@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { HistoryDistributionPlot } from '../features/comparisons/components/HistoryDistributionPlot';
 import { TrendLineChart } from '../features/comparisons/components/TrendLineChart';
 import { compareLatestSnapshots, summarizeSnapshotHistory } from '../features/listings/statistics';
@@ -15,8 +16,10 @@ import { formatPrice } from '../shared/utils/price';
 
 export function TrendPage() {
   const { complexes, snapshots, groups, memberships, loading, error } = useAppData();
+  const [searchParams] = useSearchParams();
+  const requestedArea = searchParams.get('area');
   const [groupId, setGroupId] = useState('');
-  const [areaGroup, setAreaGroup] = useState<AreaSelection>('all');
+  const [areaGroup, setAreaGroup] = useState<AreaSelection>(requestedArea ?? 'all');
   const [complexId, setComplexId] = useState('');
   const group = groups.find((item) => item.id === groupId) ?? groups[0];
   const complexIds = memberships
@@ -31,6 +34,12 @@ export function TrendPage() {
   const selectedComplexId = complexIds.includes(complexId) ? complexId : complexIds[0] ?? '';
   const selectedComplex = complexes.find((complex) => complex.id === selectedComplexId);
   const uniqueDates = [...new Set(groupSnapshots.map((snapshot) => snapshot.captured_date))].sort();
+
+  useEffect(() => {
+    if (requestedArea && areaOptions.some((option) => option.key === requestedArea)) {
+      setAreaGroup(requestedArea);
+    }
+  }, [areaOptions, requestedArea]);
 
   useEffect(() => {
     if (areaOptions.length && (areaGroup === 'all' || !areaOptions.some((option) => option.key === areaGroup))) {
@@ -77,25 +86,21 @@ export function TrendPage() {
 
           {areaGroup !== 'all' && points.length ? (
             <>
-              <div className="grid gap-4 xl:grid-cols-2">
-                <TrendLineChart points={points} complexIds={complexIds} metric="median_price" title="중앙값 호가 변화" />
-                <TrendLineChart points={points} complexIds={complexIds} metric="min_price" title="최저 호가 변화" />
-                <TrendLineChart points={points} complexIds={complexIds} metric="listing_count" title="매물 수 변화" />
-                <Card>
-                  <h2 className="text-base font-semibold">분포 이동 확인 단지</h2>
-                  <p className="mt-1 text-xs text-slate-400">아래 점 분포 그래프에서 날짜별 변화를 자세히 볼 단지를 선택합니다.</p>
-                  <select className="field-control mt-5" value={selectedComplexId} onChange={(event) => setComplexId(event.target.value)}>
+              <Card className="p-4 shadow-none sm:p-6">
+                <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                  <div>
+                    <h2 className="text-base font-semibold">가격대 분포 변화 확인 단지</h2>
+                    <p className="mt-1 text-xs text-slate-400">저가 또는 고가 구간의 매물 수가 날짜별로 어떻게 달라지는지 확인합니다.</p>
+                  </div>
+                  <select className="field-control mt-0 sm:max-w-[280px]" value={selectedComplexId} onChange={(event) => setComplexId(event.target.value)}>
                     {complexIds.map((id) => (
                       <option key={id} value={id}>
                         {complexes.find((complex) => complex.id === id)?.name ?? id}
                       </option>
                     ))}
                   </select>
-                  <p className="mt-5 rounded-2xl bg-slate-50 px-4 py-4 text-sm leading-6 text-slate-500">
-                    신규·사라진 매물과 가격 변경 후보는 같은 동, 평형, 층, 방향의 스냅샷 변화를 기준으로 이후 상세 추적에 활용할 수 있습니다.
-                  </p>
-                </Card>
-              </div>
+                </div>
+              </Card>
               {selectedComplex && (
                 <HistoryDistributionPlot
                   snapshots={groupSnapshots}
@@ -104,6 +109,11 @@ export function TrendPage() {
                   complexName={selectedComplex.name}
                 />
               )}
+              <div className="grid gap-4 xl:grid-cols-2">
+                <TrendLineChart points={points} complexIds={complexIds} metric="median_price" title="중앙값 호가 변화" />
+                <TrendLineChart points={points} complexIds={complexIds} metric="min_price" title="최저 호가 변화" />
+                <TrendLineChart points={points} complexIds={complexIds} metric="listing_count" title="매물 수 변화" />
+              </div>
               <section>
                 <h2 className="mb-4 text-lg font-bold">최근 수집일 대비 매물 변화 후보</h2>
                 {changes.length ? (
