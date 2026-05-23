@@ -1,42 +1,42 @@
 {
   "updated_at": "2026-05-23",
   "complex_colors": {
-    "hwaseo-prugio-edu": "#008044",
-    "complex-o5pt65": "#db0000"
+    "hwaseo-prugio-edu": "#8b5cf6",
+    "complex-o5pt65": "#3182f6"
   },
   "area_groups": [
     {
       "id": "area-25-59",
       "source_area_pyeong_min": 24,
-      "source_area_pyeong_max": 26,
+      "source_area_pyeong_max": 27,
       "display_area_pyeong": 25,
       "exclusive_area_m2": 59
     },
     {
       "id": "area-33-84",
       "source_area_pyeong_min": 32,
-      "source_area_pyeong_max": 34,
+      "source_area_pyeong_max": 36,
       "display_area_pyeong": 33,
       "exclusive_area_m2": 84
     },
     {
       "id": "area-42-113",
       "source_area_pyeong_min": 41,
-      "source_area_pyeong_max": 43,
+      "source_area_pyeong_max": 44,
       "display_area_pyeong": 42,
       "exclusive_area_m2": 113
     },
     {
       "id": "area-48-129",
-      "source_area_pyeong_min": 47,
+      "source_area_pyeong_min": 45,
       "source_area_pyeong_max": 49,
       "display_area_pyeong": 48,
       "exclusive_area_m2": 129
     },
     {
       "id": "area-55-148",
-      "source_area_pyeong_min": 54,
-      "source_area_pyeong_max": 56,
+      "source_area_pyeong_min": 52,
+      "source_area_pyeong_max": 58,
       "display_area_pyeong": 55,
       "exclusive_area_m2": 148
     }
