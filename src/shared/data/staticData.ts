@@ -333,16 +333,19 @@ export function loadStaticDataset(): StaticDataset {
   }
 
   const snapshots = parsedFiles.flatMap((file) => {
-    const values = snapshotsByComplex.get(file.complex.id);
-    if (values?.length) return values.sort((a, b) => a.captured_date.localeCompare(b.captured_date));
     const fallbackDate = file.complex.updated_at.slice(0, 10);
-    return [{
-      id: `${file.complex.id}:${fallbackDate}`,
-      complex_id: file.complex.id,
-      complex_name: file.complex.name,
-      captured_date: fallbackDate,
-      listings: file.listings,
-    }];
+    const values = new Map<string, ListingSnapshot>();
+    if (file.listings.length) {
+      values.set(fallbackDate, {
+        id: `${file.complex.id}:${fallbackDate}`,
+        complex_id: file.complex.id,
+        complex_name: file.complex.name,
+        captured_date: fallbackDate,
+        listings: file.listings,
+      });
+    }
+    snapshotsByComplex.get(file.complex.id)?.forEach((snapshot) => values.set(snapshot.captured_date, snapshot));
+    return [...values.values()].sort((a, b) => a.captured_date.localeCompare(b.captured_date));
   });
   const latestSnapshots = new Map<string, ListingSnapshot>();
   snapshots.forEach((snapshot) => {
