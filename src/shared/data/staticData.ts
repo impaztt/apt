@@ -99,7 +99,8 @@ function dataFileName(pathOrName: string, id: string): string {
 function koreanPriceText(value: unknown): number | null {
   const text = optionalText(value);
   if (!text) return null;
-  const cleaned = text.replace(/[,\s원]/g, '');
+  const lowerBoundText = text.split(/\s*(?:~|〜|∼|–|—|-)\s*/)[0]?.trim() ?? text;
+  const cleaned = lowerBoundText.replace(/[,\s원]/g, '');
   if (cleaned.includes('/')) return null;
 
   const eokMatch = cleaned.match(/^(\d+(?:\.\d+)?)억(.*)$/);

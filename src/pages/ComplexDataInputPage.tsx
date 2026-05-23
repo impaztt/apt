@@ -244,7 +244,7 @@ export function ComplexDataInputPage() {
         {requestedComplexId ? (
           <ol className="mt-3 space-y-2 text-sm leading-6 text-slate-600">
             <li>1. 아래 내용을 전체 선택한 뒤, 정리한 <code className="rounded bg-white px-1.5 py-0.5 text-xs">complex_name / items</code> JSON을 그대로 붙여넣습니다.</li>
-            <li>2. <code className="rounded bg-white px-1.5 py-0.5 text-xs">price_text</code>, <code className="rounded bg-white px-1.5 py-0.5 text-xs">supply_area_pyeong</code>, 날짜와 층 정보는 저장 형식으로 자동 변환됩니다.</li>
+            <li>2. <code className="rounded bg-white px-1.5 py-0.5 text-xs">price_text</code>, <code className="rounded bg-white px-1.5 py-0.5 text-xs">supply_area_pyeong</code>, 날짜와 층 정보는 자동 변환됩니다. 가격 범위는 낮은 금액 기준으로 저장됩니다.</li>
             <li>3. <strong>JSON 검증 및 미리보기</strong>로 평형별 매매 가격이 맞는지 확인합니다.</li>
             <li>4. 수집 기준일을 확인하고 관리자 저장 키를 입력한 뒤 <strong>오늘 데이터 저장</strong>을 누릅니다.</li>
             <li>5. 재배포 후 단지 상세와 대시보드에서 변경 내용을 확인합니다.</li>
