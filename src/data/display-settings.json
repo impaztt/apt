@@ -1,8 +1,8 @@
 {
   "updated_at": "2026-05-23",
   "complex_colors": {
-    "hwaseo-prugio-edu": "#007a2d",
-    "complex-o5pt65": "#ff0000"
+    "hwaseo-prugio-edu": "#1f8f00",
+    "complex-o5pt65": "#d60000"
   },
   "area_groups": [
     {
@@ -15,7 +15,7 @@
     {
       "id": "area-33-84",
       "source_area_pyeong_min": 32,
-      "source_area_pyeong_max": 36,
+      "source_area_pyeong_max": 37,
       "display_area_pyeong": 33,
       "exclusive_area_m2": 84
     },
