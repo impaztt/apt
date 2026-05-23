@@ -82,17 +82,22 @@ export function DashboardPage() {
                   <p className="mt-1 text-sm text-slate-500">셀 색과 건수로 어느 가격대에 매물이 몰리는지 확인하세요.</p>
                 </div>
               </div>
-              {areaOptions.map((option) => (
-                <PriceDistributionMatrix
-                  key={option.key}
-                  listings={listings}
-                  complexes={complexes}
-                  complexIds={complexIds}
-                  areaGroup={option.key}
-                  title={option.label}
-                  trendsLink={`/trends?area=${encodeURIComponent(option.key)}`}
-                />
-              ))}
+              {areaOptions.map((option) => {
+                const areaSummaries = summarizeListings(listings, complexes, option.key, complexIds);
+                return (
+                  <div key={option.key} className="space-y-3">
+                    <PriceDistributionMatrix
+                      listings={listings}
+                      complexes={complexes}
+                      complexIds={complexIds}
+                      areaGroup={option.key}
+                      title={option.label}
+                      trendsLink={`/trends?area=${encodeURIComponent(option.key)}`}
+                    />
+                    <PriceRangeSummary summaries={areaSummaries} title={`${option.label} 단지별 호가 범위`} />
+                  </div>
+                );
+              })}
             </section>
           ) : (
             <>
