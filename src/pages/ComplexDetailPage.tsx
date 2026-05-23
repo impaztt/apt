@@ -7,7 +7,7 @@ import { Button } from '../shared/components/Button';
 import { Card } from '../shared/components/Card';
 import { EmptyState, ErrorState, LoadingState } from '../shared/components/States';
 import { useAppData } from '../shared/data/AppDataContext';
-import { formatAreaGroup, getAreaGroup } from '../shared/utils/area';
+import { getAreaGroup } from '../shared/utils/area';
 import { formatDate, isStaleDate } from '../shared/utils/date';
 import { formatPrice } from '../shared/utils/price';
 
@@ -26,7 +26,7 @@ export function ComplexDetailPage() {
     () =>
       relatedListings
         .filter((listing) => !dealFilter || listing.deal_type === dealFilter)
-        .filter((listing) => !areaFilter || getAreaGroup(listing.exclusive_area_m2) === areaFilter)
+        .filter((listing) => !areaFilter || getAreaGroup(listing) === areaFilter)
         .filter((listing) => !floorFilter || listing.floor_group === floorFilter)
         .filter((listing) => !directionFilter.trim() || (listing.direction ?? '').includes(directionFilter.trim()))
         .filter((listing) => !maxPriceEok || (listing.price ?? listing.deposit ?? 0) <= Number(maxPriceEok) * 100_000_000)
@@ -73,7 +73,7 @@ export function ComplexDetailPage() {
           <div className="flex gap-3 overflow-x-auto">
             {summaries.map((summary) => (
               <Card key={summary.area_group} className="min-w-[238px]">
-                <p className="text-sm font-semibold text-slate-500">{formatAreaGroup(summary.area_group)}</p>
+                <p className="text-sm font-semibold text-slate-500">{summary.area_label}</p>
                 <p className="metric-number mt-4 text-xl font-bold">{formatPrice(summary.avg_price)}</p>
                 <p className="mt-3 text-xs text-slate-500">
                   {formatPrice(summary.min_price)} ~ {formatPrice(summary.max_price)}
@@ -109,7 +109,7 @@ export function ComplexDetailPage() {
               <option value="">전체 평형</option>
               {summaries.map((summary) => (
                 <option key={summary.area_group} value={summary.area_group}>
-                  {formatAreaGroup(summary.area_group)}
+                  {summary.area_label}
                 </option>
               ))}
             </select>
@@ -158,7 +158,8 @@ export function ComplexDetailPage() {
                     </div>
                     <p className="metric-number mt-4 text-2xl font-bold">{formatPrice(listing.price ?? listing.deposit)}</p>
                     <p className="mt-3 text-sm text-slate-500">
-                      {listing.building_no ?? '-'} · 전용 {listing.exclusive_area_m2}㎡ · {listing.floor_text ?? listing.floor_group ?? '-'}
+                      {listing.building_no ?? '-'} · {listing.area_pyeong}평형 (전용 {listing.exclusive_area_pyeong}평) ·{' '}
+                      {listing.floor_text ?? listing.floor_group ?? '-'}
                     </p>
                     <p className="mt-2 text-xs text-slate-400">
                       {listing.direction ?? '방향 미입력'} · 확인 {formatDate(listing.verified_date)} · {listing.source ?? '출처 미입력'}

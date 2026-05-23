@@ -1,6 +1,7 @@
 export type DealType = '매매' | '전세' | '월세';
 export type FloorGroup = '저층' | '중층' | '고층' | null;
-export type AreaGroup = '59' | '74' | '84' | '99' | '113' | '129' | '148' | '기타';
+export type AreaGroup = string;
+export type AreaSelection = 'all' | AreaGroup;
 
 export interface ApartmentListing {
   id: string;
@@ -11,7 +12,9 @@ export interface ApartmentListing {
   deposit: number | null;
   monthly_rent: number | null;
   supply_area_m2: number | null;
-  exclusive_area_m2: number;
+  exclusive_area_m2: number | null;
+  area_pyeong: number;
+  exclusive_area_pyeong: number;
   area_type: string | null;
   floor_text: string | null;
   floor: number | null;
@@ -37,12 +40,14 @@ export interface ListingAreaSummary {
   complex_id: string;
   complex_name: string;
   area_group: AreaGroup;
+  area_pyeong: number;
+  exclusive_area_pyeong: number;
+  area_label: string;
   listing_count: number;
   min_price: number;
   max_price: number;
   avg_price: number;
   median_price: number;
-  price_per_m2: number;
   price_per_pyeong: number;
   latest_verified_date: string | null;
   min_listing: ApartmentListing;

@@ -1,18 +1,38 @@
-import type { AreaGroup } from '../../features/listings/types';
+import type { ApartmentListing, AreaGroup } from '../../features/listings/types';
 
-export const AREA_GROUPS: AreaGroup[] = ['59', '74', '84', '99', '113', '129', '148'];
+export const ALL_AREAS = 'all' as const;
 
-export function getAreaGroup(exclusiveArea: number): AreaGroup {
-  if (exclusiveArea >= 55 && exclusiveArea < 65) return '59';
-  if (exclusiveArea >= 70 && exclusiveArea < 80) return '74';
-  if (exclusiveArea >= 80 && exclusiveArea < 90) return '84';
-  if (exclusiveArea >= 95 && exclusiveArea < 105) return '99';
-  if (exclusiveArea >= 108 && exclusiveArea < 118) return '113';
-  if (exclusiveArea >= 124 && exclusiveArea < 134) return '129';
-  if (exclusiveArea >= 143 && exclusiveArea < 153) return '148';
-  return '기타';
+export interface AreaOption {
+  key: AreaGroup;
+  areaPyeong: number;
+  exclusiveAreaPyeong: number;
+  label: string;
 }
 
-export function formatAreaGroup(areaGroup: AreaGroup): string {
-  return areaGroup === '기타' ? areaGroup : `전용 ${areaGroup}㎡`;
+export function getAreaGroup(listing: Pick<ApartmentListing, 'area_pyeong' | 'exclusive_area_pyeong'>): AreaGroup {
+  return `${listing.area_pyeong}|${listing.exclusive_area_pyeong}`;
+}
+
+export function formatAreaLabel(areaPyeong: number, exclusiveAreaPyeong: number): string {
+  return `${areaPyeong}평형 (전용 ${exclusiveAreaPyeong}평)`;
+}
+
+export function getAreaOption(listing: Pick<ApartmentListing, 'area_pyeong' | 'exclusive_area_pyeong'>): AreaOption {
+  return {
+    key: getAreaGroup(listing),
+    areaPyeong: listing.area_pyeong,
+    exclusiveAreaPyeong: listing.exclusive_area_pyeong,
+    label: formatAreaLabel(listing.area_pyeong, listing.exclusive_area_pyeong),
+  };
+}
+
+export function getAreaOptions(listings: ApartmentListing[]): AreaOption[] {
+  const options = new Map<AreaGroup, AreaOption>();
+  listings.forEach((listing) => {
+    const option = getAreaOption(listing);
+    options.set(option.key, option);
+  });
+  return [...options.values()].sort(
+    (a, b) => a.areaPyeong - b.areaPyeong || a.exclusiveAreaPyeong - b.exclusiveAreaPyeong,
+  );
 }

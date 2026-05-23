@@ -4,7 +4,8 @@ export function validateListingInput(input: Partial<ListingInput>): string[] {
   const errors: string[] = [];
   if (!input.complex_id) errors.push('단지를 선택해 주세요.');
   if (!input.deal_type) errors.push('거래 유형을 선택해 주세요.');
-  if (!input.exclusive_area_m2 || input.exclusive_area_m2 <= 0) errors.push('전용면적은 0보다 커야 합니다.');
+  if (!input.area_pyeong || input.area_pyeong <= 0) errors.push('평형(area_pyeong)은 0보다 커야 합니다.');
+  if (!input.exclusive_area_pyeong || input.exclusive_area_pyeong <= 0) errors.push('전용평수(exclusive_area_pyeong)는 0보다 커야 합니다.');
 
   if (input.deal_type === '매매' && (!input.price || input.price <= 0)) {
     errors.push('매매 가격은 0보다 커야 합니다.');
@@ -36,7 +37,8 @@ export function isPossibleDuplicate(input: ListingInput, existing: ApartmentList
     return (
       listing.complex_id === input.complex_id &&
       listing.building_no === input.building_no &&
-      listing.exclusive_area_m2 === input.exclusive_area_m2 &&
+      listing.area_pyeong === input.area_pyeong &&
+      listing.exclusive_area_pyeong === input.exclusive_area_pyeong &&
       listing.price === input.price &&
       floorMatches &&
       listing.direction === input.direction &&

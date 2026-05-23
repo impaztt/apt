@@ -1,5 +1,5 @@
 import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
-import type { ApartmentListing, AreaGroup } from '../../listings/types';
+import type { ApartmentListing, AreaSelection } from '../../listings/types';
 import { getAreaGroup } from '../../../shared/utils/area';
 import { Card } from '../../../shared/components/Card';
 
@@ -19,14 +19,14 @@ export function DistributionChart({
 }: {
   listings: ApartmentListing[];
   complexIds: string[];
-  areaGroup: AreaGroup;
+  areaGroup: AreaSelection;
 }) {
   const relevantListings = listings.filter(
     (listing) =>
       listing.deal_type === '매매' &&
       listing.price !== null &&
       complexIds.includes(listing.complex_id) &&
-      getAreaGroup(listing.exclusive_area_m2) === areaGroup,
+      (areaGroup === 'all' || getAreaGroup(listing) === areaGroup),
   );
   const data = buckets.map((bucket) => ({
     name: bucket.label,
@@ -35,7 +35,7 @@ export function DistributionChart({
 
   return (
     <Card>
-      <h2 className="text-base font-semibold">매물 가격 분포</h2>
+      <h2 className="text-base font-semibold">{areaGroup === 'all' ? '전체 평형 가격 분포' : '매물 가격 분포'}</h2>
       <div className="mt-5 h-60">
         <ResponsiveContainer width="100%" height="100%">
           <BarChart data={data} margin={{ left: -24, right: 6 }}>

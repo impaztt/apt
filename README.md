@@ -6,7 +6,7 @@
 
 - 단지별 JSON 파일 자동 수집 및 필수값 검증
 - 대시보드와 단지 상세 조회
-- 비교 그룹별 전용면적 탭 비교
+- 비교 그룹별 `전체` / 평형 탭 비교
 - 최저가, 최고가, 평균가, 중앙값, 평당가, 매물 수 계산
 - 가격 범위, 평균 호가, 가격 분포 차트
 - JSON 붙여넣기/업로드 검증, 미리보기, 파일 다운로드 화면
@@ -38,7 +38,8 @@ npm run dev
       "building_no": "108동",
       "deal_type": "매매",
       "price": 670000000,
-      "exclusive_area_m2": 59,
+      "area_pyeong": 33,
+      "exclusive_area_pyeong": 25,
       "floor": 2,
       "total_floor": 25,
       "direction": "남동향",
@@ -49,7 +50,17 @@ npm run dev
 }
 ```
 
-필수 단지 필드는 `id`, `name`, `updated_at`, `comparison_groups`, `listings`입니다. 매매 매물의 필수 필드는 `deal_type`, `price`, `exclusive_area_m2`입니다.
+필수 단지 필드는 `id`, `name`, `updated_at`, `comparison_groups`, `listings`입니다. 매매 매물의 필수 필드는 `deal_type`, `price`, `area_pyeong`, `exclusive_area_pyeong`입니다.
+
+면적 표기는 입력된 평형 데이터를 그대로 기준으로 합니다.
+
+```text
+area_pyeong: 33
+exclusive_area_pyeong: 25
+화면 표시: 33평형 (전용 25평)
+```
+
+대시보드의 `전체` 탭에서는 등록된 모든 평형을 평형별로 나눠 각 단지의 가격 범위를 함께 보여줍니다. 특정 평형 탭에서는 같은 평형만 대상으로 최저가, 평균가와 단지 간 비교를 표시합니다.
 
 같은 그룹에서 비교할 단지들은 각 파일의 `comparison_groups`에 동일한 그룹명을 넣습니다. 한 단지가 여러 그룹에 포함될 수도 있습니다.
 

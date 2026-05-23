@@ -24,7 +24,8 @@ const sampleJson = JSON.stringify(
         building_no: '101동',
         deal_type: '매매',
         price: 830000000,
-        exclusive_area_m2: 84,
+        area_pyeong: 33,
+        exclusive_area_pyeong: 25,
         floor: 12,
         total_floor: 25,
         direction: '남향',
@@ -145,7 +146,7 @@ export function ComplexDataInputPage() {
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
             {summaries.map((summary) => (
               <Card key={summary.area_group}>
-                <p className="text-sm font-semibold text-slate-500">전용 {summary.area_group}㎡</p>
+                <p className="text-sm font-semibold text-slate-500">{summary.area_label}</p>
                 <p className="metric-number mt-4 text-2xl font-bold">{formatPrice(summary.avg_price)}</p>
                 <p className="mt-3 text-xs text-slate-500">
                   {formatPrice(summary.min_price)} ~ {formatPrice(summary.max_price)} · {summary.listing_count}건
