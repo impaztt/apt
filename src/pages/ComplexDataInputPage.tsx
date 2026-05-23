@@ -1,5 +1,6 @@
-import { useState, type ChangeEvent } from 'react';
-import { CheckCircle2, Download, FileJson, Save, Upload, TriangleAlert } from 'lucide-react';
+import { useEffect, useState, type ChangeEvent } from 'react';
+import { Link, useSearchParams } from 'react-router-dom';
+import { ArrowLeft, CheckCircle2, Download, FileJson, Save, Upload, TriangleAlert } from 'lucide-react';
 import type { ParsedComplexData } from '../shared/data/staticData';
 import { getStaticComplexSource, parseComplexDataFile } from '../shared/data/staticData';
 import { summarizeListings } from '../features/listings/statistics';
@@ -41,14 +42,39 @@ const sampleJson = JSON.stringify(
 
 export function ComplexDataInputPage() {
   const { complexes } = useAppData();
+  const [searchParams] = useSearchParams();
+  const requestedComplexId = searchParams.get('complexId');
   const [jsonText, setJsonText] = useState(sampleJson);
   const [preview, setPreview] = useState<ParsedComplexData | null>(null);
   const [notice, setNotice] = useState<string | null>(null);
   const [hasError, setHasError] = useState(false);
-  const [selectedComplexId, setSelectedComplexId] = useState(complexes[0]?.id ?? '');
+  const [selectedComplexId, setSelectedComplexId] = useState(requestedComplexId ?? complexes[0]?.id ?? '');
   const [adminKey, setAdminKey] = useState('');
   const [saving, setSaving] = useState(false);
   const [commitUrl, setCommitUrl] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!requestedComplexId) return;
+    const source = getStaticComplexSource(requestedComplexId);
+    if (!source) {
+      setHasError(true);
+      setNotice('선택한 단지의 JSON 파일을 찾지 못했습니다.');
+      return;
+    }
+    const nextText = JSON.stringify(source, null, 2);
+    setSelectedComplexId(requestedComplexId);
+    setJsonText(nextText);
+    try {
+      const result = parseComplexDataFile(source, `${requestedComplexId}.json`);
+      setPreview(result);
+      setHasError(false);
+      setNotice(`${result.complex.name}의 현재 JSON을 불러왔습니다. listings 내용을 수정한 뒤 저장하세요.`);
+    } catch (caught) {
+      setPreview(null);
+      setHasError(true);
+      setNotice(caught instanceof Error ? caught.message : 'JSON 파일을 읽을 수 없습니다.');
+    }
+  }, [requestedComplexId]);
 
   function validate(text = jsonText, fileName?: string) {
     try {
@@ -141,18 +167,36 @@ export function ComplexDataInputPage() {
 
   return (
     <div className="space-y-6">
+      {requestedComplexId && (
+        <Link to={`/complexes/${requestedComplexId}`} className="inline-flex items-center gap-1 text-sm font-medium text-slate-500">
+          <ArrowLeft className="h-4 w-4" /> 단지 상세로 돌아가기
+        </Link>
+      )}
       <PageHeader
-        title="단지 JSON 입력"
-        description="단지 하나와 해당 매물 전체를 담은 JSON 파일을 검증하고 생성합니다."
+        title={requestedComplexId ? '단지 매물 수정' : '새 단지 JSON 입력'}
+        description={
+          requestedComplexId
+            ? '선택한 단지의 현재 JSON을 불러왔습니다. listings 배열을 수정하고 저장하면 됩니다.'
+            : '신규 단지 하나와 해당 매물 전체를 담은 JSON을 입력해 저장합니다.'
+        }
       />
 
       <Card className="bg-brand-50 shadow-none">
-        <p className="text-sm font-semibold text-brand-700">브라우저에서 실제 저장</p>
-        <p className="mt-2 text-sm leading-6 text-slate-600">
-          JSON을 검증한 뒤 관리자 키로 저장하면 Cloudflare Function이
-          <code className="mx-1 rounded bg-white px-1.5 py-0.5 text-xs">src/data/complexes/{'{id}'}.json</code>
-          파일을 GitHub에 커밋합니다. Cloudflare가 새 커밋을 재배포하면 대시보드에 반영됩니다.
-        </p>
+        <p className="text-sm font-semibold text-brand-700">{requestedComplexId ? '기존 단지 수정 순서' : '신규 단지 추가 순서'}</p>
+        {requestedComplexId ? (
+          <ol className="mt-3 space-y-2 text-sm leading-6 text-slate-600">
+            <li>1. 아래 JSON에서 <code className="rounded bg-white px-1.5 py-0.5 text-xs">listings</code> 배열을 실제 매물 목록으로 교체합니다.</li>
+            <li>2. <strong>JSON 검증 및 미리보기</strong>로 평형별 가격이 맞는지 확인합니다.</li>
+            <li>3. 관리자 저장 키를 입력하고 <strong>수정 내용 저장</strong>을 누릅니다.</li>
+            <li>4. 재배포 후 단지 상세와 대시보드에서 변경 내용을 확인합니다.</li>
+          </ol>
+        ) : (
+          <ol className="mt-3 space-y-2 text-sm leading-6 text-slate-600">
+            <li>1. `id`, `name`, 비교 그룹과 <code className="rounded bg-white px-1.5 py-0.5 text-xs">listings</code> 배열을 입력합니다.</li>
+            <li>2. 검증 후 관리자 저장 키로 <strong>새 단지 저장</strong>을 누릅니다.</li>
+            <li>3. 재배포 후 단지 목록과 비교 화면에 새 단지가 표시됩니다.</li>
+          </ol>
+        )}
       </Card>
 
       <Card>
@@ -167,7 +211,7 @@ export function ComplexDataInputPage() {
             <input className="hidden" type="file" accept=".json,application/json" onChange={(event) => void handleFileSelect(event)} />
           </label>
         </div>
-        {complexes.length > 0 && (
+        {!requestedComplexId && complexes.length > 0 && (
           <div className="mt-4 flex flex-col gap-2 sm:flex-row">
             <select
               className="field-control mt-0 flex-1"
@@ -204,7 +248,7 @@ export function ComplexDataInputPage() {
       </Card>
 
       <Card>
-        <h2 className="text-base font-semibold">GitHub 저장 및 반영</h2>
+        <h2 className="text-base font-semibold">{requestedComplexId ? '수정 내용 저장' : '신규 단지 저장'}</h2>
         <p className="mt-2 text-sm leading-6 text-slate-500">
           관리자 저장 키는 GitHub 토큰이 아니라 Cloudflare에 설정한 별도 비밀번호입니다. GitHub 토큰은 서버 Secret에만 보관됩니다.
         </p>
@@ -219,7 +263,7 @@ export function ComplexDataInputPage() {
           />
           <Button disabled={!preview || saving} onClick={() => void handleGitHubSave()}>
             <span className="flex items-center justify-center gap-2">
-              <Save className="h-4 w-4" /> {saving ? '저장 중...' : 'GitHub에 저장'}
+              <Save className="h-4 w-4" /> {saving ? '저장 중...' : requestedComplexId ? '수정 내용 저장' : '새 단지 저장'}
             </span>
           </Button>
         </div>

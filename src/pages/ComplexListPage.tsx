@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { ArrowRight, FileJson, Plus } from 'lucide-react';
+import { ArrowRight, FileJson, Pencil, Plus } from 'lucide-react';
 import { Button } from '../shared/components/Button';
 import { Card } from '../shared/components/Card';
 import { PageHeader } from '../shared/components/PageHeader';
@@ -16,8 +16,8 @@ export function ComplexListPage() {
   return (
     <div className="space-y-6">
       <PageHeader
-        title="단지 JSON 파일"
-        description="각 단지의 기본정보와 매물은 JSON 파일 하나에 저장되며, 배포 시 화면에 자동 반영됩니다."
+        title="단지 목록"
+        description="수정할 단지를 선택하면 기존 JSON을 바로 열어 매물을 교체하고 저장할 수 있습니다."
         action={
           <Link to="/data/input">
             <Button>
@@ -30,10 +30,10 @@ export function ComplexListPage() {
       />
 
       <Card className="bg-brand-50 shadow-none">
-        <p className="text-sm font-semibold text-brand-700">데이터 저장 위치</p>
+        <p className="text-sm font-semibold text-brand-700">매물 수정 방법</p>
         <p className="mt-2 text-sm leading-6 text-slate-600">
-          단지별 파일을 <code className="rounded bg-white px-1.5 py-0.5 text-xs">src/data/complexes/단지-id.json</code>에
-          추가하거나 교체한 뒤 GitHub에 푸시하면 Cloudflare 재배포 후 반영됩니다.
+          아래 단지의 <strong>매물 수정</strong>을 누른 뒤 JSON의 <code className="rounded bg-white px-1.5 py-0.5 text-xs">listings</code>
+          부분을 바꾸고 저장하세요. GitHub 저장과 재배포는 화면에서 처리됩니다.
         </p>
       </Card>
 
@@ -60,13 +60,21 @@ export function ComplexListPage() {
                 <p className="mt-4 truncate rounded-xl bg-slate-50 px-3 py-2 font-mono text-xs text-slate-500">
                   src/data/complexes/{complex.data_file}
                 </p>
-                <div className="mt-5 flex items-center justify-between">
+                <div className="mt-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                   <p className="text-xs text-slate-500">
                     매물 {related.length}건 · 최근 확인 {formatDate(latestDate)}
                   </p>
-                  <Link to={`/complexes/${complex.id}`} className="inline-flex items-center gap-1 text-sm font-semibold text-brand-600">
-                    상세 <ArrowRight className="h-4 w-4" />
-                  </Link>
+                  <div className="flex items-center gap-3">
+                    <Link
+                      to={`/data/input?complexId=${complex.id}`}
+                      className="inline-flex items-center gap-1 text-sm font-semibold text-brand-600"
+                    >
+                      <Pencil className="h-4 w-4" /> 매물 수정
+                    </Link>
+                    <Link to={`/complexes/${complex.id}`} className="inline-flex items-center gap-1 text-sm font-semibold text-slate-500">
+                      상세 <ArrowRight className="h-4 w-4" />
+                    </Link>
+                  </div>
                 </div>
               </Card>
             );
