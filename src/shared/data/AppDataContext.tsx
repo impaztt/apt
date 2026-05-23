@@ -1,12 +1,14 @@
 import { createContext, useContext, useMemo, type PropsWithChildren } from 'react';
 import type { ApartmentComplex } from '../../features/complexes/types';
 import type { ComparisonGroup, ComparisonGroupComplex } from '../../features/comparisons/types';
-import type { ApartmentListing } from '../../features/listings/types';
+import type { ApartmentListing, ListingSnapshot } from '../../features/listings/types';
 import { loadStaticDataset } from './staticData';
 
 interface AppDataValue {
   complexes: ApartmentComplex[];
   listings: ApartmentListing[];
+  snapshots: ListingSnapshot[];
+  latestCapturedDates: Record<string, string>;
   groups: ComparisonGroup[];
   memberships: ComparisonGroupComplex[];
   loading: boolean;
@@ -24,6 +26,8 @@ export function AppDataProvider({ children }: PropsWithChildren) {
       return {
         complexes: [],
         listings: [],
+        snapshots: [],
+        latestCapturedDates: {},
         groups: [],
         memberships: [],
         loading: false,

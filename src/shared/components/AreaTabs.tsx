@@ -6,10 +6,14 @@ interface AreaTabsProps {
   value: AreaSelection;
   options: AreaOption[];
   onChange: (value: AreaSelection) => void;
+  showAll?: boolean;
 }
 
-export function AreaTabs({ value, options, onChange }: AreaTabsProps) {
-  const tabs = [{ key: ALL_AREAS, label: '전체' }, ...options.map((option) => ({ key: option.key, label: option.label }))];
+export function AreaTabs({ value, options, onChange, showAll = true }: AreaTabsProps) {
+  const tabs = [
+    ...(showAll ? [{ key: ALL_AREAS, label: '전체' }] : []),
+    ...options.map((option) => ({ key: option.key, label: option.label })),
+  ];
 
   return (
     <div className="flex gap-2 overflow-x-auto pb-1">

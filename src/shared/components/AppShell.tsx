@@ -1,4 +1,4 @@
-import { BarChart3, Building2, FileJson, Layers3, Scale } from 'lucide-react';
+import { BarChart3, Building2, FileJson, Layers3, Scale, TrendingUp } from 'lucide-react';
 import { NavLink, Outlet } from 'react-router-dom';
 
 const navigation = [
@@ -7,11 +7,12 @@ const navigation = [
   { to: '/data/input', label: 'JSON 입력', icon: FileJson },
   { to: '/groups', label: '그룹', icon: Layers3 },
   { to: '/compare', label: '비교', icon: Scale },
+  { to: '/trends', label: '변화', icon: TrendingUp },
 ];
 
 function Navigation({ mobile = false }: { mobile?: boolean }) {
   return (
-    <nav className={mobile ? 'grid grid-cols-5 px-1' : 'space-y-1'}>
+    <nav className={mobile ? 'grid grid-cols-6 px-1' : 'space-y-1'}>
       {navigation.map(({ to, label, icon: Icon, end }) => (
         <NavLink
           key={to}

@@ -1,5 +1,12 @@
 import type { ApartmentComplex } from '../complexes/types';
-import type { ApartmentListing, AreaSelection, ListingAreaSummary } from './types';
+import type {
+  ApartmentListing,
+  AreaSelection,
+  ListingAreaSummary,
+  ListingSnapshot,
+  ListingTrendPoint,
+  SnapshotChangeSummary,
+} from './types';
 import { getAreaGroup } from '../../shared/utils/area';
 
 function median(values: number[]): number {
@@ -76,4 +83,76 @@ export function getGroupAverage(summaries: ListingAreaSummary[]): number | null 
 export function getRelativeRate(price: number, groupAverage: number | null): number | null {
   if (!groupAverage) return null;
   return ((price - groupAverage) / groupAverage) * 100;
+}
+
+export function summarizeSnapshotHistory(
+  snapshots: ListingSnapshot[],
+  complexes: ApartmentComplex[],
+  areaGroup: AreaSelection,
+  complexIds: string[],
+): ListingTrendPoint[] {
+  if (areaGroup === 'all') return [];
+  return snapshots
+    .filter((snapshot) => complexIds.includes(snapshot.complex_id))
+    .flatMap((snapshot) =>
+      summarizeListings(snapshot.listings, complexes, areaGroup, [snapshot.complex_id]).map((summary) => ({
+        complex_id: summary.complex_id,
+        complex_name: summary.complex_name,
+        area_group: summary.area_group,
+        area_label: summary.area_label,
+        captured_date: snapshot.captured_date,
+        listing_count: summary.listing_count,
+        min_price: summary.min_price,
+        max_price: summary.max_price,
+        avg_price: summary.avg_price,
+        median_price: summary.median_price,
+      })),
+    )
+    .sort((a, b) => a.captured_date.localeCompare(b.captured_date) || a.complex_name.localeCompare(b.complex_name, 'ko'));
+}
+
+function trackingKey(listing: ApartmentListing): string {
+  return [
+    listing.building_no,
+    listing.deal_type,
+    listing.area_pyeong,
+    listing.exclusive_area_pyeong,
+    listing.floor_text,
+    listing.direction,
+  ].join('|');
+}
+
+export function compareLatestSnapshots(
+  snapshots: ListingSnapshot[],
+  areaGroup: AreaSelection,
+  complexIds: string[],
+): SnapshotChangeSummary[] {
+  if (areaGroup === 'all') return [];
+  return complexIds.flatMap((complexId) => {
+    const history = snapshots
+      .filter((snapshot) => snapshot.complex_id === complexId)
+      .sort((a, b) => a.captured_date.localeCompare(b.captured_date));
+    if (history.length < 2) return [];
+    const previous = history[history.length - 2];
+    const current = history[history.length - 1];
+    const select = (listing: ApartmentListing) =>
+      listing.deal_type === '매매' && listing.price !== null && getAreaGroup(listing) === areaGroup;
+    const before = previous.listings.filter(select);
+    const after = current.listings.filter(select);
+    const beforeMap = new Map(before.map((listing) => [trackingKey(listing), listing]));
+    const afterMap = new Map(after.map((listing) => [trackingKey(listing), listing]));
+    const repriced = [...afterMap.entries()]
+      .filter(([key, listing]) => beforeMap.has(key) && beforeMap.get(key)?.price !== listing.price)
+      .map(([key, listing]) => ({ before: beforeMap.get(key) as ApartmentListing, after: listing }));
+    const repricedKeys = new Set(repriced.map((item) => trackingKey(item.after)));
+    return [{
+      complex_id: complexId,
+      complex_name: current.complex_name,
+      previous_date: previous.captured_date,
+      current_date: current.captured_date,
+      added: after.filter((listing) => !beforeMap.has(trackingKey(listing)) && !repricedKeys.has(trackingKey(listing))),
+      removed: before.filter((listing) => !afterMap.has(trackingKey(listing)) && !repricedKeys.has(trackingKey(listing))),
+      repriced,
+    }];
+  });
 }

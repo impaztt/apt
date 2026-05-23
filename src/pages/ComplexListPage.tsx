@@ -9,7 +9,7 @@ import { formatDate } from '../shared/utils/date';
 import { DeleteComplexDialog } from '../features/complexes/components/DeleteComplexDialog';
 
 export function ComplexListPage() {
-  const { complexes, listings, loading, error } = useAppData();
+  const { complexes, listings, latestCapturedDates, loading, error } = useAppData();
 
   if (loading) return <LoadingState />;
   if (error) return <ErrorState message={error} />;
@@ -18,7 +18,7 @@ export function ComplexListPage() {
     <div className="space-y-6">
       <PageHeader
         title="단지 목록"
-        description="수정할 단지를 선택하면 기존 JSON을 바로 열어 매물을 교체하고 저장할 수 있습니다."
+        description="단지를 선택해 수집일별 매물 스냅샷을 추가하고, 최신 분포와 기간 변화를 분석합니다."
         action={
           <Link to="/data/input">
             <Button>
@@ -33,8 +33,8 @@ export function ComplexListPage() {
       <Card className="bg-brand-50 shadow-none">
         <p className="text-sm font-semibold text-brand-700">매물 수정 방법</p>
         <p className="mt-2 text-sm leading-6 text-slate-600">
-          아래 단지의 <strong>매물 수정</strong>을 누른 뒤 JSON의 <code className="rounded bg-white px-1.5 py-0.5 text-xs">listings</code>
-          부분을 바꾸고 저장하세요. 단지 전체를 제거할 때는 <strong>단지 삭제</strong>를 누르세요. GitHub 저장과 재배포는 화면에서 처리됩니다.
+          아래 단지의 <strong>매물 수정</strong>에서 수집 JSON을 붙여넣고 <strong>수집 기준일</strong>을 선택해 저장하세요.
+          날짜별 파일이 누적되므로 호가 변화 화면에서 가격과 매물 수 변화를 비교할 수 있습니다.
         </p>
       </Card>
 
@@ -42,11 +42,7 @@ export function ComplexListPage() {
         <div className="grid gap-3 md:grid-cols-2">
           {complexes.map((complex) => {
             const related = listings.filter((listing) => listing.complex_id === complex.id);
-            const verifiedDates = related
-              .map((listing) => listing.verified_date)
-              .filter((date): date is string => Boolean(date))
-              .sort();
-            const latestDate = verifiedDates[verifiedDates.length - 1] ?? null;
+            const latestDate = latestCapturedDates[complex.id] ?? null;
             return (
               <Card key={complex.id}>
                 <div className="flex items-start justify-between gap-3">
@@ -63,7 +59,7 @@ export function ComplexListPage() {
                 </p>
                 <div className="mt-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                   <p className="text-xs text-slate-500">
-                    매물 {related.length}건 · 최근 확인 {formatDate(latestDate)}
+                    최신 매물 {related.length}건 · 수집 기준일 {formatDate(latestDate)}
                   </p>
                   <div className="flex flex-wrap items-center gap-3">
                     <Link

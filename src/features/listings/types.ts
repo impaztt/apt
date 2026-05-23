@@ -53,3 +53,39 @@ export interface ListingAreaSummary {
   min_listing: ApartmentListing;
   max_listing: ApartmentListing;
 }
+
+export interface ListingSnapshot {
+  id: string;
+  complex_id: string;
+  complex_name: string;
+  captured_date: string;
+  listings: ApartmentListing[];
+}
+
+export interface ListingTrendPoint {
+  complex_id: string;
+  complex_name: string;
+  area_group: AreaGroup;
+  area_label: string;
+  captured_date: string;
+  listing_count: number;
+  min_price: number;
+  max_price: number;
+  avg_price: number;
+  median_price: number;
+}
+
+export interface RepricedListingCandidate {
+  before: ApartmentListing;
+  after: ApartmentListing;
+}
+
+export interface SnapshotChangeSummary {
+  complex_id: string;
+  complex_name: string;
+  previous_date: string;
+  current_date: string;
+  added: ApartmentListing[];
+  removed: ApartmentListing[];
+  repriced: RepricedListingCandidate[];
+}

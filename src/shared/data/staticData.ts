@@ -1,11 +1,13 @@
 import type { ApartmentComplex } from '../../features/complexes/types';
 import type { ComparisonGroup, ComparisonGroupComplex } from '../../features/comparisons/types';
-import type { ApartmentListing, DealType, FloorGroup, ListingInput } from '../../features/listings/types';
+import type { ApartmentListing, DealType, FloorGroup, ListingInput, ListingSnapshot } from '../../features/listings/types';
 import { validateListingInput, isPossibleDuplicate } from '../../features/listings/validation';
 
 export interface StaticDataset {
   complexes: ApartmentComplex[];
   listings: ApartmentListing[];
+  snapshots: ListingSnapshot[];
+  latestCapturedDates: Record<string, string>;
   groups: ComparisonGroup[];
   memberships: ComparisonGroupComplex[];
 }
@@ -20,6 +22,11 @@ export interface ParsedComplexData {
 }
 
 const modules = import.meta.glob('../../data/complexes/*.json', {
+  eager: true,
+  import: 'default',
+}) as Record<string, unknown>;
+
+const snapshotModules = import.meta.glob('../../data/snapshots/**/*.json', {
   eager: true,
   import: 'default',
 }) as Record<string, unknown>;
@@ -273,12 +280,75 @@ export function parseComplexDataFile(
   return { fileName, complex, listings, groupNames, source, inputFormat: normalized.inputFormat };
 }
 
+function parseSnapshotFile(
+  raw: unknown,
+  path: string,
+  complexFiles: Map<string, ParsedComplexData>,
+): ListingSnapshot | null {
+  const source = recordValue(raw, path);
+  const complexId = requiredText(source.complex_id, 'complex_id', path);
+  const base = complexFiles.get(complexId);
+  if (!base) return null;
+  const capturedDate = normalizedDate(requiredText(source.captured_date, 'captured_date', path)) as string;
+  const snapshotListings = source.listings ?? source.items;
+  if (!Array.isArray(snapshotListings)) throw new Error(`${path}: listings 또는 items 배열을 입력해 주세요.`);
+
+  const parsed = parseComplexDataFile(
+    {
+      ...base.source,
+      complex_name: source.complex_name ?? base.complex.name,
+      source_text_type: source.source_text_type,
+      updated_at: capturedDate,
+      ...(Array.isArray(source.items) ? { items: snapshotListings } : { listings: snapshotListings }),
+    },
+    path,
+    base.source,
+  );
+
+  return {
+    id: `${complexId}:${capturedDate}`,
+    complex_id: complexId,
+    complex_name: base.complex.name,
+    captured_date: capturedDate,
+    listings: parsed.listings,
+  };
+}
+
 export function loadStaticDataset(): StaticDataset {
   const parsedFiles = Object.entries(modules).map(([path, data]) => parseComplexDataFile(data, path));
   const duplicates = parsedFiles
     .map((file) => file.complex.id)
     .filter((id, index, ids) => ids.indexOf(id) !== index);
   if (duplicates.length) throw new Error(`단지 JSON id가 중복되었습니다: ${[...new Set(duplicates)].join(', ')}`);
+
+  const complexFiles = new Map(parsedFiles.map((file) => [file.complex.id, file]));
+  const storedSnapshots = Object.entries(snapshotModules)
+    .map(([path, data]) => parseSnapshotFile(data, path, complexFiles))
+    .filter((snapshot): snapshot is ListingSnapshot => snapshot !== null);
+  const snapshotsByComplex = new Map<string, ListingSnapshot[]>();
+  for (const snapshot of storedSnapshots) {
+    const values = snapshotsByComplex.get(snapshot.complex_id) ?? [];
+    values.push(snapshot);
+    snapshotsByComplex.set(snapshot.complex_id, values);
+  }
+
+  const snapshots = parsedFiles.flatMap((file) => {
+    const values = snapshotsByComplex.get(file.complex.id);
+    if (values?.length) return values.sort((a, b) => a.captured_date.localeCompare(b.captured_date));
+    const fallbackDate = file.complex.updated_at.slice(0, 10);
+    return [{
+      id: `${file.complex.id}:${fallbackDate}`,
+      complex_id: file.complex.id,
+      complex_name: file.complex.name,
+      captured_date: fallbackDate,
+      listings: file.listings,
+    }];
+  });
+  const latestSnapshots = new Map<string, ListingSnapshot>();
+  snapshots.forEach((snapshot) => {
+    const current = latestSnapshots.get(snapshot.complex_id);
+    if (!current || current.captured_date < snapshot.captured_date) latestSnapshots.set(snapshot.complex_id, snapshot);
+  });
 
   const now = new Date().toISOString();
   const groupNames = [...new Set(parsedFiles.flatMap((file) => file.groupNames))];
@@ -301,7 +371,11 @@ export function loadStaticDataset(): StaticDataset {
 
   return {
     complexes: parsedFiles.map((file) => file.complex).sort((a, b) => a.name.localeCompare(b.name, 'ko')),
-    listings: parsedFiles.flatMap((file) => file.listings),
+    listings: parsedFiles.flatMap((file) => latestSnapshots.get(file.complex.id)?.listings ?? file.listings),
+    snapshots,
+    latestCapturedDates: Object.fromEntries(
+      [...latestSnapshots.entries()].map(([complexId, snapshot]) => [complexId, snapshot.captured_date]),
+    ),
     groups,
     memberships,
   };
@@ -310,7 +384,18 @@ export function loadStaticDataset(): StaticDataset {
 export function getStaticComplexSource(complexId: string): Record<string, unknown> | null {
   for (const [path, data] of Object.entries(modules)) {
     const source = recordValue(data, path);
-    if (source.id === complexId) return source;
+    if (source.id !== complexId) continue;
+    const latestSnapshot = Object.entries(snapshotModules)
+      .map(([snapshotPath, snapshotValue]) => recordValue(snapshotValue, snapshotPath))
+      .filter((snapshot) => snapshot.complex_id === complexId && typeof snapshot.captured_date === 'string')
+      .sort((a, b) => String(a.captured_date).localeCompare(String(b.captured_date)))
+      .pop();
+    if (!latestSnapshot || !Array.isArray(latestSnapshot.listings)) return source;
+    return {
+      ...source,
+      updated_at: latestSnapshot.captured_date,
+      listings: latestSnapshot.listings,
+    };
   }
   return null;
 }

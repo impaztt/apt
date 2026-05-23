@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { ArrowLeft, FileJson } from 'lucide-react';
+import { ArrowLeft, CalendarDays, FileJson } from 'lucide-react';
 import { summarizeListings } from '../features/listings/statistics';
 import type { AreaGroup, DealType, FloorGroup } from '../features/listings/types';
 import { Button } from '../shared/components/Button';
@@ -14,14 +14,19 @@ import { DeleteComplexDialog } from '../features/complexes/components/DeleteComp
 
 export function ComplexDetailPage() {
   const { complexId } = useParams();
-  const { complexes, listings, loading, error } = useAppData();
+  const { complexes, listings, snapshots, loading, error } = useAppData();
   const [areaFilter, setAreaFilter] = useState<AreaGroup | ''>('');
   const [dealFilter, setDealFilter] = useState<DealType | ''>('매매');
   const [floorFilter, setFloorFilter] = useState<FloorGroup | ''>('');
   const [directionFilter, setDirectionFilter] = useState('');
   const [maxPriceEok, setMaxPriceEok] = useState('');
+  const [capturedDate, setCapturedDate] = useState('');
   const complex = complexes.find((item) => item.id === complexId);
-  const relatedListings = listings.filter((listing) => listing.complex_id === complexId);
+  const complexSnapshots = snapshots
+    .filter((snapshot) => snapshot.complex_id === complexId)
+    .sort((a, b) => b.captured_date.localeCompare(a.captured_date));
+  const selectedSnapshot = complexSnapshots.find((snapshot) => snapshot.captured_date === capturedDate) ?? complexSnapshots[0];
+  const relatedListings = selectedSnapshot?.listings ?? listings.filter((listing) => listing.complex_id === complexId);
   const summaries = summarizeListings(relatedListings, complex ? [complex] : []);
   const filteredListings = useMemo(
     () =>
@@ -68,6 +73,28 @@ export function ComplexDetailPage() {
             </Link>
             <DeleteComplexDialog complex={complex} />
           </div>
+        </div>
+      </Card>
+
+      <Card className="bg-brand-50 shadow-none">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <p className="inline-flex items-center gap-2 text-sm font-semibold text-brand-700">
+              <CalendarDays className="h-4 w-4" /> 수집 기준일별 매물 조회
+            </p>
+            <p className="mt-2 text-xs text-slate-500">선택한 날짜에 업로드된 매물 분포와 상세 목록을 확인합니다.</p>
+          </div>
+          <select
+            className="field-control mt-0 min-w-[190px]"
+            value={selectedSnapshot?.captured_date ?? ''}
+            onChange={(event) => setCapturedDate(event.target.value)}
+          >
+            {complexSnapshots.map((snapshot) => (
+              <option key={snapshot.id} value={snapshot.captured_date}>
+                {snapshot.captured_date} · {snapshot.listings.length}건
+              </option>
+            ))}
+          </select>
         </div>
       </Card>
 

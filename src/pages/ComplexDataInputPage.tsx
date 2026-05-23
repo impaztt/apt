@@ -40,6 +40,12 @@ const sampleJson = JSON.stringify(
   2,
 );
 
+function todayLocalDate(): string {
+  const now = new Date();
+  const offset = now.getTimezoneOffset() * 60_000;
+  return new Date(now.getTime() - offset).toISOString().slice(0, 10);
+}
+
 export function ComplexDataInputPage() {
   const { complexes } = useAppData();
   const [searchParams] = useSearchParams();
@@ -50,6 +56,7 @@ export function ComplexDataInputPage() {
   const [hasError, setHasError] = useState(false);
   const [selectedComplexId, setSelectedComplexId] = useState(requestedComplexId ?? complexes[0]?.id ?? '');
   const [adminKey, setAdminKey] = useState('');
+  const [capturedDate, setCapturedDate] = useState(todayLocalDate);
   const [saving, setSaving] = useState(false);
   const [commitUrl, setCommitUrl] = useState<string | null>(null);
 
@@ -145,6 +152,11 @@ export function ComplexDataInputPage() {
       setNotice('Cloudflare에 등록한 관리자 저장 키를 입력해 주세요.');
       return;
     }
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(capturedDate)) {
+      setHasError(true);
+      setNotice('수집 기준일을 선택해 주세요.');
+      return;
+    }
 
     let nextPreview: ParsedComplexData;
     try {
@@ -165,7 +177,11 @@ export function ComplexDataInputPage() {
           'Content-Type': 'application/json',
           'X-Admin-Key': adminKey,
         },
-        body: JSON.stringify(nextPreview.source),
+        body: JSON.stringify({
+          operation: 'save_snapshot',
+          captured_date: capturedDate,
+          complex: nextPreview.source,
+        }),
       });
       const result = (await response.json()) as { message?: string; commitUrl?: string | null };
       if (!response.ok) throw new Error(result.message ?? 'GitHub 저장 요청에 실패했습니다.');
@@ -194,8 +210,8 @@ export function ComplexDataInputPage() {
         title={requestedComplexId ? '단지 매물 수정' : '새 단지 JSON 입력'}
         description={
           requestedComplexId
-            ? '수집한 매물 JSON의 complex_name과 items 형식을 그대로 붙여넣어 저장할 수 있습니다.'
-            : '새 단지를 추가하거나, 기존 단지명과 일치하는 수집 JSON을 붙여넣어 매물을 갱신합니다.'
+            ? '수집한 매물 JSON을 붙여넣고 수집 기준일별 스냅샷으로 저장합니다.'
+            : '새 단지를 추가하거나, 기존 단지명의 매물 데이터를 날짜별 스냅샷으로 저장합니다.'
         }
       />
 
@@ -206,19 +222,20 @@ export function ComplexDataInputPage() {
             <li>1. 아래 내용을 전체 선택한 뒤, 정리한 <code className="rounded bg-white px-1.5 py-0.5 text-xs">complex_name / items</code> JSON을 그대로 붙여넣습니다.</li>
             <li>2. <code className="rounded bg-white px-1.5 py-0.5 text-xs">price_text</code>, <code className="rounded bg-white px-1.5 py-0.5 text-xs">supply_area_pyeong</code>, 날짜와 층 정보는 저장 형식으로 자동 변환됩니다.</li>
             <li>3. <strong>JSON 검증 및 미리보기</strong>로 평형별 매매 가격이 맞는지 확인합니다.</li>
-            <li>4. 관리자 저장 키를 입력하고 <strong>수정 내용 저장</strong>을 누릅니다.</li>
+            <li>4. 수집 기준일을 확인하고 관리자 저장 키를 입력한 뒤 <strong>오늘 데이터 저장</strong>을 누릅니다.</li>
             <li>5. 재배포 후 단지 상세와 대시보드에서 변경 내용을 확인합니다.</li>
           </ol>
         ) : (
           <ol className="mt-3 space-y-2 text-sm leading-6 text-slate-600">
             <li>1. 기존 단지 매물을 수정할 때는 <code className="rounded bg-white px-1.5 py-0.5 text-xs">complex_name / items</code> JSON을 그대로 붙여넣습니다. 단지명이 일치하면 자동으로 수정 대상으로 인식합니다.</li>
             <li>2. 새 단지는 <code className="rounded bg-white px-1.5 py-0.5 text-xs">id</code>와 <code className="rounded bg-white px-1.5 py-0.5 text-xs">comparison_groups</code>도 포함해 입력합니다.</li>
-            <li>3. 검증 후 관리자 저장 키로 저장을 누릅니다.</li>
+            <li>3. 수집 기준일을 선택하고 관리자 저장 키로 저장합니다.</li>
             <li>4. 재배포 후 단지 목록과 비교 화면에 추가 또는 수정 내용이 표시됩니다.</li>
           </ol>
         )}
         <p className="mt-4 rounded-2xl bg-white px-4 py-3 text-xs leading-5 text-slate-500">
-          대시보드 가격 비교는 매매 매물만 계산합니다. 입력한 전세와 월세 매물은 단지 상세 목록에서 함께 확인할 수 있습니다.
+          저장 파일은 <code className="rounded bg-slate-50 px-1">snapshots/단지ID/수집일.json</code>으로 누적됩니다. 같은 날짜에 다시 저장하면
+          해당 날짜 자료만 갱신됩니다. 대시보드 가격 비교는 매매 매물만 계산합니다.
         </p>
       </Card>
 
@@ -271,10 +288,22 @@ export function ComplexDataInputPage() {
       </Card>
 
       <Card>
-        <h2 className="text-base font-semibold">{isExistingPreview ? '수정 내용 저장' : '신규 단지 저장'}</h2>
+        <h2 className="text-base font-semibold">{isExistingPreview ? '수집일별 매물 저장' : '신규 단지 저장'}</h2>
         <p className="mt-2 text-sm leading-6 text-slate-500">
           관리자 저장 키는 GitHub 토큰이 아니라 Cloudflare에 설정한 별도 비밀번호입니다. GitHub 토큰은 서버 Secret에만 보관됩니다.
         </p>
+        <label className="mt-4 block text-sm font-semibold text-slate-600">
+          수집 기준일
+          <input
+            type="date"
+            className="field-control mt-2"
+            value={capturedDate}
+            onChange={(event) => setCapturedDate(event.target.value)}
+          />
+          <span className="mt-2 block text-xs font-normal text-slate-400">
+            웹에 매물 목록을 입력한 날짜입니다. 매물의 확인일과 별도로 기간별 호가 변화를 계산하는 기준입니다.
+          </span>
+        </label>
         <div className="mt-4 flex flex-col gap-2 sm:flex-row">
           <input
             type="password"
@@ -286,7 +315,7 @@ export function ComplexDataInputPage() {
           />
           <Button disabled={!preview || saving} onClick={() => void handleGitHubSave()}>
             <span className="flex items-center justify-center gap-2">
-              <Save className="h-4 w-4" /> {saving ? '저장 중...' : isExistingPreview ? '수정 내용 저장' : '새 단지 저장'}
+              <Save className="h-4 w-4" /> {saving ? '저장 중...' : isExistingPreview ? '오늘 데이터 저장' : '새 단지 저장'}
             </span>
           </Button>
         </div>
