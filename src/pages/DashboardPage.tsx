@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { TrendingUp } from 'lucide-react';
+import { Check, SlidersHorizontal, TrendingUp } from 'lucide-react';
 import { PriceRangeSummary } from '../features/comparisons/components/PriceRangeSummary';
 import { summarizeListings } from '../features/listings/statistics';
 import type { AreaSelection } from '../features/listings/types';
@@ -18,11 +18,15 @@ export function DashboardPage() {
   const { complexes, listings, groups, memberships, latestCapturedDates, loading, error } = useAppData();
   const [selectedGroupId, setSelectedGroupId] = useState('');
   const [areaGroup, setAreaGroup] = useState<AreaSelection>('all');
+  const [selectedComplexIds, setSelectedComplexIds] = useState<string[]>([]);
   const activeGroup = groups.find((group) => group.id === selectedGroupId) ?? groups[0];
-  const complexIds = memberships
+  const groupComplexIds = memberships
     .filter((membership) => membership.group_id === activeGroup?.id)
     .sort((a, b) => a.sort_order - b.sort_order)
     .map((membership) => membership.complex_id);
+  const complexIds = selectedComplexIds.length
+    ? groupComplexIds.filter((id) => selectedComplexIds.includes(id))
+    : groupComplexIds;
   const relevantListings = listings.filter((listing) => complexIds.includes(listing.complex_id));
   const saleListings = relevantListings.filter((listing) => listing.deal_type === '매매' && listing.price !== null);
   const areaOptions = getAreaOptions(saleListings);
@@ -43,6 +47,18 @@ export function DashboardPage() {
   useEffect(() => {
     if (areaGroup !== 'all' && !areaOptions.some((option) => option.key === areaGroup)) setAreaGroup('all');
   }, [areaGroup, areaOptions]);
+
+  useEffect(() => {
+    setSelectedComplexIds(groupComplexIds);
+  }, [activeGroup?.id]);
+
+  function toggleComplex(complexId: string) {
+    setSelectedComplexIds((current) => {
+      const selected = current.includes(complexId);
+      if (selected && current.length === 1) return current;
+      return selected ? current.filter((id) => id !== complexId) : [...current, complexId];
+    });
+  }
 
   if (loading) return <LoadingState />;
   if (error) return <ErrorState message={error} />;
@@ -69,6 +85,59 @@ export function DashboardPage() {
       />
 
       <AreaTabs value={areaGroup} options={areaOptions} onChange={setAreaGroup} />
+
+      <Card className="p-3.5 shadow-none sm:p-5">
+        <details>
+          <summary className="flex cursor-pointer list-none items-center justify-between gap-3">
+            <span className="inline-flex min-w-0 items-center gap-2 text-sm font-semibold text-slate-700">
+              <SlidersHorizontal className="h-4 w-4 shrink-0 text-brand-600" />
+              표시 단지 선택
+            </span>
+            <span className="shrink-0 rounded-full bg-brand-50 px-2.5 py-1 text-xs font-bold text-brand-700">
+              {complexIds.length}/{groupComplexIds.length}개
+            </span>
+          </summary>
+          <div className="mt-4">
+            <div className="flex gap-2">
+              <button
+                type="button"
+                className="rounded-xl bg-brand-50 px-3 py-2 text-xs font-semibold text-brand-700"
+                onClick={() => setSelectedComplexIds(groupComplexIds)}
+              >
+                전체 선택
+              </button>
+              <button
+                type="button"
+                className="rounded-xl bg-slate-50 px-3 py-2 text-xs font-semibold text-slate-500"
+                onClick={() => setSelectedComplexIds(groupComplexIds.slice(0, 1))}
+              >
+                첫 단지만 보기
+              </button>
+            </div>
+            <div className="mt-3 flex flex-wrap gap-2">
+              {groupComplexIds.map((id) => {
+                const complex = complexes.find((item) => item.id === id);
+                const selected = complexIds.includes(id);
+                return (
+                  <button
+                    key={id}
+                    type="button"
+                    className={`inline-flex items-center gap-2 rounded-full border px-3 py-2 text-xs font-semibold transition ${
+                      selected ? 'border-transparent bg-slate-900 text-white' : 'border-slate-200 bg-white text-slate-500'
+                    }`}
+                    onClick={() => toggleComplex(id)}
+                  >
+                    <span className="h-2.5 w-2.5 rounded-full" style={{ backgroundColor: complex?.color ?? '#3182f6' }} />
+                    <span>{complex?.name ?? id}</span>
+                    {selected && <Check className="h-3.5 w-3.5" />}
+                  </button>
+                );
+              })}
+            </div>
+            <p className="mt-3 text-[11px] leading-5 text-slate-400">차트와 요약은 선택한 단지만 기준으로 다시 계산됩니다. 최소 1개 단지는 유지됩니다.</p>
+          </div>
+        </details>
+      </Card>
 
       {summaries.length ? (
         <>
