@@ -1,11 +1,12 @@
 import { useState, type ChangeEvent } from 'react';
-import { CheckCircle2, Download, FileJson, Upload, TriangleAlert } from 'lucide-react';
+import { CheckCircle2, Download, FileJson, Save, Upload, TriangleAlert } from 'lucide-react';
 import type { ParsedComplexData } from '../shared/data/staticData';
-import { parseComplexDataFile } from '../shared/data/staticData';
+import { getStaticComplexSource, parseComplexDataFile } from '../shared/data/staticData';
 import { summarizeListings } from '../features/listings/statistics';
 import { Button } from '../shared/components/Button';
 import { Card } from '../shared/components/Card';
 import { PageHeader } from '../shared/components/PageHeader';
+import { useAppData } from '../shared/data/AppDataContext';
 import { formatPrice } from '../shared/utils/price';
 
 const sampleJson = JSON.stringify(
@@ -39,16 +40,22 @@ const sampleJson = JSON.stringify(
 );
 
 export function ComplexDataInputPage() {
+  const { complexes } = useAppData();
   const [jsonText, setJsonText] = useState(sampleJson);
   const [preview, setPreview] = useState<ParsedComplexData | null>(null);
   const [notice, setNotice] = useState<string | null>(null);
   const [hasError, setHasError] = useState(false);
+  const [selectedComplexId, setSelectedComplexId] = useState(complexes[0]?.id ?? '');
+  const [adminKey, setAdminKey] = useState('');
+  const [saving, setSaving] = useState(false);
+  const [commitUrl, setCommitUrl] = useState<string | null>(null);
 
   function validate(text = jsonText, fileName?: string) {
     try {
       const result = parseComplexDataFile(JSON.parse(text) as unknown, fileName);
       setPreview(result);
       setHasError(false);
+      setCommitUrl(null);
       setNotice(`${result.fileName} 파일이 유효합니다. 매물 ${result.listings.length}건을 읽었습니다.`);
     } catch (caught) {
       setPreview(null);
@@ -77,6 +84,59 @@ export function ComplexDataInputPage() {
     URL.revokeObjectURL(url);
   }
 
+  function handleLoadCurrent() {
+    const source = getStaticComplexSource(selectedComplexId);
+    if (!source) {
+      setHasError(true);
+      setNotice('불러올 단지 JSON 파일을 찾지 못했습니다.');
+      return;
+    }
+    const nextText = JSON.stringify(source, null, 2);
+    setJsonText(nextText);
+    validate(nextText, `${selectedComplexId}.json`);
+  }
+
+  async function handleGitHubSave() {
+    if (!adminKey.trim()) {
+      setHasError(true);
+      setNotice('Cloudflare에 등록한 관리자 저장 키를 입력해 주세요.');
+      return;
+    }
+
+    let nextPreview: ParsedComplexData;
+    try {
+      nextPreview = parseComplexDataFile(JSON.parse(jsonText) as unknown);
+      setPreview(nextPreview);
+    } catch (caught) {
+      setHasError(true);
+      setNotice(caught instanceof Error ? caught.message : 'JSON 파일을 읽을 수 없습니다.');
+      return;
+    }
+
+    setSaving(true);
+    setCommitUrl(null);
+    try {
+      const response = await fetch('/api/complex-files', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Admin-Key': adminKey,
+        },
+        body: JSON.stringify(nextPreview.source),
+      });
+      const result = (await response.json()) as { message?: string; commitUrl?: string | null };
+      if (!response.ok) throw new Error(result.message ?? 'GitHub 저장 요청에 실패했습니다.');
+      setHasError(false);
+      setNotice(result.message ?? 'GitHub에 JSON 파일을 저장했습니다.');
+      setCommitUrl(result.commitUrl ?? null);
+    } catch (caught) {
+      setHasError(true);
+      setNotice(caught instanceof Error ? caught.message : 'GitHub 저장 요청에 실패했습니다.');
+    } finally {
+      setSaving(false);
+    }
+  }
+
   const summaries = preview ? summarizeListings(preview.listings, [preview.complex]) : [];
 
   return (
@@ -87,11 +147,11 @@ export function ComplexDataInputPage() {
       />
 
       <Card className="bg-brand-50 shadow-none">
-        <p className="text-sm font-semibold text-brand-700">실제 화면 반영 절차</p>
+        <p className="text-sm font-semibold text-brand-700">브라우저에서 실제 저장</p>
         <p className="mt-2 text-sm leading-6 text-slate-600">
-          아래에서 검증한 JSON을 다운로드한 뒤
-          <code className="mx-1 rounded bg-white px-1.5 py-0.5 text-xs">src/data/complexes/</code>
-          폴더에 넣고 GitHub에 푸시하세요. 정적 웹페이지는 브라우저에서 배포 파일을 직접 수정할 수 없습니다.
+          JSON을 검증한 뒤 관리자 키로 저장하면 Cloudflare Function이
+          <code className="mx-1 rounded bg-white px-1.5 py-0.5 text-xs">src/data/complexes/{'{id}'}.json</code>
+          파일을 GitHub에 커밋합니다. Cloudflare가 새 커밋을 재배포하면 대시보드에 반영됩니다.
         </p>
       </Card>
 
@@ -107,6 +167,24 @@ export function ComplexDataInputPage() {
             <input className="hidden" type="file" accept=".json,application/json" onChange={(event) => void handleFileSelect(event)} />
           </label>
         </div>
+        {complexes.length > 0 && (
+          <div className="mt-4 flex flex-col gap-2 sm:flex-row">
+            <select
+              className="field-control mt-0 flex-1"
+              value={selectedComplexId}
+              onChange={(event) => setSelectedComplexId(event.target.value)}
+            >
+              {complexes.map((complex) => (
+                <option key={complex.id} value={complex.id}>
+                  {complex.name}
+                </option>
+              ))}
+            </select>
+            <Button variant="ghost" onClick={handleLoadCurrent}>
+              현재 단지 JSON 불러오기
+            </Button>
+          </div>
+        )}
         <textarea
           className="field-control mt-4 min-h-[400px] resize-y font-mono text-xs leading-6"
           value={jsonText}
@@ -125,10 +203,37 @@ export function ComplexDataInputPage() {
         </div>
       </Card>
 
+      <Card>
+        <h2 className="text-base font-semibold">GitHub 저장 및 반영</h2>
+        <p className="mt-2 text-sm leading-6 text-slate-500">
+          관리자 저장 키는 GitHub 토큰이 아니라 Cloudflare에 설정한 별도 비밀번호입니다. GitHub 토큰은 서버 Secret에만 보관됩니다.
+        </p>
+        <div className="mt-4 flex flex-col gap-2 sm:flex-row">
+          <input
+            type="password"
+            autoComplete="current-password"
+            className="field-control mt-0 flex-1"
+            value={adminKey}
+            onChange={(event) => setAdminKey(event.target.value)}
+            placeholder="관리자 저장 키 입력"
+          />
+          <Button disabled={!preview || saving} onClick={() => void handleGitHubSave()}>
+            <span className="flex items-center justify-center gap-2">
+              <Save className="h-4 w-4" /> {saving ? '저장 중...' : 'GitHub에 저장'}
+            </span>
+          </Button>
+        </div>
+      </Card>
+
       {notice && (
         <div className={`flex gap-3 rounded-2xl px-4 py-3 text-sm font-medium ${hasError ? 'bg-red-50 text-red-700' : 'bg-emerald-50 text-emerald-700'}`}>
           {hasError ? <TriangleAlert className="h-5 w-5 shrink-0" /> : <CheckCircle2 className="h-5 w-5 shrink-0" />}
           {notice}
+          {commitUrl && (
+            <a className="ml-auto shrink-0 underline" href={commitUrl} target="_blank" rel="noreferrer">
+              커밋 확인
+            </a>
+          )}
         </div>
       )}
 

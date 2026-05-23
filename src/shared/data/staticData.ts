@@ -192,3 +192,11 @@ export function loadStaticDataset(): StaticDataset {
     memberships,
   };
 }
+
+export function getStaticComplexSource(complexId: string): Record<string, unknown> | null {
+  for (const [path, data] of Object.entries(modules)) {
+    const source = recordValue(data, path);
+    if (source.id === complexId) return source;
+  }
+  return null;
+}
