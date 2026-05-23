@@ -62,6 +62,7 @@ export function ComplexDataInputPage() {
   const [selectedComplexId, setSelectedComplexId] = useState(requestedComplexId ?? complexes[0]?.id ?? '');
   const [adminKey, setAdminKey] = useState('');
   const [capturedDate, setCapturedDate] = useState(todayLocalDate);
+  const [newComplexName, setNewComplexName] = useState('');
   const [newComplexGroup, setNewComplexGroup] = useState(groups[0]?.name ?? '기본 비교 그룹');
   const [saving, setSaving] = useState(false);
   const [commitUrl, setCommitUrl] = useState<string | null>(null);
@@ -72,16 +73,18 @@ export function ComplexDataInputPage() {
     let preparedInput = input;
     if (!existingSource && input && typeof input === 'object' && !Array.isArray(input)) {
       const record = input as Record<string, unknown>;
-      const inputName = typeof record.complex_name === 'string'
+      const enteredName = newComplexName.trim();
+      const inputName = enteredName || (typeof record.complex_name === 'string'
         ? record.complex_name
         : typeof record.name === 'string'
           ? record.name
-          : null;
+          : null);
       const matchingComplex = inputName ? complexes.find((complex) => complex.name === inputName.trim()) : null;
       existingSource = matchingComplex ? getStaticComplexSource(matchingComplex.id) : null;
       if (!existingSource && inputName?.trim() && Array.isArray(record.items)) {
         preparedInput = {
           ...record,
+          complex_name: inputName.trim(),
           id: typeof record.id === 'string' && record.id.trim() ? record.id : generatedComplexId(inputName.trim()),
           comparison_groups:
             Array.isArray(record.comparison_groups) && record.comparison_groups.length
@@ -120,6 +123,7 @@ export function ComplexDataInputPage() {
     try {
       const result = parseInput(text, fileName);
       setPreview(result);
+      if (!requestedComplexId && !newComplexName.trim()) setNewComplexName(result.complex.name);
       setHasError(false);
       setCommitUrl(null);
       setNotice(
@@ -248,7 +252,7 @@ export function ComplexDataInputPage() {
         ) : (
           <ol className="mt-3 space-y-2 text-sm leading-6 text-slate-600">
             <li>1. 기존 단지 매물을 수정할 때는 <code className="rounded bg-white px-1.5 py-0.5 text-xs">complex_name / items</code> JSON을 그대로 붙여넣습니다. 단지명이 일치하면 자동으로 수정 대상으로 인식합니다.</li>
-            <li>2. 새 단지도 <code className="rounded bg-white px-1.5 py-0.5 text-xs">complex_name / items</code>만 붙여넣으면 됩니다. 저장용 ID는 자동 생성됩니다.</li>
+            <li>2. 새 단지는 아래 <strong>신규 단지명</strong>을 입력하고, 매물 <code className="rounded bg-white px-1.5 py-0.5 text-xs">items</code> JSON을 붙여넣으면 됩니다. JSON의 단지명도 자동 인식합니다.</li>
             <li>3. 새 단지일 때만 아래에서 포함할 비교 그룹을 확인하거나 수정합니다.</li>
             <li>4. 수집 기준일을 선택하고 관리자 저장 키로 저장합니다.</li>
             <li>5. 재배포 후 단지 목록과 비교 화면에 추가 또는 수정 내용이 표시됩니다.</li>
@@ -291,29 +295,47 @@ export function ComplexDataInputPage() {
           </div>
         )}
         {!requestedComplexId && (
-          <label className="mt-4 block text-sm font-semibold text-slate-600">
-            신규 단지 비교 그룹
-            <input
-              className="field-control mt-2"
-              list="comparison-group-options"
-              value={newComplexGroup}
-              onChange={(event) => setNewComplexGroup(event.target.value)}
-              placeholder="예: 화서역·정자동 비교"
-            />
-            <datalist id="comparison-group-options">
-              {groups.map((group) => (
-                <option key={group.id} value={group.name} />
-              ))}
-            </datalist>
-            <span className="mt-2 block text-xs font-normal text-slate-400">
-              기존 단지명과 일치하지 않는 JSON을 저장할 때 이 비교 그룹에 새 단지가 추가됩니다.
-            </span>
-          </label>
+          <div className="mt-4 grid gap-4 sm:grid-cols-2">
+            <label className="block text-sm font-semibold text-slate-600">
+              신규 단지명
+              <input
+                className="field-control mt-2"
+                value={newComplexName}
+                onChange={(event) => setNewComplexName(event.target.value)}
+                placeholder="예: 화서역파크푸르지오"
+              />
+              <span className="mt-2 block text-xs font-normal text-slate-400">
+                JSON에 단지명이 있으면 비워도 되며, 직접 입력하면 이 이름을 우선 사용합니다.
+              </span>
+            </label>
+            <label className="block text-sm font-semibold text-slate-600">
+              신규 단지 비교 그룹
+              <input
+                className="field-control mt-2"
+                list="comparison-group-options"
+                value={newComplexGroup}
+                onChange={(event) => setNewComplexGroup(event.target.value)}
+                placeholder="예: 화서역·정자동 비교"
+              />
+              <datalist id="comparison-group-options">
+                {groups.map((group) => (
+                  <option key={group.id} value={group.name} />
+                ))}
+              </datalist>
+              <span className="mt-2 block text-xs font-normal text-slate-400">
+                신규 단지가 포함될 비교 그룹입니다.
+              </span>
+            </label>
+          </div>
         )}
         <textarea
           className="field-control mt-4 min-h-[400px] resize-y font-mono text-xs leading-6"
           value={jsonText}
-          onChange={(event) => setJsonText(event.target.value)}
+          onChange={(event) => {
+            setJsonText(event.target.value);
+            setPreview(null);
+            setCommitUrl(null);
+          }}
           spellCheck={false}
         />
         <div className="mt-4 flex flex-col gap-2 sm:flex-row sm:justify-end">
@@ -331,7 +353,7 @@ export function ComplexDataInputPage() {
       <Card>
         <h2 className="text-base font-semibold">{isExistingPreview ? '수집일별 매물 저장' : '신규 단지 저장'}</h2>
         <p className="mt-2 text-sm leading-6 text-slate-500">
-          관리자 저장 키는 GitHub 토큰이 아니라 Cloudflare에 설정한 별도 비밀번호입니다. GitHub 토큰은 서버 Secret에만 보관됩니다.
+          저장 버튼을 누르면 JSON 검증도 자동으로 수행됩니다. 관리자 저장 키는 GitHub 토큰이 아니라 Cloudflare에 설정한 별도 비밀번호입니다.
         </p>
         <label className="mt-4 block text-sm font-semibold text-slate-600">
           수집 기준일
@@ -354,7 +376,7 @@ export function ComplexDataInputPage() {
             onChange={(event) => setAdminKey(event.target.value)}
             placeholder="관리자 저장 키 입력"
           />
-          <Button disabled={!preview || saving} onClick={() => void handleGitHubSave()}>
+          <Button disabled={saving} onClick={() => void handleGitHubSave()}>
             <span className="flex items-center justify-center gap-2">
               <Save className="h-4 w-4" /> {saving ? '저장 중...' : isExistingPreview ? '오늘 데이터 저장' : '새 단지 저장'}
             </span>
