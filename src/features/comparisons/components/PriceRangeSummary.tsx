@@ -149,8 +149,24 @@ export function PriceRangeSummary({
                   <span className="text-slate-500">{summary.listing_count}건</span>
                 </div>
               </div>
+              <div className={`mt-3 grid gap-1 text-center ${showMedian ? 'grid-cols-3' : 'grid-cols-2'}`}>
+                <div className="text-left">
+                  <p className="text-[11px] font-semibold text-slate-400">최저</p>
+                  <p className="metric-number mt-0.5 text-base font-bold text-brand-700">{formatPrice(summary.min_price)}</p>
+                </div>
+                {showMedian && (
+                  <div>
+                    <p className="text-[11px] font-semibold text-slate-500">중앙</p>
+                    <p className="metric-number mt-0.5 text-lg font-extrabold text-slate-900">{formatPrice(summary.median_price)}</p>
+                  </div>
+                )}
+                <div className="text-right">
+                  <p className="text-[11px] font-semibold text-slate-400">최고</p>
+                  <p className="metric-number mt-0.5 text-base font-bold text-rose-600">{formatPrice(summary.max_price)}</p>
+                </div>
+              </div>
               {interactive ? (
-                <div className="relative mt-4 h-[70px]">
+                <div className="relative mt-3 h-[70px]">
                   <span className="absolute bottom-2 left-0 right-0 h-2 rounded-full bg-slate-100" />
                   <span
                     className="absolute bottom-2 h-2 rounded-full opacity-30"
@@ -187,7 +203,7 @@ export function PriceRangeSummary({
                   ))}
                 </div>
               ) : (
-                <div className="relative mt-4 h-[18px] rounded-full bg-slate-100">
+                <div className="relative mt-3 h-[18px] rounded-full bg-slate-100">
                   <span
                     className="absolute bottom-0 top-0 rounded-full"
                     style={{
@@ -204,22 +220,6 @@ export function PriceRangeSummary({
                   )}
                 </div>
               )}
-              <div className={`mt-3 grid gap-1 text-center ${showMedian ? 'grid-cols-3' : 'grid-cols-2'}`}>
-                <div className="text-left">
-                  <p className="text-[11px] font-semibold text-slate-400">최저</p>
-                  <p className="metric-number mt-0.5 text-base font-bold text-brand-700">{formatPrice(summary.min_price)}</p>
-                </div>
-                {showMedian && (
-                  <div>
-                    <p className="text-[11px] font-semibold text-slate-500">중앙</p>
-                    <p className="metric-number mt-0.5 text-lg font-extrabold text-slate-900">{formatPrice(summary.median_price)}</p>
-                  </div>
-                )}
-                <div className="text-right">
-                  <p className="text-[11px] font-semibold text-slate-400">최고</p>
-                  <p className="metric-number mt-0.5 text-base font-bold text-rose-600">{formatPrice(summary.max_price)}</p>
-                </div>
-              </div>
               {activeMarker && (
                 <div className="mt-3 rounded-2xl bg-slate-50 p-3">
                   <div className="flex items-center justify-between gap-3">
@@ -243,14 +243,11 @@ export function PriceRangeSummary({
                               <strong className="shrink-0 text-slate-800">{formatPrice(listing.price)}</strong>
                               <span className="truncate">{listing.building_no ?? '동 미입력'} · {listing.floor_text ?? '층 미입력'} · {listing.direction ?? '방향 미입력'}</span>
                             </span>
-                            <span className="shrink-0 text-slate-400">{formatDate(listing.verified_date)}</span>
-                          </p>
-                          {badges.length > 0 && (
-                            <div className="mt-2 flex flex-wrap gap-1">
+                            <span className="flex shrink-0 items-center justify-end gap-1 whitespace-nowrap text-slate-400">
                               {badges.map((badge) => (
                                 <span
                                   key={badge}
-                                  className={`rounded-full px-2 py-0.5 text-[10px] font-bold ${
+                                  className={`shrink-0 rounded-full px-1.5 py-0.5 text-[9px] font-bold ${
                                     badge === '세안고'
                                       ? 'bg-violet-50 text-violet-700'
                                       : badge === '인테리어'
@@ -261,8 +258,9 @@ export function PriceRangeSummary({
                                   {badge}
                                 </span>
                               ))}
-                            </div>
-                          )}
+                              <span className="shrink-0">{formatDate(listing.verified_date)}</span>
+                            </span>
+                          </p>
                         </div>
                       );
                     })}
