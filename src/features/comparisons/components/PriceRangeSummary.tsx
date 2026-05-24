@@ -24,7 +24,7 @@ interface PositionedMarker extends PriceMarker {
 
 const MARKER_MIN_POSITION = 5;
 const MARKER_MAX_POSITION = 95;
-const MARKER_HORIZONTAL_GAP = 10;
+const MARKER_HORIZONTAL_GAP = 7;
 
 function createMarkers(
   summary: ListingAreaSummary,
