@@ -143,22 +143,8 @@ export function PriceRangeSummary({
                   <span className="text-slate-500">{summary.listing_count}건</span>
                 </div>
               </div>
-              <div className="mt-3 grid grid-cols-3 gap-2">
-                <div className="rounded-xl bg-blue-50 px-2.5 py-2.5">
-                  <p className="text-[10px] font-semibold text-brand-600">최저가</p>
-                  <p className="metric-number mt-1 text-sm font-bold text-brand-700">{formatPrice(summary.min_price)}</p>
-                </div>
-                <div className="rounded-xl bg-slate-900 px-2.5 py-2.5 text-white">
-                  <p className="text-[10px] font-semibold text-slate-300">중앙가</p>
-                  <p className="metric-number mt-1 text-base font-bold">{formatPrice(summary.median_price)}</p>
-                </div>
-                <div className="rounded-xl bg-rose-50 px-2.5 py-2.5">
-                  <p className="text-[10px] font-semibold text-rose-500">최고가</p>
-                  <p className="metric-number mt-1 text-sm font-bold text-rose-600">{formatPrice(summary.max_price)}</p>
-                </div>
-              </div>
               {interactive ? (
-                <div className="relative mt-3 h-[70px]">
+                <div className="relative mt-4 h-[70px]">
                   <span className="absolute bottom-2 left-0 right-0 h-2 rounded-full bg-slate-100" />
                   <span
                     className="absolute bottom-2 h-2 rounded-full opacity-30"
@@ -193,7 +179,7 @@ export function PriceRangeSummary({
                   ))}
                 </div>
               ) : (
-                <div className="relative mt-3 h-[18px] rounded-full bg-slate-100">
+                <div className="relative mt-4 h-[18px] rounded-full bg-slate-100">
                   <span
                     className="absolute bottom-0 top-0 rounded-full"
                     style={{
@@ -208,6 +194,20 @@ export function PriceRangeSummary({
                   />
                 </div>
               )}
+              <div className="mt-3 grid grid-cols-3 gap-1 text-center">
+                <div className="text-left">
+                  <p className="text-[11px] font-semibold text-slate-400">최저</p>
+                  <p className="metric-number mt-0.5 text-base font-bold text-brand-700">{formatPrice(summary.min_price)}</p>
+                </div>
+                <div>
+                  <p className="text-[11px] font-semibold text-slate-500">중앙</p>
+                  <p className="metric-number mt-0.5 text-lg font-extrabold text-slate-900">{formatPrice(summary.median_price)}</p>
+                </div>
+                <div className="text-right">
+                  <p className="text-[11px] font-semibold text-slate-400">최고</p>
+                  <p className="metric-number mt-0.5 text-base font-bold text-rose-600">{formatPrice(summary.max_price)}</p>
+                </div>
+              </div>
               {activeMarker && (
                 <div className="mt-3 rounded-2xl bg-slate-50 p-3">
                   <div className="flex items-center justify-between gap-3">

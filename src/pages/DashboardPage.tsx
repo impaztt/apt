@@ -94,7 +94,7 @@ export function DashboardPage() {
       <AreaTabs value={areaGroup} options={areaOptions} onChange={setAreaGroup} />
 
       <Card className="p-3.5 shadow-none sm:p-5">
-        <details>
+        <details open>
           <summary className="flex cursor-pointer list-none items-center justify-between gap-3">
             <span className="inline-flex min-w-0 items-center gap-2 text-sm font-semibold text-slate-700">
               <SlidersHorizontal className="h-4 w-4 shrink-0 text-brand-600" />
