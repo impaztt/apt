@@ -4,6 +4,7 @@ import { formatDate } from '../../../shared/utils/date';
 import { formatPrice } from '../../../shared/utils/price';
 import { getAreaGroup } from '../../../shared/utils/area';
 import { Card } from '../../../shared/components/Card';
+import { getListingKeywordBadges } from '../../listings/statistics';
 
 type PricedListing = ApartmentListing & { price: number };
 type SortMode = 'median' | 'min' | 'count' | 'name';
@@ -233,15 +234,38 @@ export function PriceRangeSummary({
                     </span>
                   </div>
                   <div className="mt-2 max-h-44 space-y-1.5 overflow-y-auto text-xs text-slate-600">
-                    {[...activeMarker.listings].sort((a, b) => a.price - b.price).map((listing) => (
-                      <p key={listing.id} className="flex justify-between gap-2">
-                        <span className="flex min-w-0 gap-2">
-                          <strong className="shrink-0 text-slate-800">{formatPrice(listing.price)}</strong>
-                          <span className="truncate">{listing.building_no ?? '동 미입력'} · {listing.floor_text ?? '층 미입력'} · {listing.direction ?? '방향 미입력'}</span>
-                        </span>
-                        <span className="shrink-0 text-slate-400">{formatDate(listing.verified_date)}</span>
-                      </p>
-                    ))}
+                    {[...activeMarker.listings].sort((a, b) => a.price - b.price).map((listing) => {
+                      const badges = getListingKeywordBadges(listing);
+                      return (
+                        <div key={listing.id} className="rounded-xl bg-white px-2.5 py-2">
+                          <p className="flex justify-between gap-2">
+                            <span className="flex min-w-0 gap-2">
+                              <strong className="shrink-0 text-slate-800">{formatPrice(listing.price)}</strong>
+                              <span className="truncate">{listing.building_no ?? '동 미입력'} · {listing.floor_text ?? '층 미입력'} · {listing.direction ?? '방향 미입력'}</span>
+                            </span>
+                            <span className="shrink-0 text-slate-400">{formatDate(listing.verified_date)}</span>
+                          </p>
+                          {badges.length > 0 && (
+                            <div className="mt-2 flex flex-wrap gap-1">
+                              {badges.map((badge) => (
+                                <span
+                                  key={badge}
+                                  className={`rounded-full px-2 py-0.5 text-[10px] font-bold ${
+                                    badge === '세안고'
+                                      ? 'bg-violet-50 text-violet-700'
+                                      : badge === '인테리어'
+                                        ? 'bg-emerald-50 text-emerald-700'
+                                        : 'bg-slate-100 text-slate-600'
+                                  }`}
+                                >
+                                  {badge}
+                                </span>
+                              ))}
+                            </div>
+                          )}
+                        </div>
+                      );
+                    })}
                   </div>
                 </div>
               )}

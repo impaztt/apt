@@ -2,12 +2,19 @@ import { useEffect, useState } from 'react';
 import { ArrowLeft, CalendarDays } from 'lucide-react';
 import { AllAreasComparisonCards, ComplexPriceRanking, SelectedAreaHighlights } from '../features/comparisons/components/MobileComparisonCards';
 import { PriceRangeSummary } from '../features/comparisons/components/PriceRangeSummary';
-import { filterSpecialListings, isSpecialListing, summarizeListings } from '../features/listings/statistics';
+import {
+  filterSpecialListings,
+  filterTenantOccupiedListings,
+  isSpecialListing,
+  isTenantOccupiedListing,
+  summarizeListings,
+} from '../features/listings/statistics';
 import type { AreaSelection } from '../features/listings/types';
 import { AreaTabs } from '../shared/components/AreaTabs';
 import { Card } from '../shared/components/Card';
 import { PageHeader } from '../shared/components/PageHeader';
 import { SpecialUnitToggle } from '../shared/components/SpecialUnitToggle';
+import { TenantOccupiedToggle } from '../shared/components/TenantOccupiedToggle';
 import { EmptyState, ErrorState, LoadingState } from '../shared/components/States';
 import { useAppData } from '../shared/data/AppDataContext';
 import { getAreaOptions } from '../shared/utils/area';
@@ -18,6 +25,7 @@ export function ComparisonPage() {
   const [groupId, setGroupId] = useState('');
   const [areaGroup, setAreaGroup] = useState<AreaSelection>('all');
   const [includeSpecialUnits, setIncludeSpecialUnits] = useState(false);
+  const [includeTenantOccupied, setIncludeTenantOccupied] = useState(false);
   const group = groups.find((item) => item.id === groupId) ?? groups[0];
   const complexIds = memberships
     .filter((item) => item.group_id === group?.id)
@@ -27,7 +35,13 @@ export function ComparisonPage() {
   const specialSaleCount = groupListings.filter(
     (listing) => listing.deal_type === '매매' && listing.price !== null && isSpecialListing(listing),
   ).length;
-  const analysisListings = filterSpecialListings(listings, includeSpecialUnits);
+  const tenantOccupiedSaleCount = groupListings.filter(
+    (listing) => listing.deal_type === '매매' && listing.price !== null && isTenantOccupiedListing(listing),
+  ).length;
+  const analysisListings = filterTenantOccupiedListings(
+    filterSpecialListings(listings, includeSpecialUnits),
+    includeTenantOccupied,
+  );
   const relevantListings = analysisListings.filter((listing) => complexIds.includes(listing.complex_id));
   const areaOptions = getAreaOptions(relevantListings.filter((listing) => listing.deal_type === '매매'));
   const selectedArea = areaOptions.find((area) => area.key === areaGroup);
@@ -68,6 +82,12 @@ export function ComparisonPage() {
         checked={includeSpecialUnits}
         onChange={setIncludeSpecialUnits}
         specialCount={specialSaleCount}
+      />
+
+      <TenantOccupiedToggle
+        checked={includeTenantOccupied}
+        onChange={setIncludeTenantOccupied}
+        occupiedCount={tenantOccupiedSaleCount}
       />
 
       {areaOptions.length ? areaGroup === 'all' ? (

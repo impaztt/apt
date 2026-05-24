@@ -2,13 +2,20 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Check, SlidersHorizontal, TrendingUp } from 'lucide-react';
 import { PriceRangeSummary } from '../features/comparisons/components/PriceRangeSummary';
-import { filterSpecialListings, isSpecialListing, summarizeListings } from '../features/listings/statistics';
+import {
+  filterSpecialListings,
+  filterTenantOccupiedListings,
+  isSpecialListing,
+  isTenantOccupiedListing,
+  summarizeListings,
+} from '../features/listings/statistics';
 import type { AreaSelection } from '../features/listings/types';
 import { AreaTabs } from '../shared/components/AreaTabs';
 import { Card } from '../shared/components/Card';
 import { MetricCard } from '../shared/components/MetricCard';
 import { PageHeader } from '../shared/components/PageHeader';
 import { SpecialUnitToggle } from '../shared/components/SpecialUnitToggle';
+import { TenantOccupiedToggle } from '../shared/components/TenantOccupiedToggle';
 import { EmptyState, ErrorState, LoadingState } from '../shared/components/States';
 import { useAppData } from '../shared/data/AppDataContext';
 import { getAreaGroup, getAreaOptions } from '../shared/utils/area';
@@ -21,6 +28,7 @@ export function DashboardPage() {
   const [areaGroup, setAreaGroup] = useState<AreaSelection>('all');
   const [selectedComplexIds, setSelectedComplexIds] = useState<string[]>([]);
   const [includeSpecialUnits, setIncludeSpecialUnits] = useState(false);
+  const [includeTenantOccupied, setIncludeTenantOccupied] = useState(false);
   const activeGroup = groups.find((group) => group.id === selectedGroupId) ?? groups[0];
   const groupComplexIds = memberships
     .filter((membership) => membership.group_id === activeGroup?.id)
@@ -33,7 +41,13 @@ export function DashboardPage() {
   const specialSaleCount = selectedComplexListings.filter(
     (listing) => listing.deal_type === '매매' && listing.price !== null && isSpecialListing(listing),
   ).length;
-  const analysisListings = filterSpecialListings(listings, includeSpecialUnits);
+  const tenantOccupiedSaleCount = selectedComplexListings.filter(
+    (listing) => listing.deal_type === '매매' && listing.price !== null && isTenantOccupiedListing(listing),
+  ).length;
+  const analysisListings = filterTenantOccupiedListings(
+    filterSpecialListings(listings, includeSpecialUnits),
+    includeTenantOccupied,
+  );
   const relevantListings = analysisListings.filter((listing) => complexIds.includes(listing.complex_id));
   const saleListings = relevantListings.filter((listing) => listing.deal_type === '매매' && listing.price !== null);
   const areaOptions = getAreaOptions(saleListings);
@@ -150,6 +164,12 @@ export function DashboardPage() {
         checked={includeSpecialUnits}
         onChange={setIncludeSpecialUnits}
         specialCount={specialSaleCount}
+      />
+
+      <TenantOccupiedToggle
+        checked={includeTenantOccupied}
+        onChange={setIncludeTenantOccupied}
+        occupiedCount={tenantOccupiedSaleCount}
       />
 
       {summaries.length ? (

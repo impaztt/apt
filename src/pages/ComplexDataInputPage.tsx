@@ -3,7 +3,13 @@ import { Link, useSearchParams } from 'react-router-dom';
 import { ArrowLeft, CheckCircle2, Download, FileJson, Save, Upload, TriangleAlert } from 'lucide-react';
 import type { ParsedComplexData } from '../shared/data/staticData';
 import { getStaticComplexSource, parseComplexDataFile } from '../shared/data/staticData';
-import { filterSpecialListings, isSpecialListing, summarizeListings } from '../features/listings/statistics';
+import {
+  filterSpecialListings,
+  filterTenantOccupiedListings,
+  isSpecialListing,
+  isTenantOccupiedListing,
+  summarizeListings,
+} from '../features/listings/statistics';
 import { Button } from '../shared/components/Button';
 import { Card } from '../shared/components/Card';
 import { PageHeader } from '../shared/components/PageHeader';
@@ -234,7 +240,12 @@ export function ComplexDataInputPage() {
   const previewBrokerCount = preview
     ? preview.listings.reduce((total, listing) => total + listing.broker_details.length, 0)
     : 0;
-  const summaries = preview ? summarizeListings(filterSpecialListings(preview.listings, false), [preview.complex]) : [];
+  const previewTenantOccupiedCount = preview
+    ? preview.listings.filter((listing) => listing.deal_type === '매매' && isTenantOccupiedListing(listing)).length
+    : 0;
+  const summaries = preview
+    ? summarizeListings(filterTenantOccupiedListings(filterSpecialListings(preview.listings, false), false), [preview.complex])
+    : [];
   const isExistingPreview = preview ? complexes.some((complex) => complex.id === preview.complex.id) : Boolean(requestedComplexId);
 
   return (
@@ -261,9 +272,10 @@ export function ComplexDataInputPage() {
             <li>2. <code className="rounded bg-white px-1.5 py-0.5 text-xs">supply_area_m2 / exclusive_area_m2</code>는 평형 표시 규칙으로 자동 변환됩니다. <code className="rounded bg-white px-1.5 py-0.5 text-xs">broker_details</code>는 동일 매물의 중개사 상세로 보존됩니다.</li>
             <li>3. 가격 범위 매물은 <code className="rounded bg-white px-1.5 py-0.5 text-xs">is_price_range: true</code>, <code className="rounded bg-white px-1.5 py-0.5 text-xs">price_min_text / price_max_text</code>로 넣으면 낮은 금액을 호가 비교 기준으로 계산합니다.</li>
             <li>4. <code className="rounded bg-white px-1.5 py-0.5 text-xs">supply_area_type</code> 또는 <code className="rounded bg-white px-1.5 py-0.5 text-xs">exclusive_area_type</code> 코드에 <code className="rounded bg-white px-1.5 py-0.5 text-xs">P</code>가 있으면 펜트, <code className="rounded bg-white px-1.5 py-0.5 text-xs">T</code>가 있으면 테라스로 자동 분류합니다. 필요하면 <code className="rounded bg-white px-1.5 py-0.5 text-xs">special_unit_type</code>으로 직접 지정할 수도 있습니다.</li>
-            <li>5. <strong>JSON 검증 및 미리보기</strong>로 일반세대 기준 평형별 매매 가격이 맞는지 확인합니다.</li>
-            <li>6. 수집 기준일을 확인하고 관리자 저장 키를 입력한 뒤 <strong>오늘 데이터 저장</strong>을 누릅니다.</li>
-            <li>7. 재배포 후 단지 상세와 대시보드에서 변경 내용을 확인합니다.</li>
+            <li>5. <code className="rounded bg-white px-1.5 py-0.5 text-xs">keyword_analysis.occupancy_type</code>이 <code className="rounded bg-white px-1.5 py-0.5 text-xs">세안고</code>인 매물은 기본 통계에서 제외됩니다. 중개사 상세에 표시된 세안고도 같은 매물에 반영됩니다.</li>
+            <li>6. <strong>JSON 검증 및 미리보기</strong>로 일반세대·비세안고 기준 평형별 매매 가격이 맞는지 확인합니다.</li>
+            <li>7. 수집 기준일을 확인하고 관리자 저장 키를 입력한 뒤 <strong>오늘 데이터 저장</strong>을 누릅니다.</li>
+            <li>8. 재배포 후 단지 상세와 대시보드에서 변경 내용을 확인합니다.</li>
           </ol>
         ) : (
           <ol className="mt-3 space-y-2 text-sm leading-6 text-slate-600">
@@ -271,14 +283,15 @@ export function ComplexDataInputPage() {
             <li>2. 새 단지는 아래 <strong>신규 단지명</strong>을 입력하고, <code className="rounded bg-white px-1.5 py-0.5 text-xs">data_version: "m2_with_broker_details_v1"</code> 형식의 매물 JSON을 붙여넣으면 됩니다.</li>
             <li>3. 공급·전용면적은 <code className="rounded bg-white px-1.5 py-0.5 text-xs">㎡</code> 입력값을 기준으로 평형 규칙에 자동 연결하고, 중개사 상세는 매물 안에서 펼쳐볼 수 있게 저장합니다.</li>
             <li>4. 타입 코드가 <code className="rounded bg-white px-1.5 py-0.5 text-xs">120PB</code>처럼 <code className="rounded bg-white px-1.5 py-0.5 text-xs">P</code>를 포함하면 펜트, <code className="rounded bg-white px-1.5 py-0.5 text-xs">T</code>를 포함하면 테라스로 자동 분류됩니다. 특수세대는 일반 통계에서 기본 제외됩니다.</li>
-            <li>5. 새 단지일 때만 아래에서 포함할 비교 그룹을 확인하거나 수정합니다.</li>
-            <li>6. 수집 기준일을 선택하고 관리자 저장 키로 저장합니다.</li>
-            <li>7. 재배포 후 단지 목록과 비교 화면에 추가 또는 수정 내용이 표시됩니다.</li>
+            <li>5. <code className="rounded bg-white px-1.5 py-0.5 text-xs">occupancy_type: "세안고"</code>인 매물도 기본 통계에서 제외되며 화면에서 포함 여부를 선택할 수 있습니다.</li>
+            <li>6. 새 단지일 때만 아래에서 포함할 비교 그룹을 확인하거나 수정합니다.</li>
+            <li>7. 수집 기준일을 선택하고 관리자 저장 키로 저장합니다.</li>
+            <li>8. 재배포 후 단지 목록과 비교 화면에 추가 또는 수정 내용이 표시됩니다.</li>
           </ol>
         )}
         <p className="mt-4 rounded-2xl bg-white px-4 py-3 text-xs leading-5 text-slate-500">
           저장 파일은 <code className="rounded bg-slate-50 px-1">snapshots/단지ID/수집일.json</code>으로 누적됩니다. 같은 날짜에 다시 저장하면
-          해당 날짜 자료만 갱신됩니다. 대시보드 가격 비교는 매매 매물만 계산하며, 특수세대 표식 매물은 기본 통계에서 제외됩니다.
+          해당 날짜 자료만 갱신됩니다. 대시보드 가격 비교는 매매 매물만 계산하며, 특수세대 및 세안고 매물은 기본 통계에서 제외됩니다.
         </p>
       </Card>
 
@@ -432,6 +445,11 @@ export function ComplexDataInputPage() {
             {previewSpecialCount > 0 && (
               <p className="mt-2 rounded-xl bg-amber-50 px-3 py-2 text-xs font-semibold text-amber-700">
                 특수세대 {previewSpecialCount}건은 아래 일반세대 가격 요약에서 제외됩니다.
+              </p>
+            )}
+            {previewTenantOccupiedCount > 0 && (
+              <p className="mt-2 rounded-xl bg-violet-50 px-3 py-2 text-xs font-semibold text-violet-700">
+                세안고 매물 {previewTenantOccupiedCount}건은 아래 기본 가격 요약에서 제외됩니다.
               </p>
             )}
           </Card>

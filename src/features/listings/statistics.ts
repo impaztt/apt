@@ -24,6 +24,40 @@ export function filterSpecialListings(listings: ApartmentListing[], includeSpeci
   return includeSpecialUnits ? listings : listings.filter((listing) => !isSpecialListing(listing));
 }
 
+function listingKeywordValues(listing: ApartmentListing): string[] {
+  const sources = [
+    listing.keyword_analysis,
+    ...listing.broker_details.map((detail) => detail.keyword_analysis),
+  ];
+  return sources.flatMap((analysis) =>
+    analysis
+      ? [analysis.occupancy_type, analysis.structure_type, analysis.condition_type].filter(
+          (value): value is string => value !== null,
+        )
+      : [],
+  );
+}
+
+export function isTenantOccupiedListing(listing: ApartmentListing): boolean {
+  return listingKeywordValues(listing).some((value) => value.includes('세안고'));
+}
+
+export function filterTenantOccupiedListings(
+  listings: ApartmentListing[],
+  includeTenantOccupied: boolean,
+): ApartmentListing[] {
+  return includeTenantOccupied ? listings : listings.filter((listing) => !isTenantOccupiedListing(listing));
+}
+
+export function getListingKeywordBadges(listing: ApartmentListing): string[] {
+  const values = listingKeywordValues(listing);
+  return [
+    ...(values.some((value) => value.includes('세안고')) ? ['세안고'] : []),
+    ...(values.some((value) => value.includes('기본')) ? ['기본'] : []),
+    ...(values.some((value) => value.includes('인테리어')) ? ['인테리어'] : []),
+  ];
+}
+
 export function summarizeListings(
   listings: ApartmentListing[],
   complexes: ApartmentComplex[],

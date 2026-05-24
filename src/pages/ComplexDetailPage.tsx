@@ -1,11 +1,19 @@
 import { useMemo, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { ArrowLeft, CalendarDays, FileJson } from 'lucide-react';
-import { filterSpecialListings, isSpecialListing, summarizeListings } from '../features/listings/statistics';
+import {
+  filterSpecialListings,
+  filterTenantOccupiedListings,
+  getListingKeywordBadges,
+  isSpecialListing,
+  isTenantOccupiedListing,
+  summarizeListings,
+} from '../features/listings/statistics';
 import type { AreaGroup, DealType, FloorGroup } from '../features/listings/types';
 import { Button } from '../shared/components/Button';
 import { Card } from '../shared/components/Card';
 import { SpecialUnitToggle } from '../shared/components/SpecialUnitToggle';
+import { TenantOccupiedToggle } from '../shared/components/TenantOccupiedToggle';
 import { EmptyState, ErrorState, LoadingState } from '../shared/components/States';
 import { useAppData } from '../shared/data/AppDataContext';
 import { getAreaGroup, getAreaOption } from '../shared/utils/area';
@@ -23,6 +31,7 @@ export function ComplexDetailPage() {
   const [maxPriceEok, setMaxPriceEok] = useState('');
   const [capturedDate, setCapturedDate] = useState('');
   const [includeSpecialUnits, setIncludeSpecialUnits] = useState(false);
+  const [includeTenantOccupied, setIncludeTenantOccupied] = useState(false);
   const complex = complexes.find((item) => item.id === complexId);
   const complexSnapshots = snapshots
     .filter((snapshot) => snapshot.complex_id === complexId)
@@ -32,7 +41,13 @@ export function ComplexDetailPage() {
   const specialSaleCount = relatedListings.filter(
     (listing) => listing.deal_type === '매매' && listing.price !== null && isSpecialListing(listing),
   ).length;
-  const summaries = summarizeListings(filterSpecialListings(relatedListings, includeSpecialUnits), complex ? [complex] : []);
+  const tenantOccupiedSaleCount = relatedListings.filter(
+    (listing) => listing.deal_type === '매매' && listing.price !== null && isTenantOccupiedListing(listing),
+  ).length;
+  const summaries = summarizeListings(
+    filterTenantOccupiedListings(filterSpecialListings(relatedListings, includeSpecialUnits), includeTenantOccupied),
+    complex ? [complex] : [],
+  );
   const filteredListings = useMemo(
     () =>
       relatedListings
@@ -107,6 +122,12 @@ export function ComplexDetailPage() {
         checked={includeSpecialUnits}
         onChange={setIncludeSpecialUnits}
         specialCount={specialSaleCount}
+      />
+
+      <TenantOccupiedToggle
+        checked={includeTenantOccupied}
+        onChange={setIncludeTenantOccupied}
+        occupiedCount={tenantOccupiedSaleCount}
       />
 
       <section>
@@ -186,7 +207,7 @@ export function ComplexDetailPage() {
               <Card key={listing.id} className={isStaleDate(listing.verified_date) ? 'opacity-60' : ''}>
                 <div className="flex justify-between gap-4">
                   <div>
-                    <div className="flex items-center gap-2">
+                    <div className="flex flex-wrap items-center gap-2">
                       <span className="rounded-full bg-slate-50 px-2 py-1 text-xs font-semibold">{listing.deal_type}</span>
                       {index === 0 && listing.deal_type === '매매' && (
                         <span className="rounded-full bg-brand-50 px-2 py-1 text-xs font-semibold text-brand-600">최저가</span>
@@ -205,6 +226,20 @@ export function ComplexDetailPage() {
                           {listing.special_unit_type ?? '특수세대'}
                         </span>
                       )}
+                      {getListingKeywordBadges(listing).map((badge) => (
+                        <span
+                          key={badge}
+                          className={`rounded-full px-2 py-1 text-xs font-semibold ${
+                            badge === '세안고'
+                              ? 'bg-violet-50 text-violet-700'
+                              : badge === '인테리어'
+                                ? 'bg-emerald-50 text-emerald-700'
+                                : 'bg-slate-100 text-slate-600'
+                          }`}
+                        >
+                          {badge}
+                        </span>
+                      ))}
                     </div>
                     <p className="metric-number mt-4 text-2xl font-bold">
                       {formatPrice(listing.price ?? listing.deposit)}

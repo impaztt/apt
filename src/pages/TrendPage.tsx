@@ -2,13 +2,21 @@ import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { HistoryDistributionPlot } from '../features/comparisons/components/HistoryDistributionPlot';
 import { TrendLineChart } from '../features/comparisons/components/TrendLineChart';
-import { compareLatestSnapshots, filterSpecialListings, isSpecialListing, summarizeSnapshotHistory } from '../features/listings/statistics';
+import {
+  compareLatestSnapshots,
+  filterSpecialListings,
+  filterTenantOccupiedListings,
+  isSpecialListing,
+  isTenantOccupiedListing,
+  summarizeSnapshotHistory,
+} from '../features/listings/statistics';
 import type { AreaSelection } from '../features/listings/types';
 import { AreaTabs } from '../shared/components/AreaTabs';
 import { Card } from '../shared/components/Card';
 import { MetricCard } from '../shared/components/MetricCard';
 import { PageHeader } from '../shared/components/PageHeader';
 import { SpecialUnitToggle } from '../shared/components/SpecialUnitToggle';
+import { TenantOccupiedToggle } from '../shared/components/TenantOccupiedToggle';
 import { EmptyState, ErrorState, LoadingState } from '../shared/components/States';
 import { useAppData } from '../shared/data/AppDataContext';
 import { getAreaOptions } from '../shared/utils/area';
@@ -23,6 +31,7 @@ export function TrendPage() {
   const [areaGroup, setAreaGroup] = useState<AreaSelection>(requestedArea ?? 'all');
   const [complexId, setComplexId] = useState('');
   const [includeSpecialUnits, setIncludeSpecialUnits] = useState(false);
+  const [includeTenantOccupied, setIncludeTenantOccupied] = useState(false);
   const group = groups.find((item) => item.id === groupId) ?? groups[0];
   const complexIds = memberships
     .filter((item) => item.group_id === group?.id)
@@ -32,9 +41,15 @@ export function TrendPage() {
   const specialSaleCount = rawGroupSnapshots
     .flatMap((snapshot) => snapshot.listings)
     .filter((listing) => listing.deal_type === '매매' && listing.price !== null && isSpecialListing(listing)).length;
+  const tenantOccupiedSaleCount = rawGroupSnapshots
+    .flatMap((snapshot) => snapshot.listings)
+    .filter((listing) => listing.deal_type === '매매' && listing.price !== null && isTenantOccupiedListing(listing)).length;
   const groupSnapshots = rawGroupSnapshots.map((snapshot) => ({
     ...snapshot,
-    listings: filterSpecialListings(snapshot.listings, includeSpecialUnits),
+    listings: filterTenantOccupiedListings(
+      filterSpecialListings(snapshot.listings, includeSpecialUnits),
+      includeTenantOccupied,
+    ),
   }));
   const historicalListings = groupSnapshots.flatMap((snapshot) => snapshot.listings);
   const areaOptions = getAreaOptions(historicalListings.filter((listing) => listing.deal_type === '매매'));
@@ -87,6 +102,12 @@ export function TrendPage() {
         checked={includeSpecialUnits}
         onChange={setIncludeSpecialUnits}
         specialCount={specialSaleCount}
+      />
+
+      <TenantOccupiedToggle
+        checked={includeTenantOccupied}
+        onChange={setIncludeTenantOccupied}
+        occupiedCount={tenantOccupiedSaleCount}
       />
 
       {areaOptions.length ? (
