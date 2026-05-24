@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Check, ChevronDown, SlidersHorizontal, TrendingUp } from 'lucide-react';
+import { Check, SlidersHorizontal, TrendingUp } from 'lucide-react';
 import { PriceRangeSummary } from '../features/comparisons/components/PriceRangeSummary';
 import {
   filterSpecialListings,
@@ -60,9 +60,6 @@ export function DashboardPage() {
   const capturedDates = complexIds.map((id) => latestCapturedDates[id]).filter((date): date is string => Boolean(date));
   const latestCapturedDate = [...capturedDates].sort().pop() ?? null;
   const differingDates = new Set(capturedDates).size > 1;
-  const specialUnitLabel = includeSpecialUnits ? '특수세대 포함' : '특수세대 제외';
-  const tenantOccupiedLabel =
-    tenantOccupiedMode === 'all' ? '세안고 전체 포함' : tenantOccupiedMode === 'exclude' ? '세안고 제외' : '세안고만';
   const lowPriceListings = [...selectedListings]
     .filter((listing): listing is typeof listing & { price: number } => listing.price !== null)
     .sort((a, b) => a.price - b.price)
@@ -98,20 +95,13 @@ export function DashboardPage() {
       <AreaTabs value={areaGroup} options={areaOptions} onChange={setAreaGroup} />
 
       <Card className="overflow-hidden p-0 shadow-none">
-        <details className="group">
-          <summary className="flex cursor-pointer list-none items-center justify-between gap-3 px-4 py-3.5 sm:px-5 sm:py-4">
-            <span className="min-w-0">
-              <span className="inline-flex items-center gap-2 text-sm font-semibold text-slate-700">
-                <SlidersHorizontal className="h-4 w-4 shrink-0 text-brand-600" />
-                분석 조건 설정
-              </span>
-              <span className="mt-1 block truncate pl-6 text-[11px] text-slate-400">
-                단지 {complexIds.length}개 · {specialUnitLabel} · {tenantOccupiedLabel}
-              </span>
-            </span>
-            <ChevronDown className="h-4 w-4 shrink-0 text-slate-400 transition group-open:rotate-180" />
-          </summary>
-          <div className="border-t border-slate-100 px-4 pb-1 sm:px-5">
+          <div className="px-4 pt-3.5 sm:px-5">
+            <p className="inline-flex items-center gap-2 text-sm font-semibold text-slate-700">
+              <SlidersHorizontal className="h-4 w-4 shrink-0 text-brand-600" />
+              분석 조건
+            </p>
+          </div>
+          <div className="px-4 pb-1 sm:px-5">
             <label className="flex items-center gap-3 border-b border-slate-100 py-3">
               <span className="shrink-0 text-sm font-semibold text-slate-700">비교 그룹</span>
               <select
@@ -175,7 +165,6 @@ export function DashboardPage() {
               <TenantOccupiedToggle compact mode={tenantOccupiedMode} onChange={setTenantOccupiedMode} occupiedCount={tenantOccupiedSaleCount} />
             </div>
           </div>
-        </details>
       </Card>
 
       {summaries.length ? (
