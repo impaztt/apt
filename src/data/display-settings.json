@@ -16,7 +16,7 @@
     },
     {
       "id": "area-33-84",
-      "source_area_pyeong_min": 32,
+      "source_area_pyeong_min": 31,
       "source_area_pyeong_max": 37,
       "display_area_pyeong": 33,
       "exclusive_area_m2": 84
@@ -38,7 +38,7 @@
     {
       "id": "area-55-148",
       "source_area_pyeong_min": 52,
-      "source_area_pyeong_max": 58,
+      "source_area_pyeong_max": 65,
       "display_area_pyeong": 55,
       "exclusive_area_m2": 148
     }
