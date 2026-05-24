@@ -22,8 +22,6 @@ interface PositionedMarker extends PriceMarker {
   displayPosition: number;
 }
 
-const MARKER_MIN_POSITION = 5;
-const MARKER_MAX_POSITION = 95;
 const MARKER_HORIZONTAL_GAP = 7;
 
 function createMarkers(
@@ -57,27 +55,55 @@ function createMarkers(
     }));
 }
 
-function positionMarkers(markers: PriceMarker[], position: (price: number) => number): PositionedMarker[] {
-  const minimumGap = Math.min(
-    MARKER_HORIZONTAL_GAP,
-    markers.length > 1 ? (MARKER_MAX_POSITION - MARKER_MIN_POSITION) / (markers.length - 1) : MARKER_HORIZONTAL_GAP,
-  );
+function mergeMarkers(markers: PriceMarker[], displayPosition: number): PositionedMarker {
+  const firstMarker = markers[0];
+  const lastMarker = markers[markers.length - 1];
+  const listings = markers.flatMap((marker) => marker.listings);
+
+  return {
+    key: `${firstMarker.key}:${lastMarker.key}:merged`,
+    price: listings.reduce((total, listing) => total + listing.price, 0) / listings.length,
+    minPrice: firstMarker.minPrice,
+    maxPrice: lastMarker.maxPrice,
+    distinctPriceCount: markers.reduce((total, marker) => total + marker.distinctPriceCount, 0),
+    listings,
+    displayPosition,
+  };
+}
+
+function positionMarkers(
+  markers: PriceMarker[],
+  position: (price: number) => number,
+  minimumPrice: number,
+  maximumPrice: number,
+): PositionedMarker[] {
+  if (!markers.length) return [];
+
+  const minimumPosition = position(minimumPrice);
+  const maximumPosition = position(maximumPrice);
+  const availableWidth = maximumPosition - minimumPosition;
+  const requiredWidth = (markers.length - 1) * MARKER_HORIZONTAL_GAP;
+
+  if (markers.length > 1 && availableWidth < requiredWidth) {
+    return [mergeMarkers(markers, minimumPosition + availableWidth / 2)];
+  }
+
   const positioned = markers.map((marker) => ({
     ...marker,
-    displayPosition: Math.min(MARKER_MAX_POSITION, Math.max(MARKER_MIN_POSITION, position(marker.price))),
+    displayPosition: Math.min(maximumPosition, Math.max(minimumPosition, position(marker.price))),
   }));
 
   for (let index = 1; index < positioned.length; index += 1) {
     positioned[index].displayPosition = Math.max(
       positioned[index].displayPosition,
-      positioned[index - 1].displayPosition + minimumGap,
+      positioned[index - 1].displayPosition + MARKER_HORIZONTAL_GAP,
     );
   }
 
   for (let index = positioned.length - 1; index >= 0; index -= 1) {
     const maximumPosition = index === positioned.length - 1
-      ? MARKER_MAX_POSITION
-      : positioned[index + 1].displayPosition - minimumGap;
+      ? position(maximumPrice)
+      : positioned[index + 1].displayPosition - MARKER_HORIZONTAL_GAP;
     positioned[index].displayPosition = Math.min(positioned[index].displayPosition, maximumPosition);
   }
 
@@ -140,13 +166,15 @@ export function PriceRangeSummary({
       </div>
       <p className="mt-1 text-[11px] leading-5 text-slate-400">
         {interactive
-          ? '동일 가격 매물만 숫자로 묶고, 가까운 서로 다른 호가는 한 줄에서 간격을 두어 표시합니다. 점을 눌러 상세 호가를 확인하세요.'
+          ? '점은 색상 가격 범위 안에 표시하며, 범위가 좁으면 숫자 점 하나로 묶습니다. 점을 눌러 상세 호가를 확인하세요.'
           : '막대는 최저~최고 호가, 세로 표시는 중앙값입니다.'}
       </p>
       <div className="mt-4 divide-y divide-slate-100">
         {orderedSummaries.map((summary) => {
           const color = summary.complex_color;
-          const markers = listings ? positionMarkers(createMarkers(summary, listings), position) : [];
+          const markers = listings
+            ? positionMarkers(createMarkers(summary, listings), position, summary.min_price, summary.max_price)
+            : [];
           const activeMarker = markers.find((marker) => marker.key === selectedMarkerKey);
           const differenceFromLowestMedian = summary.median_price - baselineMedian;
 
