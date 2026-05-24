@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-05-23",
+  "updated_at": "2026-05-24",
   "complex_colors": {
     "hwaseo-prugio-edu": "#1f8f00",
     "complex-o5pt65": "#d60000"
@@ -21,7 +21,7 @@
     },
     {
       "id": "area-42-113",
-      "source_area_pyeong_min": 41,
+      "source_area_pyeong_min": 40,
       "source_area_pyeong_max": 44,
       "display_area_pyeong": 42,
       "exclusive_area_m2": 113
@@ -29,7 +29,7 @@
     {
       "id": "area-48-129",
       "source_area_pyeong_min": 45,
-      "source_area_pyeong_max": 49,
+      "source_area_pyeong_max": 51,
       "display_area_pyeong": 48,
       "exclusive_area_m2": 129
     },
