@@ -14,6 +14,7 @@ const sampleJson = JSON.stringify(
   {
     complex_name: '새 아파트 단지명',
     source_text_type: '부동산 매물 목록 복사 텍스트',
+    data_version: 'm2_with_broker_details_v1',
     items: [
       {
         id: 1,
@@ -22,14 +23,20 @@ const sampleJson = JSON.stringify(
         deal_type: '매매',
         price_text: '8억 3,000',
         sale_price_text: '8억 3,000',
-        supply_area_pyeong: 33,
-        exclusive_area_pyeong: 25,
+        is_price_range: false,
+        price_min_text: null,
+        price_max_text: null,
+        supply_area_m2: 110,
+        supply_area_type: '110E',
+        exclusive_area_m2: 84,
+        exclusive_area_type: '84E',
         special_unit_type: null,
         floor_text: '12/25층',
         floor: '12',
         total_floor: 25,
         direction: '남향',
         verified_date: '2026.05.23',
+        broker_details: [],
       },
     ],
   },
@@ -224,6 +231,9 @@ export function ComplexDataInputPage() {
   const previewSpecialCount = preview
     ? preview.listings.filter((listing) => listing.deal_type === '매매' && isSpecialListing(listing)).length
     : 0;
+  const previewBrokerCount = preview
+    ? preview.listings.reduce((total, listing) => total + listing.broker_details.length, 0)
+    : 0;
   const summaries = preview ? summarizeListings(filterSpecialListings(preview.listings, false), [preview.complex]) : [];
   const isExistingPreview = preview ? complexes.some((complex) => complex.id === preview.complex.id) : Boolean(requestedComplexId);
 
@@ -248,20 +258,22 @@ export function ComplexDataInputPage() {
         {requestedComplexId ? (
           <ol className="mt-3 space-y-2 text-sm leading-6 text-slate-600">
             <li>1. 아래 내용을 전체 선택한 뒤, 정리한 <code className="rounded bg-white px-1.5 py-0.5 text-xs">complex_name / items</code> JSON을 그대로 붙여넣습니다.</li>
-            <li>2. <code className="rounded bg-white px-1.5 py-0.5 text-xs">price_text</code>, <code className="rounded bg-white px-1.5 py-0.5 text-xs">supply_area_pyeong</code>, 날짜와 층 정보는 자동 변환됩니다. 가격 범위는 낮은 금액 기준으로 저장됩니다.</li>
-            <li>3. 펜트·테라스 매물만 <code className="rounded bg-white px-1.5 py-0.5 text-xs">"special_unit_type": "펜트"</code> 또는 <code className="rounded bg-white px-1.5 py-0.5 text-xs">"테라스"</code>를 넣습니다. 일반세대는 생략하거나 <code className="rounded bg-white px-1.5 py-0.5 text-xs">null</code>로 둡니다.</li>
-            <li>4. <strong>JSON 검증 및 미리보기</strong>로 일반세대 기준 평형별 매매 가격이 맞는지 확인합니다.</li>
-            <li>5. 수집 기준일을 확인하고 관리자 저장 키를 입력한 뒤 <strong>오늘 데이터 저장</strong>을 누릅니다.</li>
-            <li>6. 재배포 후 단지 상세와 대시보드에서 변경 내용을 확인합니다.</li>
+            <li>2. <code className="rounded bg-white px-1.5 py-0.5 text-xs">supply_area_m2 / exclusive_area_m2</code>는 평형 표시 규칙으로 자동 변환됩니다. <code className="rounded bg-white px-1.5 py-0.5 text-xs">broker_details</code>는 동일 매물의 중개사 상세로 보존됩니다.</li>
+            <li>3. 가격 범위 매물은 <code className="rounded bg-white px-1.5 py-0.5 text-xs">is_price_range: true</code>, <code className="rounded bg-white px-1.5 py-0.5 text-xs">price_min_text / price_max_text</code>로 넣으면 낮은 금액을 호가 비교 기준으로 계산합니다.</li>
+            <li>4. 펜트·테라스 매물만 <code className="rounded bg-white px-1.5 py-0.5 text-xs">"special_unit_type": "펜트"</code> 또는 <code className="rounded bg-white px-1.5 py-0.5 text-xs">"테라스"</code>를 넣습니다. 일반세대는 생략하거나 <code className="rounded bg-white px-1.5 py-0.5 text-xs">null</code>로 둡니다.</li>
+            <li>5. <strong>JSON 검증 및 미리보기</strong>로 일반세대 기준 평형별 매매 가격이 맞는지 확인합니다.</li>
+            <li>6. 수집 기준일을 확인하고 관리자 저장 키를 입력한 뒤 <strong>오늘 데이터 저장</strong>을 누릅니다.</li>
+            <li>7. 재배포 후 단지 상세와 대시보드에서 변경 내용을 확인합니다.</li>
           </ol>
         ) : (
           <ol className="mt-3 space-y-2 text-sm leading-6 text-slate-600">
             <li>1. 기존 단지 매물을 수정할 때는 <code className="rounded bg-white px-1.5 py-0.5 text-xs">complex_name / items</code> JSON을 그대로 붙여넣습니다. 단지명이 일치하면 자동으로 수정 대상으로 인식합니다.</li>
-            <li>2. 새 단지는 아래 <strong>신규 단지명</strong>을 입력하고, 매물 <code className="rounded bg-white px-1.5 py-0.5 text-xs">items</code> JSON을 붙여넣으면 됩니다. JSON의 단지명도 자동 인식합니다.</li>
-            <li>3. 펜트·테라스 매물은 <code className="rounded bg-white px-1.5 py-0.5 text-xs">special_unit_type</code>에 유형을 넣습니다. 일반 통계에서는 기본 제외되고 화면에서 포함 여부를 선택할 수 있습니다.</li>
-            <li>4. 새 단지일 때만 아래에서 포함할 비교 그룹을 확인하거나 수정합니다.</li>
-            <li>5. 수집 기준일을 선택하고 관리자 저장 키로 저장합니다.</li>
-            <li>6. 재배포 후 단지 목록과 비교 화면에 추가 또는 수정 내용이 표시됩니다.</li>
+            <li>2. 새 단지는 아래 <strong>신규 단지명</strong>을 입력하고, <code className="rounded bg-white px-1.5 py-0.5 text-xs">data_version: "m2_with_broker_details_v1"</code> 형식의 매물 JSON을 붙여넣으면 됩니다.</li>
+            <li>3. 공급·전용면적은 <code className="rounded bg-white px-1.5 py-0.5 text-xs">㎡</code> 입력값을 기준으로 평형 규칙에 자동 연결하고, 중개사 상세는 매물 안에서 펼쳐볼 수 있게 저장합니다.</li>
+            <li>4. 펜트·테라스 매물은 <code className="rounded bg-white px-1.5 py-0.5 text-xs">special_unit_type</code>에 유형을 넣습니다. 일반 통계에서는 기본 제외되고 화면에서 포함 여부를 선택할 수 있습니다.</li>
+            <li>5. 새 단지일 때만 아래에서 포함할 비교 그룹을 확인하거나 수정합니다.</li>
+            <li>6. 수집 기준일을 선택하고 관리자 저장 키로 저장합니다.</li>
+            <li>7. 재배포 후 단지 목록과 비교 화면에 추가 또는 수정 내용이 표시됩니다.</li>
           </ol>
         )}
         <p className="mt-4 rounded-2xl bg-white px-4 py-3 text-xs leading-5 text-slate-500">
@@ -412,6 +424,11 @@ export function ComplexDataInputPage() {
               {preview.complex.region ?? '지역 미입력'} · 비교 그룹 {preview.groupNames.join(', ')}
             </p>
             <p className="mt-3 text-xs text-slate-400">전체 매물 {preview.listings.length}건</p>
+            {previewBrokerCount > 0 && (
+              <p className="mt-2 text-xs font-medium text-slate-500">
+                중개사 상세 {previewBrokerCount}건 포함 · 가격 통계 매물 수에는 상위 매물만 반영
+              </p>
+            )}
             {previewSpecialCount > 0 && (
               <p className="mt-2 rounded-xl bg-amber-50 px-3 py-2 text-xs font-semibold text-amber-700">
                 특수세대 {previewSpecialCount}건은 아래 일반세대 가격 요약에서 제외됩니다.

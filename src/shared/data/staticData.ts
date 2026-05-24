@@ -1,6 +1,14 @@
 import type { ApartmentComplex } from '../../features/complexes/types';
 import type { ComparisonGroup, ComparisonGroupComplex } from '../../features/comparisons/types';
-import type { ApartmentListing, DealType, FloorGroup, ListingInput, ListingSnapshot } from '../../features/listings/types';
+import type {
+  ApartmentListing,
+  DealType,
+  FloorGroup,
+  ListingBrokerDetail,
+  ListingInput,
+  ListingKeywordAnalysis,
+  ListingSnapshot,
+} from '../../features/listings/types';
 import type { AreaDisplayRule, DisplaySettings } from '../../features/settings/types';
 import { fallbackComplexColor, formatDisplayAreaLabel } from '../../features/settings/display';
 import { validateListingInput, isPossibleDuplicate } from '../../features/listings/validation';
@@ -72,6 +80,45 @@ function specialUnitType(row: Record<string, unknown>): string | null {
     return row.is_special_unit === true ? '특수세대' : null;
   }
   return value;
+}
+
+function m2ToPyeong(value: number | null): number | null {
+  return value === null ? null : Math.round(value / 3.305785);
+}
+
+function optionalTextArray(value: unknown): string[] {
+  return Array.isArray(value)
+    ? value.filter((item): item is string => typeof item === 'string' && Boolean(item.trim())).map((item) => item.trim())
+    : [];
+}
+
+function keywordAnalysis(value: unknown): ListingKeywordAnalysis | null {
+  if (!value || typeof value !== 'object' || Array.isArray(value)) return null;
+  const source = value as Record<string, unknown>;
+  return {
+    occupancy_type: optionalText(source.occupancy_type),
+    structure_type: optionalText(source.structure_type),
+    condition_type: optionalText(source.condition_type),
+  };
+}
+
+function brokerDetails(value: unknown): ListingBrokerDetail[] {
+  if (!Array.isArray(value)) return [];
+  return value.map((item, index) => {
+    const source = recordValue(item, `중개사 상세 ${index + 1}`);
+    return {
+      id: typeof source.id === 'string' || typeof source.id === 'number' ? String(source.id) : String(index + 1),
+      price_text: optionalText(source.price_text),
+      verification_type: optionalText(source.verification_type),
+      verified_date: normalizedDate(source.verified_date),
+      description: optionalText(source.description),
+      agent_name: optionalText(source.agent_name),
+      platform: optionalText(source.platform),
+      is_favorite: source.is_favorite === true,
+      links: optionalTextArray(source.links),
+      keyword_analysis: keywordAnalysis(source.keyword_analysis),
+    };
+  });
 }
 
 function positiveNumber(value: unknown, field: string): number {
@@ -201,31 +248,46 @@ function collectedListing(row: Record<string, unknown>, index: number, id: strin
   const rowId = typeof row.id === 'string' || typeof row.id === 'number' ? String(row.id) : String(index + 1);
   const floorText = optionalText(row.floor_text);
   const specialType = specialUnitType(row);
+  const supplyAreaM2 = optionalNumber(row.supply_area_m2);
+  const exclusiveAreaM2 = optionalNumber(row.exclusive_area_m2);
+  const isPriceRange = row.is_price_range === true || optionalText(row.price_max_text) !== null;
+  const primaryPrice =
+    optionalNumber(row.price) ??
+    (isPriceRange ? koreanPriceText(row.price_min_text) : null) ??
+    koreanPriceText(row.sale_price_text) ??
+    koreanPriceText(row.jeonse_price_text) ??
+    koreanPriceText(row.price_text);
 
   return {
     id: `${id}-listing-${rowId}`,
     building_no: optionalText(row.building_no) ?? optionalText(row.building),
     deal_type: type,
-    price:
-      type === '매매'
-        ? optionalNumber(row.price) ?? koreanPriceText(row.sale_price_text) ?? koreanPriceText(row.price_text)
-        : type === '전세'
-          ? optionalNumber(row.price) ?? koreanPriceText(row.jeonse_price_text) ?? koreanPriceText(row.price_text)
-          : null,
+    price: type === '매매' || type === '전세' ? primaryPrice : null,
+    price_max: isPriceRange ? optionalNumber(row.price_max) ?? koreanPriceText(row.price_max_text) : null,
+    is_price_range: isPriceRange,
     deposit: type === '월세' ? optionalNumber(row.deposit) ?? koreanPriceText(row.deposit_text) : null,
     monthly_rent: type === '월세' ? optionalNumber(row.monthly_rent) ?? koreanPriceText(row.monthly_rent_text) : null,
-    area_pyeong: optionalNumber(row.area_pyeong) ?? optionalNumber(row.supply_area_pyeong),
-    exclusive_area_pyeong: optionalNumber(row.exclusive_area_pyeong),
+    supply_area_m2: supplyAreaM2,
+    exclusive_area_m2: exclusiveAreaM2,
+    supply_area_type: optionalText(row.supply_area_type),
+    exclusive_area_type: optionalText(row.exclusive_area_type),
+    area_pyeong: optionalNumber(row.area_pyeong) ?? optionalNumber(row.supply_area_pyeong) ?? m2ToPyeong(supplyAreaM2),
+    exclusive_area_pyeong: optionalNumber(row.exclusive_area_pyeong) ?? m2ToPyeong(exclusiveAreaM2),
+    area_type: optionalText(row.area_type) ?? optionalText(row.supply_area_type),
     floor_text: floorText,
     floor: optionalNumber(row.floor),
     total_floor: optionalNumber(row.total_floor),
     floor_group: classifiedFloorGroup(row.floor_group ?? row.floor, optionalNumber(row.floor), floorText),
     direction: optionalText(row.direction),
+    verification_type: optionalText(row.verification_type),
     verified_date: normalizedDate(row.verified_date),
     agent_name: optionalText(row.agent_name),
     agent_count: optionalNumber(row.agent_count) ?? optionalNumber(row.registered_agent_count),
     source: optionalText(row.source) ?? optionalText(row.platform) ?? sourceTextType,
     description: optionalText(row.description),
+    links: optionalTextArray(row.links),
+    keyword_analysis: keywordAnalysis(row.keyword_analysis),
+    broker_details: brokerDetails(row.broker_details),
     special_unit_type: specialType,
     is_special_unit: Boolean(specialType),
     is_favorite: row.is_favorite === true,
@@ -272,6 +334,7 @@ function normalizeComplexSource(
       built_year: submitted.built_year ?? existingSource?.built_year,
       household_count: submitted.household_count ?? existingSource?.household_count,
       brand: submitted.brand ?? existingSource?.brand,
+      data_version: submitted.data_version ?? existingSource?.data_version,
       updated_at: normalizedDate(submitted.updated_at) ?? latestDate ?? normalizedDate(existingSource?.updated_at) ?? new Date().toISOString().slice(0, 10),
       comparison_groups: comparisonGroups,
       listings,
@@ -326,23 +389,30 @@ export function parseComplexDataFile(
     const floor = optionalNumber(row.floor);
     const totalFloor = optionalNumber(row.total_floor);
     const specialType = specialUnitType(row);
+    const supplyAreaM2 = optionalNumber(row.supply_area_m2);
+    const exclusiveAreaM2 = optionalNumber(row.exclusive_area_m2);
     const input: ListingInput = {
       complex_id: id,
       building_no: optionalText(row.building_no),
       deal_type: dealType(row.deal_type, rowLabel),
       price: optionalNumber(row.price),
+      price_max: optionalNumber(row.price_max),
+      is_price_range: row.is_price_range === true,
       deposit: optionalNumber(row.deposit),
       monthly_rent: optionalNumber(row.monthly_rent),
-      supply_area_m2: optionalNumber(row.supply_area_m2),
-      exclusive_area_m2: optionalNumber(row.exclusive_area_m2),
-      area_pyeong: optionalNumber(row.area_pyeong) ?? 0,
-      exclusive_area_pyeong: optionalNumber(row.exclusive_area_pyeong) ?? 0,
-      area_type: optionalText(row.area_type),
+      supply_area_m2: supplyAreaM2,
+      exclusive_area_m2: exclusiveAreaM2,
+      supply_area_type: optionalText(row.supply_area_type),
+      exclusive_area_type: optionalText(row.exclusive_area_type),
+      area_pyeong: optionalNumber(row.area_pyeong) ?? m2ToPyeong(supplyAreaM2) ?? 0,
+      exclusive_area_pyeong: optionalNumber(row.exclusive_area_pyeong) ?? m2ToPyeong(exclusiveAreaM2) ?? 0,
+      area_type: optionalText(row.area_type) ?? optionalText(row.supply_area_type),
       floor_text: optionalText(row.floor_text) ?? (floor !== null && totalFloor !== null ? `${floor}/${totalFloor}층` : null),
       floor,
       total_floor: totalFloor,
       floor_group: classifiedFloorGroup(row.floor_group, floor, row.floor_text),
       direction: optionalText(row.direction),
+      verification_type: optionalText(row.verification_type),
       verified_date: normalizedDate(row.verified_date),
       registered_date: normalizedDate(row.registered_date),
       agent_name: optionalText(row.agent_name),
@@ -350,6 +420,9 @@ export function parseComplexDataFile(
       source: optionalText(row.source),
       description: optionalText(row.description),
       raw_text: optionalText(row.raw_text),
+      links: optionalTextArray(row.links),
+      keyword_analysis: keywordAnalysis(row.keyword_analysis),
+      broker_details: brokerDetails(row.broker_details),
       special_unit_type: specialType,
       is_special_unit: Boolean(specialType),
       is_favorite: row.is_favorite === true,

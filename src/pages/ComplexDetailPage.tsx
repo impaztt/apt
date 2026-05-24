@@ -197,13 +197,19 @@ export function ComplexDetailPage() {
                       {listing.is_favorite && (
                         <span className="rounded-full bg-emerald-50 px-2 py-1 text-xs font-semibold text-emerald-700">관심</span>
                       )}
+                      {listing.is_price_range && (
+                        <span className="rounded-full bg-blue-50 px-2 py-1 text-xs font-semibold text-brand-700">범위 최저가 기준</span>
+                      )}
                       {isSpecialListing(listing) && (
                         <span className="rounded-full bg-amber-50 px-2 py-1 text-xs font-semibold text-amber-700">
                           {listing.special_unit_type ?? '특수세대'}
                         </span>
                       )}
                     </div>
-                    <p className="metric-number mt-4 text-2xl font-bold">{formatPrice(listing.price ?? listing.deposit)}</p>
+                    <p className="metric-number mt-4 text-2xl font-bold">
+                      {formatPrice(listing.price ?? listing.deposit)}
+                      {listing.is_price_range && listing.price_max ? ` ~ ${formatPrice(listing.price_max)}` : ''}
+                    </p>
                     <p className="mt-3 text-sm text-slate-500">
                       {listing.building_no ?? '-'} · {getAreaOption(listing).label} ·{' '}
                       {listing.floor_text ?? listing.floor_group ?? '-'}
@@ -211,6 +217,27 @@ export function ComplexDetailPage() {
                     <p className="mt-2 text-xs text-slate-400">
                       {listing.direction ?? '방향 미입력'} · 확인 {formatDate(listing.verified_date)} · {listing.source ?? '출처 미입력'}
                     </p>
+                    {listing.broker_details.length > 0 && (
+                      <details className="mt-4 rounded-2xl bg-slate-50 p-3">
+                        <summary className="cursor-pointer list-none text-xs font-semibold text-slate-600">
+                          중개사 상세 {listing.broker_details.length}건 보기
+                        </summary>
+                        <div className="mt-3 space-y-2.5">
+                          {listing.broker_details.map((broker) => (
+                            <div key={broker.id} className="rounded-xl bg-white p-3 text-xs">
+                              <div className="flex items-start justify-between gap-2">
+                                <strong className="text-slate-800">{broker.agent_name ?? '중개사 미입력'}</strong>
+                                <span className="shrink-0 font-semibold text-brand-700">{broker.price_text ?? formatPrice(listing.price)}</span>
+                              </div>
+                              <p className="mt-1 text-slate-400">
+                                {broker.platform ?? '플랫폼 미입력'} · 확인 {formatDate(broker.verified_date)}
+                              </p>
+                              {broker.description && <p className="mt-2 leading-5 text-slate-600">{broker.description}</p>}
+                            </div>
+                          ))}
+                        </div>
+                      </details>
+                    )}
                   </div>
                 </div>
               </Card>

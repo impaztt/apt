@@ -3,16 +3,39 @@ export type FloorGroup = '저층' | '중층' | '고층' | null;
 export type AreaGroup = string;
 export type AreaSelection = 'all' | AreaGroup;
 
+export interface ListingKeywordAnalysis {
+  occupancy_type: string | null;
+  structure_type: string | null;
+  condition_type: string | null;
+}
+
+export interface ListingBrokerDetail {
+  id: string;
+  price_text: string | null;
+  verification_type: string | null;
+  verified_date: string | null;
+  description: string | null;
+  agent_name: string | null;
+  platform: string | null;
+  is_favorite: boolean;
+  links: string[];
+  keyword_analysis: ListingKeywordAnalysis | null;
+}
+
 export interface ApartmentListing {
   id: string;
   complex_id: string;
   building_no: string | null;
   deal_type: DealType;
   price: number | null;
+  price_max: number | null;
+  is_price_range: boolean;
   deposit: number | null;
   monthly_rent: number | null;
   supply_area_m2: number | null;
   exclusive_area_m2: number | null;
+  supply_area_type: string | null;
+  exclusive_area_type: string | null;
   area_pyeong: number;
   exclusive_area_pyeong: number;
   display_area_key?: string | null;
@@ -25,6 +48,7 @@ export interface ApartmentListing {
   total_floor: number | null;
   floor_group: FloorGroup;
   direction: string | null;
+  verification_type: string | null;
   verified_date: string | null;
   registered_date: string | null;
   agent_name: string | null;
@@ -32,6 +56,9 @@ export interface ApartmentListing {
   source: string | null;
   description: string | null;
   raw_text: string | null;
+  links: string[];
+  keyword_analysis: ListingKeywordAnalysis | null;
+  broker_details: ListingBrokerDetail[];
   special_unit_type: string | null;
   is_special_unit: boolean;
   is_favorite: boolean;
