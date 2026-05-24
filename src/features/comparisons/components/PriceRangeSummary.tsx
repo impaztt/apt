@@ -221,8 +221,8 @@ export function PriceRangeSummary({
                 </div>
               )}
               {activeMarker && (
-                <div className="mt-3 rounded-2xl bg-slate-50 p-3">
-                  <div className="flex items-center justify-between gap-3">
+                <div className="mt-3 overflow-hidden rounded-2xl border border-slate-100 bg-white">
+                  <div className="flex items-center justify-between gap-3 bg-slate-50 px-3 py-2.5">
                     <strong className="metric-number text-sm text-brand-700">
                       {activeMarker.minPrice === activeMarker.maxPrice
                         ? formatPrice(activeMarker.minPrice)
@@ -233,11 +233,11 @@ export function PriceRangeSummary({
                       {activeMarker.listings.length}건
                     </span>
                   </div>
-                  <div className="mt-2 max-h-44 space-y-1.5 overflow-y-auto text-xs text-slate-600">
+                  <div className="max-h-44 divide-y divide-slate-100 overflow-y-auto text-xs text-slate-600">
                     {[...activeMarker.listings].sort((a, b) => a.price - b.price).map((listing) => {
                       const badges = getListingKeywordBadges(listing);
                       return (
-                        <div key={listing.id} className="rounded-xl bg-white px-2.5 py-2">
+                        <div key={listing.id} className="px-3 py-2.5">
                           <p className="flex justify-between gap-2">
                             <span className="flex min-w-0 gap-2">
                               <strong className="shrink-0 text-slate-800">{formatPrice(listing.price)}</strong>
