@@ -386,25 +386,33 @@ export function parseComplexDataFile(
   const listings = source.listings.map((value, index) => {
     const rowLabel = `${fileName} 매물 ${index + 1}`;
     const row = recordValue(value, rowLabel);
+    const type = dealType(row.deal_type, rowLabel);
     const floor = optionalNumber(row.floor);
     const totalFloor = optionalNumber(row.total_floor);
     const specialType = specialUnitType(row);
     const supplyAreaM2 = optionalNumber(row.supply_area_m2);
     const exclusiveAreaM2 = optionalNumber(row.exclusive_area_m2);
+    const isPriceRange = row.is_price_range === true || optionalText(row.price_max_text) !== null;
+    const primaryPrice =
+      optionalNumber(row.price) ??
+      (isPriceRange ? koreanPriceText(row.price_min_text) : null) ??
+      koreanPriceText(row.sale_price_text) ??
+      koreanPriceText(row.jeonse_price_text) ??
+      koreanPriceText(row.price_text);
     const input: ListingInput = {
       complex_id: id,
-      building_no: optionalText(row.building_no),
-      deal_type: dealType(row.deal_type, rowLabel),
-      price: optionalNumber(row.price),
-      price_max: optionalNumber(row.price_max),
-      is_price_range: row.is_price_range === true,
-      deposit: optionalNumber(row.deposit),
-      monthly_rent: optionalNumber(row.monthly_rent),
+      building_no: optionalText(row.building_no) ?? optionalText(row.building),
+      deal_type: type,
+      price: type === '매매' || type === '전세' ? primaryPrice : null,
+      price_max: isPriceRange ? optionalNumber(row.price_max) ?? koreanPriceText(row.price_max_text) : null,
+      is_price_range: isPriceRange,
+      deposit: type === '월세' ? optionalNumber(row.deposit) ?? koreanPriceText(row.deposit_text) : null,
+      monthly_rent: type === '월세' ? optionalNumber(row.monthly_rent) ?? koreanPriceText(row.monthly_rent_text) : null,
       supply_area_m2: supplyAreaM2,
       exclusive_area_m2: exclusiveAreaM2,
       supply_area_type: optionalText(row.supply_area_type),
       exclusive_area_type: optionalText(row.exclusive_area_type),
-      area_pyeong: optionalNumber(row.area_pyeong) ?? m2ToPyeong(supplyAreaM2) ?? 0,
+      area_pyeong: optionalNumber(row.area_pyeong) ?? optionalNumber(row.supply_area_pyeong) ?? m2ToPyeong(supplyAreaM2) ?? 0,
       exclusive_area_pyeong: optionalNumber(row.exclusive_area_pyeong) ?? m2ToPyeong(exclusiveAreaM2) ?? 0,
       area_type: optionalText(row.area_type) ?? optionalText(row.supply_area_type),
       floor_text: optionalText(row.floor_text) ?? (floor !== null && totalFloor !== null ? `${floor}/${totalFloor}층` : null),
@@ -416,8 +424,8 @@ export function parseComplexDataFile(
       verified_date: normalizedDate(row.verified_date),
       registered_date: normalizedDate(row.registered_date),
       agent_name: optionalText(row.agent_name),
-      agent_count: optionalNumber(row.agent_count),
-      source: optionalText(row.source),
+      agent_count: optionalNumber(row.agent_count) ?? optionalNumber(row.registered_agent_count),
+      source: optionalText(row.source) ?? optionalText(row.platform),
       description: optionalText(row.description),
       raw_text: optionalText(row.raw_text),
       links: optionalTextArray(row.links),
