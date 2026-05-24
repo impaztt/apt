@@ -2,11 +2,12 @@ import { useEffect, useState } from 'react';
 import { ArrowLeft, CalendarDays } from 'lucide-react';
 import { AllAreasComparisonCards, ComplexPriceRanking, SelectedAreaHighlights } from '../features/comparisons/components/MobileComparisonCards';
 import { PriceRangeSummary } from '../features/comparisons/components/PriceRangeSummary';
-import { summarizeListings } from '../features/listings/statistics';
+import { filterSpecialListings, isSpecialListing, summarizeListings } from '../features/listings/statistics';
 import type { AreaSelection } from '../features/listings/types';
 import { AreaTabs } from '../shared/components/AreaTabs';
 import { Card } from '../shared/components/Card';
 import { PageHeader } from '../shared/components/PageHeader';
+import { SpecialUnitToggle } from '../shared/components/SpecialUnitToggle';
 import { EmptyState, ErrorState, LoadingState } from '../shared/components/States';
 import { useAppData } from '../shared/data/AppDataContext';
 import { getAreaOptions } from '../shared/utils/area';
@@ -16,17 +17,23 @@ export function ComparisonPage() {
   const { complexes, listings, groups, memberships, latestCapturedDates, loading, error } = useAppData();
   const [groupId, setGroupId] = useState('');
   const [areaGroup, setAreaGroup] = useState<AreaSelection>('all');
+  const [includeSpecialUnits, setIncludeSpecialUnits] = useState(false);
   const group = groups.find((item) => item.id === groupId) ?? groups[0];
   const complexIds = memberships
     .filter((item) => item.group_id === group?.id)
     .sort((a, b) => a.sort_order - b.sort_order)
     .map((item) => item.complex_id);
-  const relevantListings = listings.filter((listing) => complexIds.includes(listing.complex_id));
+  const groupListings = listings.filter((listing) => complexIds.includes(listing.complex_id));
+  const specialSaleCount = groupListings.filter(
+    (listing) => listing.deal_type === '매매' && listing.price !== null && isSpecialListing(listing),
+  ).length;
+  const analysisListings = filterSpecialListings(listings, includeSpecialUnits);
+  const relevantListings = analysisListings.filter((listing) => complexIds.includes(listing.complex_id));
   const areaOptions = getAreaOptions(relevantListings.filter((listing) => listing.deal_type === '매매'));
   const selectedArea = areaOptions.find((area) => area.key === areaGroup);
   const scopeLabel = selectedArea?.label ?? '전체 평형';
-  const summaries = summarizeListings(listings, complexes, areaGroup, complexIds);
-  const areaSummaries = (selectedGroup: string) => summarizeListings(listings, complexes, selectedGroup, complexIds);
+  const summaries = summarizeListings(analysisListings, complexes, areaGroup, complexIds);
+  const areaSummaries = (selectedGroup: string) => summarizeListings(analysisListings, complexes, selectedGroup, complexIds);
   const capturedDates = complexIds.map((id) => latestCapturedDates[id]).filter((date): date is string => Boolean(date));
   const latestDate = [...capturedDates].sort().pop() ?? null;
   const mismatchedDates = new Set(capturedDates).size > 1;
@@ -56,6 +63,12 @@ export function ComparisonPage() {
       />
 
       <AreaTabs value={areaGroup} options={areaOptions} onChange={setAreaGroup} />
+
+      <SpecialUnitToggle
+        checked={includeSpecialUnits}
+        onChange={setIncludeSpecialUnits}
+        specialCount={specialSaleCount}
+      />
 
       {areaOptions.length ? areaGroup === 'all' ? (
         <AllAreasComparisonCards options={areaOptions} summariesForArea={areaSummaries} onSelect={setAreaGroup} />
@@ -93,7 +106,7 @@ export function ComparisonPage() {
 
           <SelectedAreaHighlights summaries={summaries} />
 
-          <PriceRangeSummary summaries={summaries} listings={listings} title="실제 호가 위치 비교" />
+          <PriceRangeSummary summaries={summaries} listings={analysisListings} title="실제 호가 위치 비교" />
 
           <ComplexPriceRanking summaries={summaries} />
 

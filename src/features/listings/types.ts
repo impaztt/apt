@@ -32,6 +32,8 @@ export interface ApartmentListing {
   source: string | null;
   description: string | null;
   raw_text: string | null;
+  special_unit_type: string | null;
+  is_special_unit: boolean;
   is_favorite: boolean;
   is_duplicate_candidate: boolean;
   created_at: string;

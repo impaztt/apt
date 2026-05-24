@@ -63,6 +63,17 @@ function optionalNumber(value: unknown): number | null {
   return null;
 }
 
+function specialUnitType(row: Record<string, unknown>): string | null {
+  const value =
+    optionalText(row.special_unit_type) ??
+    optionalText(row.special_type) ??
+    optionalText(row.unit_variant);
+  if (!value || ['일반', '일반세대', '일반형', '없음', 'false', 'N'].includes(value)) {
+    return row.is_special_unit === true ? '특수세대' : null;
+  }
+  return value;
+}
+
 function positiveNumber(value: unknown, field: string): number {
   const result = optionalNumber(value);
   if (result === null || result <= 0) throw new Error(`표시 설정: ${field}은 0보다 커야 합니다.`);
@@ -189,6 +200,7 @@ function collectedListing(row: Record<string, unknown>, index: number, id: strin
   const type = dealType(row.deal_type, `입력 JSON 매물 ${index + 1}`);
   const rowId = typeof row.id === 'string' || typeof row.id === 'number' ? String(row.id) : String(index + 1);
   const floorText = optionalText(row.floor_text);
+  const specialType = specialUnitType(row);
 
   return {
     id: `${id}-listing-${rowId}`,
@@ -214,6 +226,8 @@ function collectedListing(row: Record<string, unknown>, index: number, id: strin
     agent_count: optionalNumber(row.agent_count) ?? optionalNumber(row.registered_agent_count),
     source: optionalText(row.source) ?? optionalText(row.platform) ?? sourceTextType,
     description: optionalText(row.description),
+    special_unit_type: specialType,
+    is_special_unit: Boolean(specialType),
     is_favorite: row.is_favorite === true,
     is_duplicate_candidate: false,
   };
@@ -311,6 +325,7 @@ export function parseComplexDataFile(
     const row = recordValue(value, rowLabel);
     const floor = optionalNumber(row.floor);
     const totalFloor = optionalNumber(row.total_floor);
+    const specialType = specialUnitType(row);
     const input: ListingInput = {
       complex_id: id,
       building_no: optionalText(row.building_no),
@@ -335,6 +350,8 @@ export function parseComplexDataFile(
       source: optionalText(row.source),
       description: optionalText(row.description),
       raw_text: optionalText(row.raw_text),
+      special_unit_type: specialType,
+      is_special_unit: Boolean(specialType),
       is_favorite: row.is_favorite === true,
       is_duplicate_candidate: row.is_duplicate_candidate === true,
     };

@@ -16,6 +16,14 @@ function median(values: number[]): number {
   return sorted[middle];
 }
 
+export function isSpecialListing(listing: ApartmentListing): boolean {
+  return listing.is_special_unit || Boolean(listing.special_unit_type);
+}
+
+export function filterSpecialListings(listings: ApartmentListing[], includeSpecialUnits: boolean): ApartmentListing[] {
+  return includeSpecialUnits ? listings : listings.filter((listing) => !isSpecialListing(listing));
+}
+
 export function summarizeListings(
   listings: ApartmentListing[],
   complexes: ApartmentComplex[],

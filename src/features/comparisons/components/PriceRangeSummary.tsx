@@ -6,6 +6,7 @@ import { getAreaGroup } from '../../../shared/utils/area';
 import { Card } from '../../../shared/components/Card';
 
 type PricedListing = ApartmentListing & { price: number };
+type SortMode = 'median' | 'min' | 'count' | 'name';
 
 interface PriceMarker {
   key: string;
@@ -79,6 +80,7 @@ export function PriceRangeSummary({
   listings?: ApartmentListing[];
 }) {
   const [selectedMarkerKey, setSelectedMarkerKey] = useState<string | null>(null);
+  const [sortMode, setSortMode] = useState<SortMode>('median');
   if (!summaries.length) return null;
   const minimum = Math.min(...summaries.map((summary) => summary.min_price));
   const maximum = Math.max(...summaries.map((summary) => summary.max_price));
@@ -87,26 +89,73 @@ export function PriceRangeSummary({
   const end = maximum + padding;
   const position = (price: number) => ((price - start) / (end - start || 1)) * 100;
   const interactive = Boolean(listings);
+  const baselineMedian = Math.min(...summaries.map((summary) => summary.median_price));
+  const orderedSummaries = [...summaries].sort((a, b) => {
+    if (sortMode === 'min') return a.min_price - b.min_price;
+    if (sortMode === 'count') return b.listing_count - a.listing_count || a.median_price - b.median_price;
+    if (sortMode === 'name') return a.complex_name.localeCompare(b.complex_name, 'ko');
+    return a.median_price - b.median_price;
+  });
 
   return (
     <Card className="p-4 sm:p-6">
-      <h2 className="text-base font-bold">{title}</h2>
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <h2 className="text-base font-bold">{title}</h2>
+        <select
+          className="rounded-xl border border-slate-100 bg-slate-50 px-2.5 py-2 text-[11px] font-semibold text-slate-600"
+          value={sortMode}
+          onChange={(event) => setSortMode(event.target.value as SortMode)}
+          aria-label="단지 정렬"
+        >
+          <option value="median">중앙가 낮은 순</option>
+          <option value="min">최저가 낮은 순</option>
+          <option value="count">매물 많은 순</option>
+          <option value="name">단지명 순</option>
+        </select>
+      </div>
       <p className="mt-1 text-[11px] leading-5 text-slate-400">
         {interactive
           ? '가까운 호가는 숫자 점 하나로 묶어 표시합니다. 점을 누르면 정확한 가격을 확인할 수 있습니다.'
           : '막대는 최저~최고 호가, 세로 표시는 중앙값입니다.'}
       </p>
-      <div className="mt-5 space-y-5">
-        {summaries.map((summary) => {
+      <div className="mt-4 divide-y divide-slate-100">
+        {orderedSummaries.map((summary) => {
           const color = summary.complex_color;
           const markers = listings ? createMarkers(summary, listings, position) : [];
           const activeMarker = markers.find((marker) => marker.key === selectedMarkerKey);
+          const differenceFromLowestMedian = summary.median_price - baselineMedian;
 
           return (
-            <div key={summary.complex_id}>
-              <div className="flex justify-between gap-3 text-xs">
-                <p className="truncate font-semibold text-slate-700">{summary.complex_name}</p>
-                <p className="shrink-0 text-slate-500">{summary.listing_count}건</p>
+            <div key={summary.complex_id} className="py-5 first:pt-1 last:pb-1">
+              <div className="flex items-start justify-between gap-3 text-xs">
+                <p className="flex min-w-0 items-center gap-2 truncate font-semibold text-slate-700">
+                  <span className="h-2.5 w-2.5 shrink-0 rounded-full" style={{ backgroundColor: color }} />
+                  <span className="truncate">{summary.complex_name}</span>
+                </p>
+                <div className="flex shrink-0 items-center gap-1.5">
+                  <span className={`rounded-full px-2 py-1 text-[10px] font-bold ${
+                    differenceFromLowestMedian === 0
+                      ? 'bg-blue-50 text-brand-700'
+                      : 'bg-slate-50 text-slate-500'
+                  }`}>
+                    {differenceFromLowestMedian === 0 ? '중앙가 최저' : `+${formatPrice(differenceFromLowestMedian)}`}
+                  </span>
+                  <span className="text-slate-500">{summary.listing_count}건</span>
+                </div>
+              </div>
+              <div className="mt-3 grid grid-cols-3 gap-2">
+                <div className="rounded-xl bg-blue-50 px-2.5 py-2.5">
+                  <p className="text-[10px] font-semibold text-brand-600">최저가</p>
+                  <p className="metric-number mt-1 text-sm font-bold text-brand-700">{formatPrice(summary.min_price)}</p>
+                </div>
+                <div className="rounded-xl bg-slate-900 px-2.5 py-2.5 text-white">
+                  <p className="text-[10px] font-semibold text-slate-300">중앙가</p>
+                  <p className="metric-number mt-1 text-base font-bold">{formatPrice(summary.median_price)}</p>
+                </div>
+                <div className="rounded-xl bg-rose-50 px-2.5 py-2.5">
+                  <p className="text-[10px] font-semibold text-rose-500">최고가</p>
+                  <p className="metric-number mt-1 text-sm font-bold text-rose-600">{formatPrice(summary.max_price)}</p>
+                </div>
               </div>
               {interactive ? (
                 <div className="relative mt-3 h-[70px]">
@@ -159,11 +208,6 @@ export function PriceRangeSummary({
                   />
                 </div>
               )}
-              <div className="mt-2 flex justify-between text-[11px] text-slate-500">
-                <span>최저 <strong className="text-brand-700">{formatPrice(summary.min_price)}</strong></span>
-                <span>중앙 <strong className="text-slate-800">{formatPrice(summary.median_price)}</strong></span>
-                <span>최고 <strong className="text-slate-800">{formatPrice(summary.max_price)}</strong></span>
-              </div>
               {activeMarker && (
                 <div className="mt-3 rounded-2xl bg-slate-50 p-3">
                   <div className="flex items-center justify-between gap-3">

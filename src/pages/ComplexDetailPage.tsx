@@ -1,10 +1,11 @@
 import { useMemo, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { ArrowLeft, CalendarDays, FileJson } from 'lucide-react';
-import { summarizeListings } from '../features/listings/statistics';
+import { filterSpecialListings, isSpecialListing, summarizeListings } from '../features/listings/statistics';
 import type { AreaGroup, DealType, FloorGroup } from '../features/listings/types';
 import { Button } from '../shared/components/Button';
 import { Card } from '../shared/components/Card';
+import { SpecialUnitToggle } from '../shared/components/SpecialUnitToggle';
 import { EmptyState, ErrorState, LoadingState } from '../shared/components/States';
 import { useAppData } from '../shared/data/AppDataContext';
 import { getAreaGroup, getAreaOption } from '../shared/utils/area';
@@ -21,13 +22,17 @@ export function ComplexDetailPage() {
   const [directionFilter, setDirectionFilter] = useState('');
   const [maxPriceEok, setMaxPriceEok] = useState('');
   const [capturedDate, setCapturedDate] = useState('');
+  const [includeSpecialUnits, setIncludeSpecialUnits] = useState(false);
   const complex = complexes.find((item) => item.id === complexId);
   const complexSnapshots = snapshots
     .filter((snapshot) => snapshot.complex_id === complexId)
     .sort((a, b) => b.captured_date.localeCompare(a.captured_date));
   const selectedSnapshot = complexSnapshots.find((snapshot) => snapshot.captured_date === capturedDate) ?? complexSnapshots[0];
   const relatedListings = selectedSnapshot?.listings ?? listings.filter((listing) => listing.complex_id === complexId);
-  const summaries = summarizeListings(relatedListings, complex ? [complex] : []);
+  const specialSaleCount = relatedListings.filter(
+    (listing) => listing.deal_type === '매매' && listing.price !== null && isSpecialListing(listing),
+  ).length;
+  const summaries = summarizeListings(filterSpecialListings(relatedListings, includeSpecialUnits), complex ? [complex] : []);
   const filteredListings = useMemo(
     () =>
       relatedListings
@@ -97,6 +102,12 @@ export function ComplexDetailPage() {
           </select>
         </div>
       </Card>
+
+      <SpecialUnitToggle
+        checked={includeSpecialUnits}
+        onChange={setIncludeSpecialUnits}
+        specialCount={specialSaleCount}
+      />
 
       <section>
         <h2 className="mb-4 text-lg font-bold">평형별 매매 호가</h2>
@@ -185,6 +196,11 @@ export function ComplexDetailPage() {
                       )}
                       {listing.is_favorite && (
                         <span className="rounded-full bg-emerald-50 px-2 py-1 text-xs font-semibold text-emerald-700">관심</span>
+                      )}
+                      {isSpecialListing(listing) && (
+                        <span className="rounded-full bg-amber-50 px-2 py-1 text-xs font-semibold text-amber-700">
+                          {listing.special_unit_type ?? '특수세대'}
+                        </span>
                       )}
                     </div>
                     <p className="metric-number mt-4 text-2xl font-bold">{formatPrice(listing.price ?? listing.deposit)}</p>

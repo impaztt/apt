@@ -2,12 +2,13 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Check, SlidersHorizontal, TrendingUp } from 'lucide-react';
 import { PriceRangeSummary } from '../features/comparisons/components/PriceRangeSummary';
-import { summarizeListings } from '../features/listings/statistics';
+import { filterSpecialListings, isSpecialListing, summarizeListings } from '../features/listings/statistics';
 import type { AreaSelection } from '../features/listings/types';
 import { AreaTabs } from '../shared/components/AreaTabs';
 import { Card } from '../shared/components/Card';
 import { MetricCard } from '../shared/components/MetricCard';
 import { PageHeader } from '../shared/components/PageHeader';
+import { SpecialUnitToggle } from '../shared/components/SpecialUnitToggle';
 import { EmptyState, ErrorState, LoadingState } from '../shared/components/States';
 import { useAppData } from '../shared/data/AppDataContext';
 import { getAreaGroup, getAreaOptions } from '../shared/utils/area';
@@ -19,6 +20,7 @@ export function DashboardPage() {
   const [selectedGroupId, setSelectedGroupId] = useState('');
   const [areaGroup, setAreaGroup] = useState<AreaSelection>('all');
   const [selectedComplexIds, setSelectedComplexIds] = useState<string[]>([]);
+  const [includeSpecialUnits, setIncludeSpecialUnits] = useState(false);
   const activeGroup = groups.find((group) => group.id === selectedGroupId) ?? groups[0];
   const groupComplexIds = memberships
     .filter((membership) => membership.group_id === activeGroup?.id)
@@ -27,12 +29,17 @@ export function DashboardPage() {
   const complexIds = selectedComplexIds.length
     ? groupComplexIds.filter((id) => selectedComplexIds.includes(id))
     : groupComplexIds;
-  const relevantListings = listings.filter((listing) => complexIds.includes(listing.complex_id));
+  const selectedComplexListings = listings.filter((listing) => complexIds.includes(listing.complex_id));
+  const specialSaleCount = selectedComplexListings.filter(
+    (listing) => listing.deal_type === '매매' && listing.price !== null && isSpecialListing(listing),
+  ).length;
+  const analysisListings = filterSpecialListings(listings, includeSpecialUnits);
+  const relevantListings = analysisListings.filter((listing) => complexIds.includes(listing.complex_id));
   const saleListings = relevantListings.filter((listing) => listing.deal_type === '매매' && listing.price !== null);
   const areaOptions = getAreaOptions(saleListings);
   const selectedArea = areaOptions.find((area) => area.key === areaGroup);
   const scopeLabel = areaGroup === 'all' ? '전체 평형' : selectedArea?.label ?? '선택 평형';
-  const summaries = summarizeListings(listings, complexes, areaGroup, complexIds);
+  const summaries = summarizeListings(analysisListings, complexes, areaGroup, complexIds);
   const selectedListings =
     areaGroup === 'all' ? saleListings : saleListings.filter((listing) => getAreaGroup(listing) === areaGroup);
   const lowest = summaries.length ? Math.min(...summaries.map((summary) => summary.min_price)) : null;
@@ -139,6 +146,12 @@ export function DashboardPage() {
         </details>
       </Card>
 
+      <SpecialUnitToggle
+        checked={includeSpecialUnits}
+        onChange={setIncludeSpecialUnits}
+        specialCount={specialSaleCount}
+      />
+
       {summaries.length ? (
         <>
           {areaGroup === 'all' ? (
@@ -150,17 +163,17 @@ export function DashboardPage() {
                 </div>
               </div>
               {areaOptions.map((option) => {
-                const areaSummaries = summarizeListings(listings, complexes, option.key, complexIds);
+                const areaSummaries = summarizeListings(analysisListings, complexes, option.key, complexIds);
                 return (
                   <div key={option.key} className="space-y-3">
-                    <PriceRangeSummary summaries={areaSummaries} listings={listings} title={`${option.label} 단지별 호가 범위`} />
+                    <PriceRangeSummary summaries={areaSummaries} listings={analysisListings} title={`${option.label} 단지별 호가 범위`} />
                   </div>
                 );
               })}
             </section>
           ) : (
             <>
-              <PriceRangeSummary summaries={summaries} listings={listings} title={`${scopeLabel} 단지별 실제 호가`} />
+              <PriceRangeSummary summaries={summaries} listings={analysisListings} title={`${scopeLabel} 단지별 실제 호가`} />
             </>
           )}
 

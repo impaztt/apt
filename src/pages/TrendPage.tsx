@@ -2,12 +2,13 @@ import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { HistoryDistributionPlot } from '../features/comparisons/components/HistoryDistributionPlot';
 import { TrendLineChart } from '../features/comparisons/components/TrendLineChart';
-import { compareLatestSnapshots, summarizeSnapshotHistory } from '../features/listings/statistics';
+import { compareLatestSnapshots, filterSpecialListings, isSpecialListing, summarizeSnapshotHistory } from '../features/listings/statistics';
 import type { AreaSelection } from '../features/listings/types';
 import { AreaTabs } from '../shared/components/AreaTabs';
 import { Card } from '../shared/components/Card';
 import { MetricCard } from '../shared/components/MetricCard';
 import { PageHeader } from '../shared/components/PageHeader';
+import { SpecialUnitToggle } from '../shared/components/SpecialUnitToggle';
 import { EmptyState, ErrorState, LoadingState } from '../shared/components/States';
 import { useAppData } from '../shared/data/AppDataContext';
 import { getAreaOptions } from '../shared/utils/area';
@@ -21,12 +22,20 @@ export function TrendPage() {
   const [groupId, setGroupId] = useState('');
   const [areaGroup, setAreaGroup] = useState<AreaSelection>(requestedArea ?? 'all');
   const [complexId, setComplexId] = useState('');
+  const [includeSpecialUnits, setIncludeSpecialUnits] = useState(false);
   const group = groups.find((item) => item.id === groupId) ?? groups[0];
   const complexIds = memberships
     .filter((item) => item.group_id === group?.id)
     .sort((a, b) => a.sort_order - b.sort_order)
     .map((item) => item.complex_id);
-  const groupSnapshots = snapshots.filter((snapshot) => complexIds.includes(snapshot.complex_id));
+  const rawGroupSnapshots = snapshots.filter((snapshot) => complexIds.includes(snapshot.complex_id));
+  const specialSaleCount = rawGroupSnapshots
+    .flatMap((snapshot) => snapshot.listings)
+    .filter((listing) => listing.deal_type === '매매' && listing.price !== null && isSpecialListing(listing)).length;
+  const groupSnapshots = rawGroupSnapshots.map((snapshot) => ({
+    ...snapshot,
+    listings: filterSpecialListings(snapshot.listings, includeSpecialUnits),
+  }));
   const historicalListings = groupSnapshots.flatMap((snapshot) => snapshot.listings);
   const areaOptions = getAreaOptions(historicalListings.filter((listing) => listing.deal_type === '매매'));
   const points = areaGroup === 'all' ? [] : summarizeSnapshotHistory(groupSnapshots, complexes, areaGroup, complexIds);
@@ -73,6 +82,12 @@ export function TrendPage() {
         <MetricCard label="최근 수집일" value={formatDate(uniqueDates[uniqueDates.length - 1] ?? null)} note="기간 종료" />
         <MetricCard label="누적 스냅샷" value={`${groupSnapshots.length}개`} note="단지별 날짜 자료" />
       </div>
+
+      <SpecialUnitToggle
+        checked={includeSpecialUnits}
+        onChange={setIncludeSpecialUnits}
+        specialCount={specialSaleCount}
+      />
 
       {areaOptions.length ? (
         <>
