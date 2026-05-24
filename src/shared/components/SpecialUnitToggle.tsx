@@ -5,13 +5,38 @@ export function SpecialUnitToggle({
   checked,
   onChange,
   specialCount,
-  embedded = false,
+  compact = false,
 }: {
   checked: boolean;
   onChange: (checked: boolean) => void;
   specialCount: number;
-  embedded?: boolean;
+  compact?: boolean;
 }) {
+  if (compact) {
+    return (
+      <label className="flex cursor-pointer items-center justify-between gap-3 py-2.5">
+        <span className="flex min-w-0 items-center gap-2.5">
+          <Sparkles className="h-4 w-4 shrink-0 text-amber-500" />
+          <span className="text-sm font-semibold text-slate-700">펜트·테라스 포함</span>
+          {specialCount > 0 && <span className="text-[11px] text-slate-400">{specialCount}건</span>}
+        </span>
+        <span className={`relative h-7 w-12 shrink-0 rounded-full transition ${checked ? 'bg-brand-600' : 'bg-slate-200'}`}>
+          <input
+            type="checkbox"
+            className="sr-only"
+            checked={checked}
+            onChange={(event) => onChange(event.target.checked)}
+          />
+          <span
+            className={`absolute top-1 h-5 w-5 rounded-full bg-white shadow transition ${
+              checked ? 'left-6' : 'left-1'
+            }`}
+          />
+        </span>
+      </label>
+    );
+  }
+
   const content = (
       <label className="flex cursor-pointer items-center justify-between gap-3">
         <span className="flex min-w-0 gap-2.5">
@@ -40,6 +65,5 @@ export function SpecialUnitToggle({
       </label>
   );
 
-  if (embedded) return <div className="h-full rounded-3xl border border-slate-100 bg-slate-50 p-4">{content}</div>;
   return <Card className="p-3.5 shadow-none sm:p-5">{content}</Card>;
 }
