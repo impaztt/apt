@@ -1,0 +1,243 @@
+{
+  "complex_id": "complex-wd2djt",
+  "complex_name": "꽃뫼버들마을진흥",
+  "captured_date": "2026-05-24",
+  "listings": [
+    {
+      "id": "complex-wd2djt-listing-1",
+      "building_no": "146동",
+      "deal_type": "매매",
+      "price": 770000000,
+      "price_max": null,
+      "is_price_range": false,
+      "deposit": null,
+      "monthly_rent": null,
+      "supply_area_m2": 87,
+      "exclusive_area_m2": 59,
+      "supply_area_type": "87",
+      "exclusive_area_type": "59",
+      "area_pyeong": 26,
+      "exclusive_area_pyeong": 18,
+      "area_type": "87",
+      "floor_text": "5/18층",
+      "floor": 5,
+      "total_floor": 18,
+      "floor_group": "저층",
+      "direction": "남향",
+      "verification_type": "확인매물",
+      "verified_date": "2026-05-23",
+      "agent_name": null,
+      "agent_count": 2,
+      "source": "부동산 매물 목록 복사 텍스트",
+      "description": null,
+      "links": [
+        "매물목록 접기"
+      ],
+      "keyword_analysis": {
+        "occupancy_type": "없음",
+        "structure_type": "없음",
+        "condition_type": "없음"
+      },
+      "broker_details": [
+        {
+          "id": "1",
+          "price_text": "7억 7,000",
+          "verification_type": "확인매물",
+          "verified_date": "2026-05-23",
+          "description": "천변뷰, 스타필드, 화서역신분당선 더블역세권, 올샷시 최신 특올수리.",
+          "agent_name": "진흥뱅크공인중개사",
+          "platform": "부동산뱅크",
+          "is_favorite": true,
+          "links": [
+            "매물 보러가기"
+          ],
+          "keyword_analysis": {
+            "occupancy_type": "없음",
+            "structure_type": "없음",
+            "condition_type": "올수리"
+          }
+        },
+        {
+          "id": "2",
+          "price_text": "7억 7,000",
+          "verification_type": "확인매물",
+          "verified_date": "2026-05-23",
+          "description": "단지내 로얄동.확장.최근수리.화이트 인테리어.예쁜집.서호천 벚꽃뷰.정상",
+          "agent_name": "천천에듀포레114(294-6900)공인중개사사무소",
+          "platform": "매경부동산",
+          "is_favorite": true,
+          "links": [
+            "매물 보러가기"
+          ],
+          "keyword_analysis": {
+            "occupancy_type": "정상입주",
+            "structure_type": "확장",
+            "condition_type": "인테리어"
+          }
+        }
+      ],
+      "special_unit_type": null,
+      "is_special_unit": false,
+      "is_favorite": false,
+      "is_duplicate_candidate": false
+    },
+    {
+      "id": "complex-wd2djt-listing-2",
+      "building_no": "141동",
+      "deal_type": "매매",
+      "price": 670000000,
+      "price_max": null,
+      "is_price_range": false,
+      "deposit": null,
+      "monthly_rent": null,
+      "supply_area_m2": 87,
+      "exclusive_area_m2": 59,
+      "supply_area_type": "87",
+      "exclusive_area_type": "59",
+      "area_pyeong": 26,
+      "exclusive_area_pyeong": 18,
+      "area_type": "87",
+      "floor_text": "3/18층",
+      "floor": 3,
+      "total_floor": 18,
+      "floor_group": "저층",
+      "direction": "남향",
+      "verification_type": "확인매물",
+      "verified_date": "2026-05-22",
+      "agent_name": null,
+      "agent_count": 2,
+      "source": "부동산 매물 목록 복사 텍스트",
+      "description": null,
+      "links": [
+        "매물목록 접기"
+      ],
+      "keyword_analysis": {
+        "occupancy_type": "없음",
+        "structure_type": "없음",
+        "condition_type": "없음"
+      },
+      "broker_details": [
+        {
+          "id": "1",
+          "price_text": "6억 7,000",
+          "verification_type": "확인매물",
+          "verified_date": "2026-05-22",
+          "description": "거실 방확장 화장실2개수리 씽크대수리 집깨끗함",
+          "agent_name": "진흥공인중개사사무소",
+          "platform": "부동산렛츠",
+          "is_favorite": true,
+          "links": [
+            "매물 보러가기"
+          ],
+          "keyword_analysis": {
+            "occupancy_type": "없음",
+            "structure_type": "확장",
+            "condition_type": "수리"
+          }
+        },
+        {
+          "id": "2",
+          "price_text": "6억 7,000",
+          "verification_type": "확인매물",
+          "verified_date": "2026-05-11",
+          "description": "화장실2, 씽크대 수리, 거실, 방확장",
+          "agent_name": "진흥공인중개사사무소",
+          "platform": "부동산써브",
+          "is_favorite": true,
+          "links": [
+            "매물 보러가기"
+          ],
+          "keyword_analysis": {
+            "occupancy_type": "없음",
+            "structure_type": "확장",
+            "condition_type": "수리"
+          }
+        }
+      ],
+      "special_unit_type": null,
+      "is_special_unit": false,
+      "is_favorite": false,
+      "is_duplicate_candidate": false
+    },
+    {
+      "id": "complex-wd2djt-listing-3",
+      "building_no": "146동",
+      "deal_type": "매매",
+      "price": 675000000,
+      "price_max": null,
+      "is_price_range": false,
+      "deposit": null,
+      "monthly_rent": null,
+      "supply_area_m2": 87,
+      "exclusive_area_m2": 59,
+      "supply_area_type": "87",
+      "exclusive_area_type": "59",
+      "area_pyeong": 26,
+      "exclusive_area_pyeong": 18,
+      "area_type": "87",
+      "floor_text": "저/18층",
+      "floor": null,
+      "total_floor": 18,
+      "floor_group": "저층",
+      "direction": "남향",
+      "verification_type": "확인매물",
+      "verified_date": "2026-05-14",
+      "agent_name": "진흥뱅크공인중개사",
+      "agent_count": null,
+      "source": "부동산뱅크",
+      "description": "로얄동,거실,방,전실확장,샷시포함 특올수리,세안고.",
+      "links": [
+        "매물 보러가기"
+      ],
+      "keyword_analysis": {
+        "occupancy_type": "세안고",
+        "structure_type": "확장",
+        "condition_type": "올수리"
+      },
+      "broker_details": [],
+      "special_unit_type": null,
+      "is_special_unit": false,
+      "is_favorite": true,
+      "is_duplicate_candidate": false
+    },
+    {
+      "id": "complex-wd2djt-listing-4",
+      "building_no": "148동",
+      "deal_type": "매매",
+      "price": 670000000,
+      "price_max": null,
+      "is_price_range": false,
+      "deposit": null,
+      "monthly_rent": null,
+      "supply_area_m2": 87,
+      "exclusive_area_m2": 59,
+      "supply_area_type": "87",
+      "exclusive_area_type": "59",
+      "area_pyeong": 26,
+      "exclusive_area_pyeong": 18,
+      "area_type": "87",
+      "floor_text": "2/16층",
+      "floor": 2,
+      "total_floor": 16,
+      "floor_group": "저층",
+      "direction": "남동향",
+      "verification_type": "확인매물",
+      "verified_date": "2026-05-02",
+      "agent_name": "부동산랜드꽃뫼진흥공인중개사사무소",
+      "agent_count": null,
+      "source": "부동산써브",
+      "description": "조용한동,전원같은느낌,최근화이트올수리해서 정말 예쁜집입니다,거실,전실확장",
+      "links": [],
+      "keyword_analysis": {
+        "occupancy_type": "없음",
+        "structure_type": "확장",
+        "condition_type": "올수리"
+      },
+      "broker_details": [],
+      "special_unit_type": null,
+      "is_special_unit": false,
+      "is_favorite": true,
+      "is_duplicate_candidate": false
+    }
+  ]
+}
