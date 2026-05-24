@@ -40,6 +40,6 @@ export function SpecialUnitToggle({
       </label>
   );
 
-  if (embedded) return <div className="rounded-2xl bg-slate-50 p-3.5">{content}</div>;
+  if (embedded) return <div className="h-full rounded-3xl border border-slate-100 bg-slate-50 p-4">{content}</div>;
   return <Card className="p-3.5 shadow-none sm:p-5">{content}</Card>;
 }

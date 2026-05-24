@@ -111,71 +111,79 @@ export function DashboardPage() {
             </span>
             <ChevronDown className="h-4 w-4 shrink-0 text-slate-400 transition group-open:rotate-180" />
           </summary>
-          <div className="space-y-3 border-t border-slate-100 px-3.5 pb-3.5 pt-3 sm:px-5 sm:pb-5">
-            <label className="block rounded-2xl bg-slate-50 p-3.5 text-sm font-semibold text-slate-700">
-              비교 그룹 선택
-              <select
-                className="field-control mt-2 w-full bg-white"
-                value={activeGroup?.id ?? ''}
-                onChange={(event) => setSelectedGroupId(event.target.value)}
-              >
-                {groups.map((group) => (
-                  <option key={group.id} value={group.id}>
-                    {group.name}
-                  </option>
-                ))}
-              </select>
-            </label>
-            <div className="rounded-2xl bg-slate-50 p-3.5">
-              <div className="flex items-center justify-between gap-3">
-                <p className="inline-flex items-center gap-2 text-sm font-semibold text-slate-700">
-                  <SlidersHorizontal className="h-4 w-4 text-brand-600" />
-                  표시 단지 선택
-                </p>
-                <span className="shrink-0 rounded-full bg-brand-50 px-2.5 py-1 text-xs font-bold text-brand-700">
-                  {complexIds.length}/{groupComplexIds.length}개
-                </span>
+          <div className="border-t border-slate-100 pb-3.5 pt-3 sm:px-5 sm:pb-5">
+            <p className="px-3.5 pb-3 text-[11px] font-medium text-slate-400 sm:px-0">좌우로 넘겨 분석 조건을 변경하세요.</p>
+            <div className="flex snap-x snap-mandatory gap-3 overflow-x-auto px-3.5 pb-1 sm:grid sm:grid-cols-2 sm:px-0">
+              <div className="min-w-[88%] shrink-0 snap-start rounded-3xl border border-slate-100 bg-slate-50 p-4 sm:min-w-0 sm:col-span-2">
+                <div className="flex items-center justify-between gap-3">
+                  <p className="inline-flex items-center gap-2 text-sm font-semibold text-slate-700">
+                    <SlidersHorizontal className="h-4 w-4 text-brand-600" />
+                    표시 단지 선택
+                  </p>
+                  <span className="shrink-0 rounded-full bg-brand-50 px-2.5 py-1 text-xs font-bold text-brand-700">
+                    {complexIds.length}/{groupComplexIds.length}개
+                  </span>
+                </div>
+                <div className="mt-3 flex gap-2">
+                  <button
+                    type="button"
+                    className="rounded-xl bg-brand-50 px-3 py-2 text-xs font-semibold text-brand-700"
+                    onClick={() => setSelectedComplexIds(groupComplexIds)}
+                  >
+                    전체 선택
+                  </button>
+                  <button
+                    type="button"
+                    className="rounded-xl bg-white px-3 py-2 text-xs font-semibold text-slate-500"
+                    onClick={() => setSelectedComplexIds(groupComplexIds.slice(0, 1))}
+                  >
+                    첫 단지만 보기
+                  </button>
+                </div>
+                <div className="mt-3 flex flex-wrap gap-2">
+                  {groupComplexIds.map((id) => {
+                    const complex = complexes.find((item) => item.id === id);
+                    const selected = complexIds.includes(id);
+                    return (
+                      <button
+                        key={id}
+                        type="button"
+                        className={`inline-flex items-center gap-2 rounded-full border px-3 py-2 text-xs font-semibold transition ${
+                          selected ? 'border-transparent bg-slate-900 text-white' : 'border-slate-200 bg-white text-slate-500'
+                        }`}
+                        onClick={() => toggleComplex(id)}
+                      >
+                        <span className="h-2.5 w-2.5 rounded-full" style={{ backgroundColor: complex?.color ?? '#3182f6' }} />
+                        <span>{complex?.name ?? id}</span>
+                        {selected && <Check className="h-3.5 w-3.5" />}
+                      </button>
+                    );
+                  })}
+                </div>
+                <p className="mt-3 text-[11px] leading-5 text-slate-400">선택 단지만 기준으로 계산됩니다. 최소 1개 단지는 유지됩니다.</p>
               </div>
-              <div className="mt-3 flex gap-2">
-                <button
-                  type="button"
-                  className="rounded-xl bg-brand-50 px-3 py-2 text-xs font-semibold text-brand-700"
-                  onClick={() => setSelectedComplexIds(groupComplexIds)}
+              <label className="block min-w-[82%] shrink-0 snap-start rounded-3xl border border-slate-100 bg-slate-50 p-4 text-sm font-semibold text-slate-700 sm:min-w-0">
+                비교 그룹 선택
+                <select
+                  className="field-control mt-3 w-full bg-white"
+                  value={activeGroup?.id ?? ''}
+                  onChange={(event) => setSelectedGroupId(event.target.value)}
                 >
-                  전체 선택
-                </button>
-                <button
-                  type="button"
-                  className="rounded-xl bg-white px-3 py-2 text-xs font-semibold text-slate-500"
-                  onClick={() => setSelectedComplexIds(groupComplexIds.slice(0, 1))}
-                >
-                  첫 단지만 보기
-                </button>
+                  {groups.map((group) => (
+                    <option key={group.id} value={group.id}>
+                      {group.name}
+                    </option>
+                  ))}
+                </select>
+                <p className="mt-3 text-[11px] font-normal leading-5 text-slate-400">같이 분석할 단지 묶음을 선택합니다.</p>
+              </label>
+              <div className="min-w-[82%] shrink-0 snap-start sm:min-w-0">
+                <SpecialUnitToggle embedded checked={includeSpecialUnits} onChange={setIncludeSpecialUnits} specialCount={specialSaleCount} />
               </div>
-              <div className="mt-3 flex flex-wrap gap-2">
-                {groupComplexIds.map((id) => {
-                  const complex = complexes.find((item) => item.id === id);
-                  const selected = complexIds.includes(id);
-                  return (
-                    <button
-                      key={id}
-                      type="button"
-                      className={`inline-flex items-center gap-2 rounded-full border px-3 py-2 text-xs font-semibold transition ${
-                        selected ? 'border-transparent bg-slate-900 text-white' : 'border-slate-200 bg-white text-slate-500'
-                      }`}
-                      onClick={() => toggleComplex(id)}
-                    >
-                      <span className="h-2.5 w-2.5 rounded-full" style={{ backgroundColor: complex?.color ?? '#3182f6' }} />
-                      <span>{complex?.name ?? id}</span>
-                      {selected && <Check className="h-3.5 w-3.5" />}
-                    </button>
-                  );
-                })}
+              <div className="min-w-[88%] shrink-0 snap-start sm:min-w-0 sm:col-span-2">
+                <TenantOccupiedToggle embedded mode={tenantOccupiedMode} onChange={setTenantOccupiedMode} occupiedCount={tenantOccupiedSaleCount} />
               </div>
-              <p className="mt-3 text-[11px] leading-5 text-slate-400">차트와 요약은 선택한 단지만 기준으로 계산됩니다. 최소 1개 단지는 유지됩니다.</p>
             </div>
-            <SpecialUnitToggle embedded checked={includeSpecialUnits} onChange={setIncludeSpecialUnits} specialCount={specialSaleCount} />
-            <TenantOccupiedToggle embedded mode={tenantOccupiedMode} onChange={setTenantOccupiedMode} occupiedCount={tenantOccupiedSaleCount} />
           </div>
         </details>
       </Card>
