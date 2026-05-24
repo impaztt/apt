@@ -19,10 +19,12 @@ interface PriceMarker {
 }
 
 interface PositionedMarker extends PriceMarker {
-  lane: number;
+  displayPosition: number;
 }
 
-const MARKER_LANE_DISTANCE = 11;
+const MARKER_MIN_POSITION = 5;
+const MARKER_MAX_POSITION = 95;
+const MARKER_HORIZONTAL_GAP = 10;
 
 function createMarkers(
   summary: ListingAreaSummary,
@@ -56,17 +58,30 @@ function createMarkers(
 }
 
 function positionMarkers(markers: PriceMarker[], position: (price: number) => number): PositionedMarker[] {
-  const lanePositions: number[] = [];
+  const minimumGap = Math.min(
+    MARKER_HORIZONTAL_GAP,
+    markers.length > 1 ? (MARKER_MAX_POSITION - MARKER_MIN_POSITION) / (markers.length - 1) : MARKER_HORIZONTAL_GAP,
+  );
+  const positioned = markers.map((marker) => ({
+    ...marker,
+    displayPosition: Math.min(MARKER_MAX_POSITION, Math.max(MARKER_MIN_POSITION, position(marker.price))),
+  }));
 
-  return markers.map((marker) => {
-    const currentPosition = position(marker.price);
-    const availableLane = lanePositions.findIndex(
-      (previousPosition) => currentPosition - previousPosition >= MARKER_LANE_DISTANCE,
+  for (let index = 1; index < positioned.length; index += 1) {
+    positioned[index].displayPosition = Math.max(
+      positioned[index].displayPosition,
+      positioned[index - 1].displayPosition + minimumGap,
     );
-    const lane = availableLane === -1 ? lanePositions.length : availableLane;
-    lanePositions[lane] = currentPosition;
-    return { ...marker, lane };
-  });
+  }
+
+  for (let index = positioned.length - 1; index >= 0; index -= 1) {
+    const maximumPosition = index === positioned.length - 1
+      ? MARKER_MAX_POSITION
+      : positioned[index + 1].displayPosition - minimumGap;
+    positioned[index].displayPosition = Math.min(positioned[index].displayPosition, maximumPosition);
+  }
+
+  return positioned;
 }
 
 export function PriceRangeSummary({
@@ -125,7 +140,7 @@ export function PriceRangeSummary({
       </div>
       <p className="mt-1 text-[11px] leading-5 text-slate-400">
         {interactive
-          ? '동일 가격 매물만 숫자로 묶고, 가까운 서로 다른 호가는 위로 펼쳐 표시합니다. 점을 눌러 상세 호가를 확인하세요.'
+          ? '동일 가격 매물만 숫자로 묶고, 가까운 서로 다른 호가는 한 줄에서 간격을 두어 표시합니다. 점을 눌러 상세 호가를 확인하세요.'
           : '막대는 최저~최고 호가, 세로 표시는 중앙값입니다.'}
       </p>
       <div className="mt-4 divide-y divide-slate-100">
@@ -133,7 +148,6 @@ export function PriceRangeSummary({
           const color = summary.complex_color;
           const markers = listings ? positionMarkers(createMarkers(summary, listings), position) : [];
           const activeMarker = markers.find((marker) => marker.key === selectedMarkerKey);
-          const maxMarkerLane = markers.reduce((highest, marker) => Math.max(highest, marker.lane), 0);
           const differenceFromLowestMedian = summary.median_price - baselineMedian;
 
           return (
@@ -173,7 +187,7 @@ export function PriceRangeSummary({
                 </div>
               </div>
               {interactive ? (
-                <div className="relative mt-3" style={{ height: `${70 + maxMarkerLane * 36}px` }}>
+                <div className="relative mt-3 h-[70px]">
                   <span className="absolute bottom-2 left-0 right-0 h-2 rounded-full bg-slate-100" />
                   <span
                     className="absolute bottom-2 h-2 rounded-full opacity-30"
@@ -198,8 +212,8 @@ export function PriceRangeSummary({
                         activeMarker?.key === marker.key ? 'ring-2 ring-slate-800 ring-offset-1' : ''
                       }`}
                       style={{
-                        left: `${position(marker.price)}%`,
-                        bottom: `${24 + marker.lane * 36}px`,
+                        left: `${marker.displayPosition}%`,
+                        bottom: '24px',
                         backgroundColor: color,
                       }}
                       onClick={() => setSelectedMarkerKey(activeMarker?.key === marker.key ? null : marker.key)}
