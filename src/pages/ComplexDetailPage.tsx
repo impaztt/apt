@@ -31,7 +31,7 @@ export function ComplexDetailPage() {
   const [maxPriceEok, setMaxPriceEok] = useState('');
   const [capturedDate, setCapturedDate] = useState('');
   const [includeSpecialUnits, setIncludeSpecialUnits] = useState(false);
-  const [includeTenantOccupied, setIncludeTenantOccupied] = useState(false);
+  const [includeTenantOccupied, setIncludeTenantOccupied] = useState(true);
   const complex = complexes.find((item) => item.id === complexId);
   const complexSnapshots = snapshots
     .filter((snapshot) => snapshot.complex_id === complexId)

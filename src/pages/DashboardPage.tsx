@@ -28,7 +28,7 @@ export function DashboardPage() {
   const [areaGroup, setAreaGroup] = useState<AreaSelection>('all');
   const [selectedComplexIds, setSelectedComplexIds] = useState<string[]>([]);
   const [includeSpecialUnits, setIncludeSpecialUnits] = useState(false);
-  const [includeTenantOccupied, setIncludeTenantOccupied] = useState(false);
+  const [includeTenantOccupied, setIncludeTenantOccupied] = useState(true);
   const activeGroup = groups.find((group) => group.id === selectedGroupId) ?? groups[0];
   const groupComplexIds = memberships
     .filter((membership) => membership.group_id === activeGroup?.id)

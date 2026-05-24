@@ -25,7 +25,7 @@ export function ComparisonPage() {
   const [groupId, setGroupId] = useState('');
   const [areaGroup, setAreaGroup] = useState<AreaSelection>('all');
   const [includeSpecialUnits, setIncludeSpecialUnits] = useState(false);
-  const [includeTenantOccupied, setIncludeTenantOccupied] = useState(false);
+  const [includeTenantOccupied, setIncludeTenantOccupied] = useState(true);
   const group = groups.find((item) => item.id === groupId) ?? groups[0];
   const complexIds = memberships
     .filter((item) => item.group_id === group?.id)

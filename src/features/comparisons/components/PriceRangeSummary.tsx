@@ -83,7 +83,7 @@ export function PriceRangeSummary({
   showMedian?: boolean;
 }) {
   const [selectedMarkerKey, setSelectedMarkerKey] = useState<string | null>(null);
-  const [sortMode, setSortMode] = useState<SortMode>('median');
+  const [sortMode, setSortMode] = useState<SortMode>('count');
   if (!summaries.length) return null;
   const minimum = Math.min(...summaries.map((summary) => summary.min_price));
   const maximum = Math.max(...summaries.map((summary) => summary.max_price));
@@ -96,7 +96,7 @@ export function PriceRangeSummary({
   const effectiveSortMode = showMedian || sortMode !== 'median' ? sortMode : 'min';
   const orderedSummaries = [...summaries].sort((a, b) => {
     if (effectiveSortMode === 'min') return a.min_price - b.min_price;
-    if (effectiveSortMode === 'count') return b.listing_count - a.listing_count || a.min_price - b.min_price;
+    if (effectiveSortMode === 'count') return a.listing_count - b.listing_count || a.min_price - b.min_price;
     if (effectiveSortMode === 'name') return a.complex_name.localeCompare(b.complex_name, 'ko');
     return a.median_price - b.median_price;
   });
@@ -113,7 +113,7 @@ export function PriceRangeSummary({
         >
           {showMedian && <option value="median">중앙가 낮은 순</option>}
           <option value="min">최저가 낮은 순</option>
-          <option value="count">매물 많은 순</option>
+          <option value="count">매물 적은 순</option>
           <option value="name">단지명 순</option>
         </select>
       </div>
