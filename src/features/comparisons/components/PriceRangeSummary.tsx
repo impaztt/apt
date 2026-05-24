@@ -76,14 +76,16 @@ export function PriceRangeSummary({
   title = '단지별 호가 범위',
   listings,
   showMedian = true,
+  stickyHeader = false,
 }: {
   summaries: ListingAreaSummary[];
   title?: string;
   listings?: ApartmentListing[];
   showMedian?: boolean;
+  stickyHeader?: boolean;
 }) {
   const [selectedMarkerKey, setSelectedMarkerKey] = useState<string | null>(null);
-  const [sortMode, setSortMode] = useState<SortMode>('count');
+  const [sortMode, setSortMode] = useState<SortMode>('min');
   if (!summaries.length) return null;
   const minimum = Math.min(...summaries.map((summary) => summary.min_price));
   const maximum = Math.max(...summaries.map((summary) => summary.max_price));
@@ -103,7 +105,13 @@ export function PriceRangeSummary({
 
   return (
     <Card className="p-4 sm:p-6">
-      <div className="flex flex-wrap items-center justify-between gap-2">
+      <div
+        className={`flex flex-wrap items-center justify-between gap-2 ${
+          stickyHeader
+            ? 'sticky top-[130px] z-[6] -mx-4 -mt-4 rounded-t-3xl bg-white/95 px-4 pb-3 pt-4 shadow-[0_1px_0_0_#f1f5f9] backdrop-blur lg:static lg:mx-0 lg:mt-0 lg:p-0 lg:shadow-none'
+            : ''
+        }`}
+      >
         <h2 className="text-base font-bold">{title}</h2>
         <select
           className="rounded-xl border border-slate-100 bg-slate-50 px-2.5 py-2 text-[11px] font-semibold text-slate-600"

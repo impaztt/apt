@@ -91,7 +91,9 @@ export function DashboardPage() {
         description="평형별 실제 매물 호가의 위치와 분포를 단지별로 비교합니다."
       />
 
-      <AreaTabs value={areaGroup} options={areaOptions} onChange={setAreaGroup} />
+      <div className="sticky top-[74px] z-[8] -mx-3.5 bg-canvas/95 px-3.5 py-2 backdrop-blur lg:static lg:mx-0 lg:bg-transparent lg:px-0 lg:py-0">
+        <AreaTabs value={areaGroup} options={areaOptions} onChange={setAreaGroup} />
+      </div>
 
       <Card className="overflow-hidden p-0 shadow-none">
           <div className="px-4 pt-3.5 sm:px-5">
@@ -166,7 +168,13 @@ export function DashboardPage() {
                 const areaSummaries = summarizeListings(analysisListings, complexes, option.key, complexIds);
                 return (
                   <div key={option.key} className="space-y-3">
-                    <PriceRangeSummary summaries={areaSummaries} listings={analysisListings} title={`${option.label} 단지별 호가 범위`} showMedian={false} />
+                    <PriceRangeSummary
+                      summaries={areaSummaries}
+                      listings={analysisListings}
+                      title={`${option.label} 단지별 호가 범위`}
+                      showMedian={false}
+                      stickyHeader
+                    />
                   </div>
                 );
               })}
