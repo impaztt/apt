@@ -24,12 +24,11 @@ import { formatPrice } from '../shared/utils/price';
 
 export function DashboardPage() {
   const { complexes, listings, groups, memberships, latestCapturedDates, loading, error } = useAppData();
-  const [selectedGroupId, setSelectedGroupId] = useState('');
   const [areaGroup, setAreaGroup] = useState<AreaSelection>('all');
   const [selectedComplexIds, setSelectedComplexIds] = useState<string[]>([]);
   const [includeSpecialUnits, setIncludeSpecialUnits] = useState(false);
   const [tenantOccupiedMode, setTenantOccupiedMode] = useState<TenantOccupiedFilterMode>('all');
-  const activeGroup = groups.find((group) => group.id === selectedGroupId) ?? groups[0];
+  const activeGroup = groups[0];
   const groupComplexIds = memberships
     .filter((membership) => membership.group_id === activeGroup?.id)
     .sort((a, b) => a.sort_order - b.sort_order)
@@ -102,20 +101,6 @@ export function DashboardPage() {
             </p>
           </div>
           <div className="px-4 pb-1 sm:px-5">
-            <label className="flex items-center gap-3 border-b border-slate-100 py-3">
-              <span className="shrink-0 text-sm font-semibold text-slate-700">비교 그룹</span>
-              <select
-                className="field-control mt-0 min-w-0 flex-1 py-2 text-xs"
-                value={activeGroup?.id ?? ''}
-                onChange={(event) => setSelectedGroupId(event.target.value)}
-              >
-                {groups.map((group) => (
-                  <option key={group.id} value={group.id}>
-                    {group.name}
-                  </option>
-                ))}
-              </select>
-            </label>
             <div className="border-b border-slate-100 py-3">
               <div className="flex items-center justify-between gap-2">
                 <p className="text-sm font-semibold text-slate-700">표시 단지</p>
@@ -139,7 +124,7 @@ export function DashboardPage() {
                   </span>
                 </div>
               </div>
-              <div className="mt-2 flex gap-1.5 overflow-x-auto pb-0.5">
+              <div className="mt-2 flex flex-wrap gap-1.5">
                 {groupComplexIds.map((id) => {
                   const complex = complexes.find((item) => item.id === id);
                   const selected = complexIds.includes(id);
@@ -147,13 +132,13 @@ export function DashboardPage() {
                     <button
                       key={id}
                       type="button"
-                      className={`inline-flex shrink-0 items-center gap-1.5 rounded-full border px-2.5 py-1.5 text-[11px] font-semibold transition ${
+                      className={`inline-flex max-w-full items-center gap-1.5 rounded-xl border px-2.5 py-1.5 text-left text-[11px] font-semibold leading-4 transition ${
                         selected ? 'border-transparent bg-slate-900 text-white' : 'border-slate-200 bg-white text-slate-500'
                       }`}
                       onClick={() => toggleComplex(id)}
                     >
                       <span className="h-2 w-2 rounded-full" style={{ backgroundColor: complex?.color ?? '#3182f6' }} />
-                      <span>{complex?.name ?? id}</span>
+                      <span className="break-keep">{complex?.name ?? id}</span>
                       {selected && <Check className="h-3 w-3" />}
                     </button>
                   );
