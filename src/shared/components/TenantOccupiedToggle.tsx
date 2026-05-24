@@ -6,10 +6,12 @@ export function TenantOccupiedToggle({
   mode,
   onChange,
   occupiedCount,
+  embedded = false,
 }: {
   mode: TenantOccupiedFilterMode;
   onChange: (mode: TenantOccupiedFilterMode) => void;
   occupiedCount: number;
+  embedded?: boolean;
 }) {
   const options: { value: TenantOccupiedFilterMode; label: string }[] = [
     { value: 'all', label: '전체 포함' },
@@ -17,8 +19,7 @@ export function TenantOccupiedToggle({
     { value: 'only', label: '세안고만 보기' },
   ];
 
-  return (
-    <Card className="p-3.5 shadow-none sm:p-5">
+  const content = (
       <div className="flex gap-2.5">
         <span className="shrink-0">
           <KeyRound className="mt-0.5 h-4 w-4 shrink-0 text-violet-500" />
@@ -45,6 +46,8 @@ export function TenantOccupiedToggle({
           </div>
         </div>
       </div>
-    </Card>
   );
+
+  if (embedded) return <div className="rounded-2xl bg-slate-50 p-3.5">{content}</div>;
+  return <Card className="p-3.5 shadow-none sm:p-5">{content}</Card>;
 }

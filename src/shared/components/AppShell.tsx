@@ -53,23 +53,18 @@ export function AppShell() {
         <div className="px-3">
           <p className="text-xs font-semibold text-brand-600">APT PRICE COMPARE</p>
           <p className="mt-2 text-xl font-bold tracking-tight">단지비교랩</p>
-          <span className="mt-4 inline-flex rounded-full bg-brand-50 px-2.5 py-1 text-xs font-medium text-brand-700">
-            JSON 파일 데이터
-          </span>
+          <p className="mt-2 text-sm font-medium text-slate-500">호가 분석 대시보드</p>
         </div>
         <div className="mt-10">
           <Navigation />
         </div>
       </aside>
 
-      <header className="sticky top-0 z-10 flex items-center justify-between border-b border-slate-100 bg-white/90 px-5 py-4 backdrop-blur lg:hidden">
+      <header className="sticky top-0 z-10 border-b border-slate-100 bg-white/90 px-5 py-3.5 backdrop-blur lg:hidden">
         <div>
-          <p className="text-xs font-semibold text-brand-600">단지비교랩</p>
-          <p className="text-sm font-bold">호가 분석 대시보드</p>
+          <p className="text-xl font-extrabold tracking-tight text-slate-900">단지비교랩</p>
+          <p className="mt-0.5 text-xs font-medium text-slate-500">호가 분석 대시보드</p>
         </div>
-        <span className="rounded-full bg-brand-50 px-2.5 py-1 text-[11px] font-semibold text-brand-700">
-          JSON
-        </span>
       </header>
 
       <main className="mx-auto max-w-6xl px-3.5 pb-24 pt-5 sm:px-6 sm:pt-6 lg:ml-64 lg:px-10 lg:pb-10 lg:pt-9">

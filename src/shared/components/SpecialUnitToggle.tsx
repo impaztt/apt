@@ -5,18 +5,19 @@ export function SpecialUnitToggle({
   checked,
   onChange,
   specialCount,
+  embedded = false,
 }: {
   checked: boolean;
   onChange: (checked: boolean) => void;
   specialCount: number;
+  embedded?: boolean;
 }) {
-  return (
-    <Card className="p-3.5 shadow-none sm:p-5">
+  const content = (
       <label className="flex cursor-pointer items-center justify-between gap-3">
         <span className="flex min-w-0 gap-2.5">
           <Sparkles className="mt-0.5 h-4 w-4 shrink-0 text-amber-500" />
           <span>
-            <span className="block text-sm font-semibold text-slate-700">펜트·테라스세대 포함</span>
+            <span className="block text-sm font-semibold text-slate-700">펜트·테라스 세대 포함</span>
             <span className="mt-1 block text-[11px] leading-5 text-slate-400">
               기본 통계는 특수세대를 제외합니다.
               {specialCount > 0 ? ` 표식 매물 ${specialCount}건 ${checked ? '포함 중' : '제외 중'}` : ''}
@@ -37,6 +38,8 @@ export function SpecialUnitToggle({
           />
         </span>
       </label>
-    </Card>
   );
+
+  if (embedded) return <div className="rounded-2xl bg-slate-50 p-3.5">{content}</div>;
+  return <Card className="p-3.5 shadow-none sm:p-5">{content}</Card>;
 }

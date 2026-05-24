@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Check, SlidersHorizontal, TrendingUp } from 'lucide-react';
+import { Check, ChevronDown, SlidersHorizontal, TrendingUp } from 'lucide-react';
 import { PriceRangeSummary } from '../features/comparisons/components/PriceRangeSummary';
 import {
   filterSpecialListings,
@@ -60,6 +60,9 @@ export function DashboardPage() {
   const capturedDates = complexIds.map((id) => latestCapturedDates[id]).filter((date): date is string => Boolean(date));
   const latestCapturedDate = [...capturedDates].sort().pop() ?? null;
   const differingDates = new Set(capturedDates).size > 1;
+  const specialUnitLabel = includeSpecialUnits ? '특수세대 포함' : '특수세대 제외';
+  const tenantOccupiedLabel =
+    tenantOccupiedMode === 'all' ? '세안고 전체 포함' : tenantOccupiedMode === 'exclude' ? '세안고 제외' : '세안고만';
   const lowPriceListings = [...selectedListings]
     .filter((listing): listing is typeof listing & { price: number } => listing.price !== null)
     .sort((a, b) => a.price - b.price)
@@ -88,89 +91,94 @@ export function DashboardPage() {
   return (
     <div className="space-y-5 sm:space-y-7">
       <PageHeader
-        title={activeGroup?.name ?? '호가 분포 대시보드'}
-        description="평형별 실제 매물 호가의 위치와 범위를 단지별로 비교합니다."
-        action={
-          <select
-            className="field-control mt-0 w-full sm:min-w-[240px]"
-            value={activeGroup?.id ?? ''}
-            onChange={(event) => setSelectedGroupId(event.target.value)}
-          >
-            {groups.map((group) => (
-              <option key={group.id} value={group.id}>
-                {group.name}
-              </option>
-            ))}
-          </select>
-        }
+        title="매물 파악 대시보드"
+        description="평형별 실제 매물 호가의 위치와 분포를 단지별로 비교합니다."
       />
 
       <AreaTabs value={areaGroup} options={areaOptions} onChange={setAreaGroup} />
 
-      <Card className="p-3.5 shadow-none sm:p-5">
-        <details open>
-          <summary className="flex cursor-pointer list-none items-center justify-between gap-3">
-            <span className="inline-flex min-w-0 items-center gap-2 text-sm font-semibold text-slate-700">
-              <SlidersHorizontal className="h-4 w-4 shrink-0 text-brand-600" />
-              표시 단지 선택
+      <Card className="overflow-hidden p-0 shadow-none">
+        <details className="group">
+          <summary className="flex cursor-pointer list-none items-center justify-between gap-3 px-4 py-3.5 sm:px-5 sm:py-4">
+            <span className="min-w-0">
+              <span className="inline-flex items-center gap-2 text-sm font-semibold text-slate-700">
+                <SlidersHorizontal className="h-4 w-4 shrink-0 text-brand-600" />
+                분석 조건 설정
+              </span>
+              <span className="mt-1 block truncate pl-6 text-[11px] text-slate-400">
+                단지 {complexIds.length}개 · {specialUnitLabel} · {tenantOccupiedLabel}
+              </span>
             </span>
-            <span className="shrink-0 rounded-full bg-brand-50 px-2.5 py-1 text-xs font-bold text-brand-700">
-              {complexIds.length}/{groupComplexIds.length}개
-            </span>
+            <ChevronDown className="h-4 w-4 shrink-0 text-slate-400 transition group-open:rotate-180" />
           </summary>
-          <div className="mt-4">
-            <div className="flex gap-2">
-              <button
-                type="button"
-                className="rounded-xl bg-brand-50 px-3 py-2 text-xs font-semibold text-brand-700"
-                onClick={() => setSelectedComplexIds(groupComplexIds)}
+          <div className="space-y-3 border-t border-slate-100 px-3.5 pb-3.5 pt-3 sm:px-5 sm:pb-5">
+            <label className="block rounded-2xl bg-slate-50 p-3.5 text-sm font-semibold text-slate-700">
+              비교 그룹 선택
+              <select
+                className="field-control mt-2 w-full bg-white"
+                value={activeGroup?.id ?? ''}
+                onChange={(event) => setSelectedGroupId(event.target.value)}
               >
-                전체 선택
-              </button>
-              <button
-                type="button"
-                className="rounded-xl bg-slate-50 px-3 py-2 text-xs font-semibold text-slate-500"
-                onClick={() => setSelectedComplexIds(groupComplexIds.slice(0, 1))}
-              >
-                첫 단지만 보기
-              </button>
+                {groups.map((group) => (
+                  <option key={group.id} value={group.id}>
+                    {group.name}
+                  </option>
+                ))}
+              </select>
+            </label>
+            <div className="rounded-2xl bg-slate-50 p-3.5">
+              <div className="flex items-center justify-between gap-3">
+                <p className="inline-flex items-center gap-2 text-sm font-semibold text-slate-700">
+                  <SlidersHorizontal className="h-4 w-4 text-brand-600" />
+                  표시 단지 선택
+                </p>
+                <span className="shrink-0 rounded-full bg-brand-50 px-2.5 py-1 text-xs font-bold text-brand-700">
+                  {complexIds.length}/{groupComplexIds.length}개
+                </span>
+              </div>
+              <div className="mt-3 flex gap-2">
+                <button
+                  type="button"
+                  className="rounded-xl bg-brand-50 px-3 py-2 text-xs font-semibold text-brand-700"
+                  onClick={() => setSelectedComplexIds(groupComplexIds)}
+                >
+                  전체 선택
+                </button>
+                <button
+                  type="button"
+                  className="rounded-xl bg-white px-3 py-2 text-xs font-semibold text-slate-500"
+                  onClick={() => setSelectedComplexIds(groupComplexIds.slice(0, 1))}
+                >
+                  첫 단지만 보기
+                </button>
+              </div>
+              <div className="mt-3 flex flex-wrap gap-2">
+                {groupComplexIds.map((id) => {
+                  const complex = complexes.find((item) => item.id === id);
+                  const selected = complexIds.includes(id);
+                  return (
+                    <button
+                      key={id}
+                      type="button"
+                      className={`inline-flex items-center gap-2 rounded-full border px-3 py-2 text-xs font-semibold transition ${
+                        selected ? 'border-transparent bg-slate-900 text-white' : 'border-slate-200 bg-white text-slate-500'
+                      }`}
+                      onClick={() => toggleComplex(id)}
+                    >
+                      <span className="h-2.5 w-2.5 rounded-full" style={{ backgroundColor: complex?.color ?? '#3182f6' }} />
+                      <span>{complex?.name ?? id}</span>
+                      {selected && <Check className="h-3.5 w-3.5" />}
+                    </button>
+                  );
+                })}
+              </div>
+              <p className="mt-3 text-[11px] leading-5 text-slate-400">차트와 요약은 선택한 단지만 기준으로 계산됩니다. 최소 1개 단지는 유지됩니다.</p>
             </div>
-            <div className="mt-3 flex flex-wrap gap-2">
-              {groupComplexIds.map((id) => {
-                const complex = complexes.find((item) => item.id === id);
-                const selected = complexIds.includes(id);
-                return (
-                  <button
-                    key={id}
-                    type="button"
-                    className={`inline-flex items-center gap-2 rounded-full border px-3 py-2 text-xs font-semibold transition ${
-                      selected ? 'border-transparent bg-slate-900 text-white' : 'border-slate-200 bg-white text-slate-500'
-                    }`}
-                    onClick={() => toggleComplex(id)}
-                  >
-                    <span className="h-2.5 w-2.5 rounded-full" style={{ backgroundColor: complex?.color ?? '#3182f6' }} />
-                    <span>{complex?.name ?? id}</span>
-                    {selected && <Check className="h-3.5 w-3.5" />}
-                  </button>
-                );
-              })}
-            </div>
-            <p className="mt-3 text-[11px] leading-5 text-slate-400">차트와 요약은 선택한 단지만 기준으로 다시 계산됩니다. 최소 1개 단지는 유지됩니다.</p>
+            <SpecialUnitToggle embedded checked={includeSpecialUnits} onChange={setIncludeSpecialUnits} specialCount={specialSaleCount} />
+            <TenantOccupiedToggle embedded mode={tenantOccupiedMode} onChange={setTenantOccupiedMode} occupiedCount={tenantOccupiedSaleCount} />
           </div>
         </details>
       </Card>
-
-      <SpecialUnitToggle
-        checked={includeSpecialUnits}
-        onChange={setIncludeSpecialUnits}
-        specialCount={specialSaleCount}
-      />
-
-      <TenantOccupiedToggle
-        mode={tenantOccupiedMode}
-        onChange={setTenantOccupiedMode}
-        occupiedCount={tenantOccupiedSaleCount}
-      />
 
       {summaries.length ? (
         <>
