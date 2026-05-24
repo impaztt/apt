@@ -60,11 +60,15 @@ export function AppShell() {
         </div>
       </aside>
 
-      <header className="sticky top-0 z-10 border-b border-slate-100 bg-white/90 px-5 py-3.5 backdrop-blur lg:hidden">
+      <header className="sticky top-0 z-10 flex items-center justify-between border-b border-slate-100 bg-white/90 px-5 py-3.5 backdrop-blur lg:hidden">
         <div>
           <p className="text-xl font-extrabold tracking-tight text-slate-900">단지비교랩</p>
           <p className="mt-0.5 text-xs font-medium text-slate-500">호가 분석 대시보드</p>
         </div>
+        <span className="inline-flex items-center gap-1.5 rounded-full bg-rose-50 px-2.5 py-1 text-[11px] font-bold uppercase tracking-wide text-rose-600">
+          <span className="h-1.5 w-1.5 rounded-full bg-rose-500" />
+          Live
+        </span>
       </header>
 
       <main className="mx-auto max-w-6xl px-3.5 pb-24 pt-5 sm:px-6 sm:pt-6 lg:ml-64 lg:px-10 lg:pb-10 lg:pt-9">
