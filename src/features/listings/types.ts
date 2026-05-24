@@ -2,6 +2,7 @@ export type DealType = '매매' | '전세' | '월세';
 export type FloorGroup = '저층' | '중층' | '고층' | null;
 export type AreaGroup = string;
 export type AreaSelection = 'all' | AreaGroup;
+export type TenantOccupiedFilterMode = 'all' | 'exclude' | 'only';
 
 export interface ListingKeywordAnalysis {
   occupancy_type: string | null;

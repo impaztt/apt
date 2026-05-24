@@ -244,7 +244,7 @@ export function ComplexDataInputPage() {
     ? preview.listings.filter((listing) => listing.deal_type === '매매' && isTenantOccupiedListing(listing)).length
     : 0;
   const summaries = preview
-    ? summarizeListings(filterTenantOccupiedListings(filterSpecialListings(preview.listings, false), true), [preview.complex])
+    ? summarizeListings(filterTenantOccupiedListings(filterSpecialListings(preview.listings, false), 'all'), [preview.complex])
     : [];
   const isExistingPreview = preview ? complexes.some((complex) => complex.id === preview.complex.id) : Boolean(requestedComplexId);
 
@@ -283,7 +283,7 @@ export function ComplexDataInputPage() {
             <li>2. 새 단지는 아래 <strong>신규 단지명</strong>을 입력하고, <code className="rounded bg-white px-1.5 py-0.5 text-xs">data_version: "m2_with_broker_details_v1"</code> 형식의 매물 JSON을 붙여넣으면 됩니다.</li>
             <li>3. 공급·전용면적은 <code className="rounded bg-white px-1.5 py-0.5 text-xs">㎡</code> 입력값을 기준으로 평형 규칙에 자동 연결하고, 중개사 상세는 매물 안에서 펼쳐볼 수 있게 저장합니다.</li>
             <li>4. 타입 코드가 <code className="rounded bg-white px-1.5 py-0.5 text-xs">120PB</code>처럼 <code className="rounded bg-white px-1.5 py-0.5 text-xs">P</code>를 포함하면 펜트, <code className="rounded bg-white px-1.5 py-0.5 text-xs">T</code>를 포함하면 테라스로 자동 분류됩니다. 특수세대는 일반 통계에서 기본 제외됩니다.</li>
-            <li>5. <code className="rounded bg-white px-1.5 py-0.5 text-xs">occupancy_type: "세안고"</code>인 매물은 기본 통계에 포함되며 화면에서 제외 여부를 선택할 수 있습니다.</li>
+            <li>5. <code className="rounded bg-white px-1.5 py-0.5 text-xs">occupancy_type: "세안고"</code>인 매물은 기본 통계에 포함되며 화면에서 제외하거나 세안고 매물만 볼 수 있습니다.</li>
             <li>6. 새 단지일 때만 아래에서 포함할 비교 그룹을 확인하거나 수정합니다.</li>
             <li>7. 수집 기준일을 선택하고 관리자 저장 키로 저장합니다.</li>
             <li>8. 재배포 후 단지 목록과 비교 화면에 추가 또는 수정 내용이 표시됩니다.</li>
@@ -449,7 +449,7 @@ export function ComplexDataInputPage() {
             )}
             {previewTenantOccupiedCount > 0 && (
               <p className="mt-2 rounded-xl bg-violet-50 px-3 py-2 text-xs font-semibold text-violet-700">
-                세안고 매물 {previewTenantOccupiedCount}건이 아래 기본 가격 요약에 포함됩니다. 대시보드에서 제외할 수 있습니다.
+                세안고 매물 {previewTenantOccupiedCount}건이 아래 기본 가격 요약에 포함됩니다. 대시보드에서 제외하거나 세안고만 볼 수 있습니다.
               </p>
             )}
           </Card>

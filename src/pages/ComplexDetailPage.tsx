@@ -9,7 +9,7 @@ import {
   isTenantOccupiedListing,
   summarizeListings,
 } from '../features/listings/statistics';
-import type { AreaGroup, DealType, FloorGroup } from '../features/listings/types';
+import type { AreaGroup, DealType, FloorGroup, TenantOccupiedFilterMode } from '../features/listings/types';
 import { Button } from '../shared/components/Button';
 import { Card } from '../shared/components/Card';
 import { SpecialUnitToggle } from '../shared/components/SpecialUnitToggle';
@@ -31,7 +31,7 @@ export function ComplexDetailPage() {
   const [maxPriceEok, setMaxPriceEok] = useState('');
   const [capturedDate, setCapturedDate] = useState('');
   const [includeSpecialUnits, setIncludeSpecialUnits] = useState(false);
-  const [includeTenantOccupied, setIncludeTenantOccupied] = useState(true);
+  const [tenantOccupiedMode, setTenantOccupiedMode] = useState<TenantOccupiedFilterMode>('all');
   const complex = complexes.find((item) => item.id === complexId);
   const complexSnapshots = snapshots
     .filter((snapshot) => snapshot.complex_id === complexId)
@@ -44,20 +44,21 @@ export function ComplexDetailPage() {
   const tenantOccupiedSaleCount = relatedListings.filter(
     (listing) => listing.deal_type === '매매' && listing.price !== null && isTenantOccupiedListing(listing),
   ).length;
+  const analysisListings = filterTenantOccupiedListings(filterSpecialListings(relatedListings, includeSpecialUnits), tenantOccupiedMode);
   const summaries = summarizeListings(
-    filterTenantOccupiedListings(filterSpecialListings(relatedListings, includeSpecialUnits), includeTenantOccupied),
+    analysisListings,
     complex ? [complex] : [],
   );
   const filteredListings = useMemo(
     () =>
-      relatedListings
+      analysisListings
         .filter((listing) => !dealFilter || listing.deal_type === dealFilter)
         .filter((listing) => !areaFilter || getAreaGroup(listing) === areaFilter)
         .filter((listing) => !floorFilter || listing.floor_group === floorFilter)
         .filter((listing) => !directionFilter.trim() || (listing.direction ?? '').includes(directionFilter.trim()))
         .filter((listing) => !maxPriceEok || (listing.price ?? listing.deposit ?? 0) <= Number(maxPriceEok) * 100_000_000)
         .sort((a, b) => (a.price ?? Number.MAX_SAFE_INTEGER) - (b.price ?? Number.MAX_SAFE_INTEGER)),
-    [relatedListings, dealFilter, areaFilter, floorFilter, directionFilter, maxPriceEok],
+    [analysisListings, dealFilter, areaFilter, floorFilter, directionFilter, maxPriceEok],
   );
 
   if (loading) return <LoadingState />;
@@ -125,8 +126,8 @@ export function ComplexDetailPage() {
       />
 
       <TenantOccupiedToggle
-        checked={includeTenantOccupied}
-        onChange={setIncludeTenantOccupied}
+        mode={tenantOccupiedMode}
+        onChange={setTenantOccupiedMode}
         occupiedCount={tenantOccupiedSaleCount}
       />
 

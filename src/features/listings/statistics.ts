@@ -3,6 +3,7 @@ import type {
   ApartmentListing,
   AreaSelection,
   ListingAreaSummary,
+  TenantOccupiedFilterMode,
   ListingSnapshot,
   ListingTrendPoint,
   SnapshotChangeSummary,
@@ -44,9 +45,10 @@ export function isTenantOccupiedListing(listing: ApartmentListing): boolean {
 
 export function filterTenantOccupiedListings(
   listings: ApartmentListing[],
-  includeTenantOccupied: boolean,
+  mode: TenantOccupiedFilterMode,
 ): ApartmentListing[] {
-  return includeTenantOccupied ? listings : listings.filter((listing) => !isTenantOccupiedListing(listing));
+  if (mode === 'all') return listings;
+  return listings.filter((listing) => isTenantOccupiedListing(listing) === (mode === 'only'));
 }
 
 export function getListingKeywordBadges(listing: ApartmentListing): string[] {

@@ -9,7 +9,7 @@ import {
   isTenantOccupiedListing,
   summarizeListings,
 } from '../features/listings/statistics';
-import type { AreaSelection } from '../features/listings/types';
+import type { AreaSelection, TenantOccupiedFilterMode } from '../features/listings/types';
 import { AreaTabs } from '../shared/components/AreaTabs';
 import { Card } from '../shared/components/Card';
 import { PageHeader } from '../shared/components/PageHeader';
@@ -25,7 +25,7 @@ export function ComparisonPage() {
   const [groupId, setGroupId] = useState('');
   const [areaGroup, setAreaGroup] = useState<AreaSelection>('all');
   const [includeSpecialUnits, setIncludeSpecialUnits] = useState(false);
-  const [includeTenantOccupied, setIncludeTenantOccupied] = useState(true);
+  const [tenantOccupiedMode, setTenantOccupiedMode] = useState<TenantOccupiedFilterMode>('all');
   const group = groups.find((item) => item.id === groupId) ?? groups[0];
   const complexIds = memberships
     .filter((item) => item.group_id === group?.id)
@@ -40,7 +40,7 @@ export function ComparisonPage() {
   ).length;
   const analysisListings = filterTenantOccupiedListings(
     filterSpecialListings(listings, includeSpecialUnits),
-    includeTenantOccupied,
+    tenantOccupiedMode,
   );
   const relevantListings = analysisListings.filter((listing) => complexIds.includes(listing.complex_id));
   const areaOptions = getAreaOptions(relevantListings.filter((listing) => listing.deal_type === '매매'));
@@ -85,8 +85,8 @@ export function ComparisonPage() {
       />
 
       <TenantOccupiedToggle
-        checked={includeTenantOccupied}
-        onChange={setIncludeTenantOccupied}
+        mode={tenantOccupiedMode}
+        onChange={setTenantOccupiedMode}
         occupiedCount={tenantOccupiedSaleCount}
       />
 

@@ -10,7 +10,7 @@ import {
   isTenantOccupiedListing,
   summarizeSnapshotHistory,
 } from '../features/listings/statistics';
-import type { AreaSelection } from '../features/listings/types';
+import type { AreaSelection, TenantOccupiedFilterMode } from '../features/listings/types';
 import { AreaTabs } from '../shared/components/AreaTabs';
 import { Card } from '../shared/components/Card';
 import { MetricCard } from '../shared/components/MetricCard';
@@ -31,7 +31,7 @@ export function TrendPage() {
   const [areaGroup, setAreaGroup] = useState<AreaSelection>(requestedArea ?? 'all');
   const [complexId, setComplexId] = useState('');
   const [includeSpecialUnits, setIncludeSpecialUnits] = useState(false);
-  const [includeTenantOccupied, setIncludeTenantOccupied] = useState(true);
+  const [tenantOccupiedMode, setTenantOccupiedMode] = useState<TenantOccupiedFilterMode>('all');
   const group = groups.find((item) => item.id === groupId) ?? groups[0];
   const complexIds = memberships
     .filter((item) => item.group_id === group?.id)
@@ -48,7 +48,7 @@ export function TrendPage() {
     ...snapshot,
     listings: filterTenantOccupiedListings(
       filterSpecialListings(snapshot.listings, includeSpecialUnits),
-      includeTenantOccupied,
+      tenantOccupiedMode,
     ),
   }));
   const historicalListings = groupSnapshots.flatMap((snapshot) => snapshot.listings);
@@ -105,8 +105,8 @@ export function TrendPage() {
       />
 
       <TenantOccupiedToggle
-        checked={includeTenantOccupied}
-        onChange={setIncludeTenantOccupied}
+        mode={tenantOccupiedMode}
+        onChange={setTenantOccupiedMode}
         occupiedCount={tenantOccupiedSaleCount}
       />
 
