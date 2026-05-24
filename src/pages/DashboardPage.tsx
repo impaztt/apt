@@ -166,14 +166,14 @@ export function DashboardPage() {
                 const areaSummaries = summarizeListings(analysisListings, complexes, option.key, complexIds);
                 return (
                   <div key={option.key} className="space-y-3">
-                    <PriceRangeSummary summaries={areaSummaries} listings={analysisListings} title={`${option.label} 단지별 호가 범위`} />
+                    <PriceRangeSummary summaries={areaSummaries} listings={analysisListings} title={`${option.label} 단지별 호가 범위`} showMedian={false} />
                   </div>
                 );
               })}
             </section>
           ) : (
             <>
-              <PriceRangeSummary summaries={summaries} listings={analysisListings} title={`${scopeLabel} 단지별 실제 호가`} />
+              <PriceRangeSummary summaries={summaries} listings={analysisListings} title={`${scopeLabel} 단지별 실제 호가`} showMedian={false} />
             </>
           )}
 

@@ -74,10 +74,12 @@ export function PriceRangeSummary({
   summaries,
   title = '단지별 호가 범위',
   listings,
+  showMedian = true,
 }: {
   summaries: ListingAreaSummary[];
   title?: string;
   listings?: ApartmentListing[];
+  showMedian?: boolean;
 }) {
   const [selectedMarkerKey, setSelectedMarkerKey] = useState<string | null>(null);
   const [sortMode, setSortMode] = useState<SortMode>('median');
@@ -90,10 +92,11 @@ export function PriceRangeSummary({
   const position = (price: number) => ((price - start) / (end - start || 1)) * 100;
   const interactive = Boolean(listings);
   const baselineMedian = Math.min(...summaries.map((summary) => summary.median_price));
+  const effectiveSortMode = showMedian || sortMode !== 'median' ? sortMode : 'min';
   const orderedSummaries = [...summaries].sort((a, b) => {
-    if (sortMode === 'min') return a.min_price - b.min_price;
-    if (sortMode === 'count') return b.listing_count - a.listing_count || a.median_price - b.median_price;
-    if (sortMode === 'name') return a.complex_name.localeCompare(b.complex_name, 'ko');
+    if (effectiveSortMode === 'min') return a.min_price - b.min_price;
+    if (effectiveSortMode === 'count') return b.listing_count - a.listing_count || a.min_price - b.min_price;
+    if (effectiveSortMode === 'name') return a.complex_name.localeCompare(b.complex_name, 'ko');
     return a.median_price - b.median_price;
   });
 
@@ -103,11 +106,11 @@ export function PriceRangeSummary({
         <h2 className="text-base font-bold">{title}</h2>
         <select
           className="rounded-xl border border-slate-100 bg-slate-50 px-2.5 py-2 text-[11px] font-semibold text-slate-600"
-          value={sortMode}
+          value={effectiveSortMode}
           onChange={(event) => setSortMode(event.target.value as SortMode)}
           aria-label="단지 정렬"
         >
-          <option value="median">중앙가 낮은 순</option>
+          {showMedian && <option value="median">중앙가 낮은 순</option>}
           <option value="min">최저가 낮은 순</option>
           <option value="count">매물 많은 순</option>
           <option value="name">단지명 순</option>
@@ -133,13 +136,15 @@ export function PriceRangeSummary({
                   <span className="truncate">{summary.complex_name}</span>
                 </p>
                 <div className="flex shrink-0 items-center gap-1.5">
-                  <span className={`rounded-full px-2 py-1 text-[10px] font-bold ${
-                    differenceFromLowestMedian === 0
-                      ? 'bg-blue-50 text-brand-700'
-                      : 'bg-slate-50 text-slate-500'
-                  }`}>
-                    {differenceFromLowestMedian === 0 ? '중앙가 최저' : `+${formatPrice(differenceFromLowestMedian)}`}
-                  </span>
+                  {showMedian && (
+                    <span className={`rounded-full px-2 py-1 text-[10px] font-bold ${
+                      differenceFromLowestMedian === 0
+                        ? 'bg-blue-50 text-brand-700'
+                        : 'bg-slate-50 text-slate-500'
+                    }`}>
+                      {differenceFromLowestMedian === 0 ? '중앙가 최저' : `+${formatPrice(differenceFromLowestMedian)}`}
+                    </span>
+                  )}
                   <span className="text-slate-500">{summary.listing_count}건</span>
                 </div>
               </div>
@@ -154,11 +159,13 @@ export function PriceRangeSummary({
                       backgroundColor: color,
                     }}
                   />
-                  <span
-                    className="absolute bottom-0 h-6 w-[3px] -translate-x-1/2 rounded-full bg-slate-500"
-                    style={{ left: `${position(summary.median_price)}%` }}
-                    aria-hidden="true"
-                  />
+                  {showMedian && (
+                    <span
+                      className="absolute bottom-0 h-6 w-[3px] -translate-x-1/2 rounded-full bg-slate-500"
+                      style={{ left: `${position(summary.median_price)}%` }}
+                      aria-hidden="true"
+                    />
+                  )}
                   {markers.map((marker) => (
                     <button
                       key={marker.key}
@@ -188,21 +195,25 @@ export function PriceRangeSummary({
                       backgroundColor: color,
                     }}
                   />
-                  <span
-                    className="absolute -top-1 bottom-[-4px] w-[4px] -translate-x-1/2 rounded-full bg-ink"
-                    style={{ left: `${position(summary.median_price)}%` }}
-                  />
+                  {showMedian && (
+                    <span
+                      className="absolute -top-1 bottom-[-4px] w-[4px] -translate-x-1/2 rounded-full bg-ink"
+                      style={{ left: `${position(summary.median_price)}%` }}
+                    />
+                  )}
                 </div>
               )}
-              <div className="mt-3 grid grid-cols-3 gap-1 text-center">
+              <div className={`mt-3 grid gap-1 text-center ${showMedian ? 'grid-cols-3' : 'grid-cols-2'}`}>
                 <div className="text-left">
                   <p className="text-[11px] font-semibold text-slate-400">최저</p>
                   <p className="metric-number mt-0.5 text-base font-bold text-brand-700">{formatPrice(summary.min_price)}</p>
                 </div>
-                <div>
-                  <p className="text-[11px] font-semibold text-slate-500">중앙</p>
-                  <p className="metric-number mt-0.5 text-lg font-extrabold text-slate-900">{formatPrice(summary.median_price)}</p>
-                </div>
+                {showMedian && (
+                  <div>
+                    <p className="text-[11px] font-semibold text-slate-500">중앙</p>
+                    <p className="metric-number mt-0.5 text-lg font-extrabold text-slate-900">{formatPrice(summary.median_price)}</p>
+                  </div>
+                )}
                 <div className="text-right">
                   <p className="text-[11px] font-semibold text-slate-400">최고</p>
                   <p className="metric-number mt-0.5 text-base font-bold text-rose-600">{formatPrice(summary.max_price)}</p>

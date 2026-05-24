@@ -72,14 +72,26 @@ function optionalNumber(value: unknown): number | null {
 }
 
 function specialUnitType(row: Record<string, unknown>): string | null {
-  const value =
+  const explicitValue =
     optionalText(row.special_unit_type) ??
     optionalText(row.special_type) ??
     optionalText(row.unit_variant);
-  if (!value || ['일반', '일반세대', '일반형', '없음', 'false', 'N'].includes(value)) {
-    return row.is_special_unit === true ? '특수세대' : null;
+  if (explicitValue && !['일반', '일반세대', '일반형', '없음', 'false', 'N'].includes(explicitValue)) {
+    return explicitValue;
   }
-  return value;
+  const typedAreaCodes = [row.supply_area_type, row.exclusive_area_type, row.area_type]
+    .map(optionalText)
+    .filter((value): value is string => value !== null)
+    .map((value) => value.toUpperCase().replace(/\s|㎡/g, '').replace(/M2/g, ''));
+  const typeSuffixes = typedAreaCodes
+    .map((value) => value.match(/^\d+(?:\.\d+)?([A-Z]+)$/)?.[1] ?? '')
+    .filter(Boolean);
+  const hasPenthouseCode = typeSuffixes.some((value) => value.includes('P'));
+  const hasTerraceCode = typeSuffixes.some((value) => value.includes('T'));
+  if (hasPenthouseCode && hasTerraceCode) return '펜트·테라스';
+  if (hasPenthouseCode) return '펜트';
+  if (hasTerraceCode) return '테라스';
+  return row.is_special_unit === true ? '특수세대' : null;
 }
 
 function m2ToPyeong(value: number | null): number | null {
