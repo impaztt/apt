@@ -54,6 +54,7 @@ export interface GuideNearbyPlace {
   category: string;
   description: string;
   url: string;
+  map_url?: string;
 }
 
 export interface GuideFaq {

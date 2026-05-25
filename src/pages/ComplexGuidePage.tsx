@@ -24,6 +24,14 @@ export function ComplexGuidePage() {
   }
   const guide = guides.find((item) => item.complex_id === GUIDE_COMPLEX_ID) ?? guides[0];
   if (!guide) return <EmptyState title="우리 단지 가이드가 없습니다" description="관리 화면에서 가이드 JSON을 등록해 주세요." />;
+  const nearbyGroups = Array.from(
+    guide.nearby_places.reduce((groups, place) => {
+      const items = groups.get(place.category) ?? [];
+      items.push(place);
+      groups.set(place.category, items);
+      return groups;
+    }, new Map<string, typeof guide.nearby_places>()),
+  );
 
   return (
     <div className="space-y-4 sm:space-y-6">
@@ -187,19 +195,45 @@ export function ComplexGuidePage() {
       </section>
 
       <section id="nearby" className="scroll-mt-36 space-y-3">
-        <div className="flex items-center gap-2 px-1">
-          <Trees className="h-5 w-5 text-brand-600" />
-          <h2 className="text-lg font-bold">주변 생활</h2>
+        <div className="flex items-end justify-between gap-2 px-1">
+          <div className="flex items-center gap-2">
+            <Trees className="h-5 w-5 text-brand-600" />
+            <h2 className="text-lg font-bold">주변 생활</h2>
+          </div>
+          <p className="text-xs font-semibold text-slate-400">{guide.nearby_places.length}곳</p>
         </div>
-        {guide.nearby_places.map((place) => (
-          <a key={place.name} href={place.url} target="_blank" rel="noreferrer" className="flex items-center justify-between gap-3 rounded-2xl bg-white p-4 shadow-card">
-            <span>
-              <span className="text-[10px] font-bold text-brand-600">{place.category}</span>
-              <strong className="mt-1 block text-sm">{place.name}</strong>
-              <span className="mt-1 block text-xs leading-5 text-slate-500">{place.description}</span>
-            </span>
-            <ExternalLink className="h-4 w-4 shrink-0 text-slate-300" />
-          </a>
+        <Card className="p-4 shadow-none">
+          <p className="text-xs leading-5 text-slate-500">
+            교통, 장보기, 산책, 문화생활과 행정·건강 시설을 모았습니다. 운영시간과 이용 조건은 각 시설의 안내에서 다시 확인하세요.
+          </p>
+        </Card>
+        {nearbyGroups.map(([category, places]) => (
+          <div key={category} className="space-y-2">
+            <div className="flex items-center justify-between px-1 pt-1">
+              <h3 className="text-sm font-bold text-slate-700">{category}</h3>
+              <span className="text-[11px] font-semibold text-slate-400">{places.length}곳</span>
+            </div>
+            <div className="grid gap-2 sm:grid-cols-2">
+              {places.map((place) => (
+                <Card key={place.name} className="flex flex-col justify-between p-4 shadow-none">
+                  <div>
+                    <strong className="block text-sm">{place.name}</strong>
+                    <p className="mt-1 text-xs leading-5 text-slate-500">{place.description}</p>
+                  </div>
+                  <div className="mt-3 flex gap-2">
+                    <a href={place.url} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 rounded-xl bg-brand-50 px-3 py-2 text-[11px] font-bold text-brand-700">
+                      {place.map_url ? '정보 보기' : '지도 보기'}<ExternalLink className="h-3 w-3" />
+                    </a>
+                    {place.map_url && (
+                      <a href={place.map_url} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 rounded-xl bg-slate-50 px-3 py-2 text-[11px] font-bold text-slate-600">
+                        지도<MapPinned className="h-3 w-3" />
+                      </a>
+                    )}
+                  </div>
+                </Card>
+              ))}
+            </div>
+          </div>
         ))}
       </section>
 

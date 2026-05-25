@@ -87,6 +87,7 @@ export function GuideEditorPage() {
           <p>`site_map.image_url`에 배치도 이미지의 공개 URL을 넣으면 가이드 화면에 표시됩니다.</p>
           <p>`building_notes`에 동별 제목, 설명, 태그를 추가하면 동별 안내 카드가 생성됩니다.</p>
           <p>`facilities`, `nearby_places`, `faqs`는 배열 항목을 추가하거나 수정할 수 있습니다.</p>
+          <p>`nearby_places`에 `map_url`을 추가하면 공식 정보 링크와 지도 링크를 나누어 표시합니다.</p>
           <p>공동현관 비밀번호나 입주민 개인정보 등 보안 정보는 입력하지 마세요.</p>
         </div>
       </Card>

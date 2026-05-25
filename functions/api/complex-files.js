@@ -175,6 +175,7 @@ function validateComplexGuide(data) {
     if (!item || !text(item.name) || !text(item.category) || !text(item.description) || !text(item.url)) {
       errors.push(`가이드 주변 생활 ${index + 1} 내용을 입력해 주세요.`);
     }
+    if (item?.map_url !== undefined && !text(item.map_url)) errors.push(`가이드 주변 생활 ${index + 1}의 map_url을 확인해 주세요.`);
   });
   if (Array.isArray(data.faqs)) data.faqs.forEach((item, index) => {
     if (!item || !text(item.question) || !text(item.answer)) errors.push(`가이드 FAQ ${index + 1} 내용을 입력해 주세요.`);

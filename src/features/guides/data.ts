@@ -60,6 +60,7 @@ export function parseComplexGuide(raw: unknown, label = '우리 단지 가이드
   (source.nearby_places as unknown[]).forEach((value, index) => {
     const item = recordValue(value, `${label} 주변 생활 ${index + 1}`);
     ['name', 'category', 'description', 'url'].forEach((field) => requiredText(item[field], field, `${label} 주변 생활 ${index + 1}`));
+    if (item.map_url !== undefined) requiredText(item.map_url, 'map_url', `${label} 주변 생활 ${index + 1}`);
   });
   (source.faqs as unknown[]).forEach((value, index) => {
     const item = recordValue(value, `${label} FAQ ${index + 1}`);

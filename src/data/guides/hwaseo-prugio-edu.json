@@ -153,22 +153,120 @@
   "building_notes": [],
   "nearby_places": [
     {
-      "name": "일월수목원",
-      "category": "여가",
-      "description": "단지에서의 이동 동선과 이용 정보를 지도에서 확인하세요.",
-      "url": "https://map.kakao.com/link/search/%EC%9D%BC%EC%9B%94%EC%88%98%EB%AA%A9%EC%9B%90"
-    },
-    {
-      "name": "일월도서관",
-      "category": "생활",
-      "description": "운영 시간과 이동 경로는 지도 및 공식 안내를 확인하세요.",
-      "url": "https://map.kakao.com/link/search/%EC%9D%BC%EC%9B%94%EB%8F%84%EC%84%9C%EA%B4%80"
+      "name": "화서역",
+      "category": "교통",
+      "description": "수도권 1호선 이용과 스타필드 수원 방향 이동을 함께 확인하기 좋은 교통 거점입니다.",
+      "url": "https://map.kakao.com/link/search/화서역"
     },
     {
       "name": "성균관대역",
       "category": "교통",
-      "description": "대중교통 이동 경로를 지도에서 확인하세요.",
-      "url": "https://map.kakao.com/link/search/%EC%84%B1%EA%B7%A0%EA%B4%80%EB%8C%80%EC%97%AD"
+      "description": "수도권 1호선을 이용하는 단지 생활권의 주요 역입니다. 출발 시간과 이동 경로는 지도에서 확인하세요.",
+      "url": "https://map.kakao.com/link/search/성균관대역"
+    },
+    {
+      "name": "수원역",
+      "category": "교통",
+      "description": "광역 철도와 시내 이동을 함께 검토할 때 확인할 수 있는 수원 주요 환승 거점입니다.",
+      "url": "https://map.kakao.com/link/search/수원역"
+    },
+    {
+      "name": "스타필드 수원",
+      "category": "쇼핑·외식",
+      "description": "쇼핑, 식음, 문화·휴식 공간이 모인 복합시설입니다. 매장과 영업시간은 공식 안내를 확인하세요.",
+      "url": "https://www.starfield.co.kr/suwon",
+      "map_url": "https://map.kakao.com/link/search/스타필드 수원"
+    },
+    {
+      "name": "트레이더스 홀세일 클럽 수원화서점",
+      "category": "쇼핑·외식",
+      "description": "스타필드 수원 지하 2층에 위치한 장보기 중심 시설입니다. 휴점일과 운영시간은 점포 안내를 확인하세요.",
+      "url": "https://eapp.emart.com/brandbranch/view.do?id=2022&trcknCode=traders_brandbranch",
+      "map_url": "https://map.kakao.com/link/search/트레이더스 홀세일 클럽 수원화서점"
+    },
+    {
+      "name": "롯데마트 천천점",
+      "category": "쇼핑·외식",
+      "description": "식료품과 생활용품 장보기를 위한 인근 대형마트 선택지입니다. 휴무일은 방문 전 확인하세요.",
+      "url": "https://map.kakao.com/link/search/롯데마트 천천점"
+    },
+    {
+      "name": "화서역 먹거리촌",
+      "category": "쇼핑·외식",
+      "description": "화서역과 스타필드 수원 주변의 외식 동선을 살펴볼 때 확인할 수 있는 상권입니다.",
+      "url": "https://map.kakao.com/link/search/화서역 먹거리촌"
+    },
+    {
+      "name": "일월수목원",
+      "category": "자연·산책",
+      "description": "수원시가 운영하는 식물문화 중심의 도심형 수목원입니다. 관람 안내와 이용시간은 공식 페이지에서 확인하세요.",
+      "url": "https://www.suwon.go.kr/sw-www/sw-visitsuwon/sw-visitsuwon-01/sw-visitsuwon-01-06/sw-visitsuwon-01-06-01.jsp",
+      "map_url": "https://map.kakao.com/link/search/일월수목원"
+    },
+    {
+      "name": "일월호수공원",
+      "category": "자연·산책",
+      "description": "일월저수지와 야외 공간, 일월도서관 등을 함께 둘러볼 수 있는 공원 생활권입니다.",
+      "url": "https://www.suwon.go.kr/sw-www/sw-iwarbor/sw-iwarbor-02/sw-iwarbor-02-05.jsp",
+      "map_url": "https://map.kakao.com/link/search/일월호수공원"
+    },
+    {
+      "name": "대유평공원",
+      "category": "자연·산책",
+      "description": "스타필드 수원 주변에서 산책이나 야외 휴식을 계획할 때 확인할 수 있는 공원입니다.",
+      "url": "https://map.kakao.com/link/search/대유평공원"
+    },
+    {
+      "name": "만석공원",
+      "category": "자연·산책",
+      "description": "장안구 생활권의 산책·운동 장소로 이동 경로와 시설 위치를 지도에서 확인하세요.",
+      "url": "https://map.kakao.com/link/search/만석공원 수원"
+    },
+    {
+      "name": "일월도서관",
+      "category": "문화·학습",
+      "description": "수원시 도서관 시설로, 자료 이용과 프로그램·휴관 정보는 공식 안내에서 확인할 수 있습니다.",
+      "url": "https://www.suwonlib.go.kr/iw/html/06_info/info05.asp",
+      "map_url": "https://map.kakao.com/link/search/일월도서관"
+    },
+    {
+      "name": "별마당 도서관·스타필드 문화공간",
+      "category": "문화·학습",
+      "description": "스타필드 수원 내 독서·전시·프로그램 정보를 공식 점포 안내에서 확인할 수 있습니다.",
+      "url": "https://www.starfield.co.kr/suwon",
+      "map_url": "https://map.kakao.com/link/search/스타필드 수원 별마당도서관"
+    },
+    {
+      "name": "수원SK아트리움",
+      "category": "문화·학습",
+      "description": "수원문화재단이 안내하는 전문 공연장입니다. 공연 일정과 시설 안내를 확인하세요.",
+      "url": "https://www.swcf.or.kr/?p=18",
+      "map_url": "https://map.kakao.com/link/search/수원SK아트리움"
+    },
+    {
+      "name": "성균관대학교 자연과학캠퍼스",
+      "category": "문화·학습",
+      "description": "단지 인근 대학 생활권의 위치와 주변 이동 경로를 지도에서 확인하세요.",
+      "url": "https://map.kakao.com/link/search/성균관대학교 자연과학캠퍼스"
+    },
+    {
+      "name": "정자3동 행정복지센터",
+      "category": "행정·건강",
+      "description": "전입과 생활 행정 관련 방문 위치를 확인할 수 있는 행정 시설입니다.",
+      "url": "https://www.suwon.go.kr/web/reserv/faci/view.do?seqNo=150",
+      "map_url": "https://map.kakao.com/link/search/정자3동 행정복지센터"
+    },
+    {
+      "name": "장안구보건소",
+      "category": "행정·건강",
+      "description": "예방접종, 건강관리 등 공공 보건 서비스 이용 위치를 지도에서 확인하세요.",
+      "url": "https://map.kakao.com/link/search/장안구보건소"
+    },
+    {
+      "name": "경기도의료원 수원병원",
+      "category": "행정·건강",
+      "description": "진료가 필요한 경우 위치와 방문 동선을 확인할 수 있는 공공의료기관입니다.",
+      "url": "https://map.kakao.com/link/search/경기도의료원 수원병원"
     }
   ],
   "faqs": [
@@ -198,6 +296,26 @@
     {
       "label": "공동주택 공개 정보 기반 단지·관리비 정보",
       "url": "https://www.aptdamoa.com/apt/A44033010/contents.html",
+      "checked_at": "2026-05-25"
+    },
+    {
+      "label": "스타필드 수원 공식 점포·오시는 길 안내",
+      "url": "https://www.starfield.co.kr/suwon",
+      "checked_at": "2026-05-25"
+    },
+    {
+      "label": "수원관광 일월수목원·일월호수공원 안내",
+      "url": "https://www.suwon.go.kr/sw-www/sw-visitsuwon/sw-visitsuwon-01/sw-visitsuwon-01-06/sw-visitsuwon-01-06-01.jsp",
+      "checked_at": "2026-05-25"
+    },
+    {
+      "label": "수원시도서관 일월도서관 안내",
+      "url": "https://www.suwonlib.go.kr/iw/html/06_info/info05.asp",
+      "checked_at": "2026-05-25"
+    },
+    {
+      "label": "수원문화재단 수원SK아트리움 안내",
+      "url": "https://www.swcf.or.kr/?p=18",
       "checked_at": "2026-05-25"
     }
   ]
