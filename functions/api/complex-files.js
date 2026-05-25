@@ -2,6 +2,13 @@ const COMPLEX_DIRECTORY = 'src/data/complexes';
 const SNAPSHOT_DIRECTORY = 'src/data/snapshots';
 const DISPLAY_SETTINGS_PATH = 'src/data/display-settings.json';
 const GUIDE_DIRECTORY = 'src/data/guides';
+const GUIDE_IMAGE_DIRECTORY = 'public/guides';
+const MAX_GUIDE_IMAGE_BYTES = 4 * 1024 * 1024;
+const GUIDE_IMAGE_EXTENSIONS = {
+  'image/jpeg': 'jpg',
+  'image/png': 'png',
+  'image/webp': 'webp',
+};
 const DEFAULT_OWNER = 'impaztt';
 const DEFAULT_REPO = 'apt';
 const DEFAULT_BRANCH = 'main';
@@ -276,6 +283,31 @@ async function putFile(context, filePath, content, message) {
   return { created: !sha, commitUrl: result?.commit?.html_url ?? null };
 }
 
+async function putBase64File(context, filePath, content, message) {
+  const current = await getEntry(context, filePath);
+  let sha;
+  if (current.response.ok) {
+    const entry = await current.response.json();
+    sha = entry.sha;
+  } else if (current.response.status !== 404) {
+    return { error: await failureMessage(current.response, '기존 GitHub 이미지 파일을 조회하지 못했습니다.') };
+  }
+
+  const response = await fetch(current.apiUrl, {
+    method: 'PUT',
+    headers: current.headers,
+    body: JSON.stringify({
+      message,
+      branch: current.branch,
+      content,
+      ...(sha ? { sha } : {}),
+    }),
+  });
+  const result = await response.json().catch(() => null);
+  if (!response.ok) return { error: result?.message ?? 'GitHub에 이미지 파일을 저장하지 못했습니다.' };
+  return { created: !sha, commitUrl: result?.commit?.html_url ?? null };
+}
+
 async function deleteFile(context, filePath, sha, message) {
   const request = repositoryRequest(context, filePath);
   const response = await fetch(request.apiUrl, {
@@ -286,6 +318,73 @@ async function deleteFile(context, filePath, sha, message) {
   if (!response.ok) return await failureMessage(response, 'GitHub에서 JSON 파일을 삭제하지 못했습니다.');
   const result = await response.json().catch(() => null);
   return { commitUrl: result?.commit?.html_url ?? null };
+}
+
+function guideImageByteLength(base64Content) {
+  const normalized = text(base64Content).replace(/\s/g, '');
+  if (!normalized || normalized.length % 4 !== 0 || !/^[A-Za-z0-9+/]*={0,2}$/.test(normalized)) return null;
+  const padding = normalized.endsWith('==') ? 2 : normalized.endsWith('=') ? 1 : 0;
+  return (normalized.length * 3) / 4 - padding;
+}
+
+function hasGuideImageSignature(content, contentType) {
+  let bytes;
+  try {
+    bytes = Uint8Array.from(atob(content.slice(0, 32)), (character) => character.charCodeAt(0));
+  } catch {
+    return false;
+  }
+  if (contentType === 'image/jpeg') return bytes[0] === 0xff && bytes[1] === 0xd8 && bytes[2] === 0xff;
+  if (contentType === 'image/png') {
+    return bytes[0] === 0x89 && bytes[1] === 0x50 && bytes[2] === 0x4e && bytes[3] === 0x47;
+  }
+  if (contentType === 'image/webp') {
+    return String.fromCharCode(...bytes.slice(0, 4)) === 'RIFF' && String.fromCharCode(...bytes.slice(8, 12)) === 'WEBP';
+  }
+  return false;
+}
+
+function managedGuideImagePath(complexId, imageUrl) {
+  const cleanUrl = text(imageUrl).split('?')[0];
+  const match = cleanUrl.match(new RegExp(`^/guides/${complexId}/site-map\\.(jpg|png|webp)$`));
+  return match ? `${GUIDE_IMAGE_DIRECTORY}/${complexId}/site-map.${match[1]}` : null;
+}
+
+async function saveGuideImage(context, body) {
+  const complexId = text(body.complex_id);
+  if (!/^[a-z0-9][a-z0-9-]*$/.test(complexId)) return json({ message: '이미지를 저장할 단지 ID가 올바르지 않습니다.' }, 400);
+  const contentType = text(body.content_type);
+  const extension = GUIDE_IMAGE_EXTENSIONS[contentType];
+  if (!extension) return json({ message: '지도 이미지는 JPG, PNG, WEBP 파일만 업로드할 수 있습니다.' }, 400);
+  const content = text(body.content_base64).replace(/\s/g, '');
+  const byteLength = guideImageByteLength(content);
+  if (byteLength === null) return json({ message: '지도 이미지 파일을 읽을 수 없습니다.' }, 400);
+  if (byteLength > MAX_GUIDE_IMAGE_BYTES) return json({ message: '지도 이미지는 4MB 이하로 업로드해 주세요.' }, 400);
+  if (!hasGuideImageSignature(content, contentType)) return json({ message: '선택한 파일이 올바른 이미지 형식인지 확인해 주세요.' }, 400);
+
+  const filePath = `${GUIDE_IMAGE_DIRECTORY}/${complexId}/site-map.${extension}`;
+  const saved = await putBase64File(context, filePath, content, `Update site map image for ${complexId}`);
+  if (saved.error) return json({ message: saved.error }, 502);
+  return json({
+    message: '단지 지도 이미지를 저장했습니다. 가이드 저장을 완료하면 공개 화면에 반영됩니다.',
+    imageUrl: `/guides/${complexId}/site-map.${extension}?v=${Date.now()}`,
+    commitUrl: saved.commitUrl,
+  });
+}
+
+async function deleteGuideImage(context, body) {
+  const complexId = text(body.complex_id);
+  if (!/^[a-z0-9][a-z0-9-]*$/.test(complexId)) return json({ message: '이미지를 삭제할 단지 ID가 올바르지 않습니다.' }, 400);
+  const filePath = managedGuideImagePath(complexId, body.image_url);
+  if (!filePath) return json({ message: '관리 화면에서 업로드한 지도 이미지 파일만 삭제할 수 있습니다.' }, 400);
+
+  const current = await getEntry(context, filePath);
+  if (current.response.status === 404) return json({ message: '기존 지도 이미지 파일이 이미 삭제되어 있습니다.' });
+  if (!current.response.ok) return json({ message: await failureMessage(current.response, '지도 이미지 파일을 조회하지 못했습니다.') }, 502);
+  const entry = await current.response.json();
+  const deleted = await deleteFile(context, filePath, entry.sha, `Delete site map image for ${complexId}`);
+  if (typeof deleted === 'string') return json({ message: deleted }, 502);
+  return json({ message: '기존 단지 지도 이미지 파일을 삭제했습니다.', commitUrl: deleted.commitUrl });
 }
 
 async function saveLegacyComplex(context, data) {
@@ -380,6 +479,8 @@ async function saveComplexFile(context) {
   if (body?.operation === 'save_snapshot') return saveSnapshot(context, body);
   if (body?.operation === 'save_display_settings') return saveDisplaySettings(context, body);
   if (body?.operation === 'save_complex_guide') return saveComplexGuide(context, body);
+  if (body?.operation === 'save_guide_image') return saveGuideImage(context, body);
+  if (body?.operation === 'delete_guide_image') return deleteGuideImage(context, body);
   return saveLegacyComplex(context, body);
 }
 

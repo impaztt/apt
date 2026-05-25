@@ -13,7 +13,7 @@ const desktopNavigation = [
   { to: '/data/input', label: 'JSON 입력', icon: FileJson },
   { to: '/groups', label: '그룹', icon: Layers3 },
   { to: '/settings/display', label: '표시 설정', icon: Palette },
-  { to: '/guide/edit', label: '가이드 편집', icon: Pencil },
+  { to: '/guide/edit', label: '가이드 관리', icon: Pencil },
   { to: '/compare', label: '비교', icon: Scale },
   { to: '/trends', label: '변화', icon: TrendingUp },
 ];
