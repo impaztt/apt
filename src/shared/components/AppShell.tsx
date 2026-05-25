@@ -3,8 +3,8 @@ import { BarChart3, BookOpen, Building2, FileJson, Layers3, MoreHorizontal, Pale
 import { NavLink, Outlet } from 'react-router-dom';
 import { KakaoBrowserNotice } from './KakaoBrowserNotice';
 
-const MOBILE_NAV_UNLOCKED_KEY = 'apt-mobile-navigation-unlocked';
-const MOBILE_NAV_PASSWORD = '3514';
+const NAVIGATION_UNLOCKED_KEY = 'apt-mobile-navigation-unlocked';
+const NAVIGATION_PASSWORD = '3514';
 
 const desktopNavigation = [
   { to: '/', label: '대시보드', icon: BarChart3, end: true },
@@ -27,7 +27,9 @@ const mobileNavigation = [
 ];
 
 function Navigation({ mobile = false, unlocked = true }: { mobile?: boolean; unlocked?: boolean }) {
-  const navigation = mobile ? (unlocked ? mobileNavigation : mobileNavigation.slice(0, 2)) : desktopNavigation;
+  const navigation = mobile
+    ? (unlocked ? mobileNavigation : mobileNavigation.slice(0, 2))
+    : (unlocked ? desktopNavigation : desktopNavigation.slice(0, 2));
   return (
     <nav className={mobile ? (unlocked ? 'grid grid-cols-5 px-1' : 'mx-auto grid max-w-48 grid-cols-2') : 'space-y-1'}>
       {navigation.map(({ to, label, icon: Icon, end }) => (
@@ -53,8 +55,8 @@ function Navigation({ mobile = false, unlocked = true }: { mobile?: boolean; unl
   );
 }
 export function AppShell() {
-  const [mobileNavigationUnlocked, setMobileNavigationUnlocked] = useState(
-    () => sessionStorage.getItem(MOBILE_NAV_UNLOCKED_KEY) === 'true',
+  const [navigationUnlocked, setNavigationUnlocked] = useState(
+    () => sessionStorage.getItem(NAVIGATION_UNLOCKED_KEY) === 'true',
   );
   const [brandTapCount, setBrandTapCount] = useState(0);
   const [showUnlockDialog, setShowUnlockDialog] = useState(false);
@@ -68,7 +70,7 @@ export function AppShell() {
   }, [brandTapCount, showUnlockDialog]);
 
   function handleBrandTap() {
-    if (mobileNavigationUnlocked) return;
+    if (navigationUnlocked) return;
 
     setBrandTapCount((current) => {
       const next = current + 1;
@@ -90,13 +92,13 @@ export function AppShell() {
 
   function unlockNavigation(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    if (password !== MOBILE_NAV_PASSWORD) {
+    if (password !== NAVIGATION_PASSWORD) {
       setPasswordError('비밀번호가 올바르지 않습니다.');
       return;
     }
 
-    sessionStorage.setItem(MOBILE_NAV_UNLOCKED_KEY, 'true');
-    setMobileNavigationUnlocked(true);
+    sessionStorage.setItem(NAVIGATION_UNLOCKED_KEY, 'true');
+    setNavigationUnlocked(true);
     closeUnlockDialog();
   }
 
@@ -104,13 +106,13 @@ export function AppShell() {
     <div className="min-h-screen bg-canvas">
       <KakaoBrowserNotice />
       <aside className="fixed inset-y-0 left-0 hidden w-64 border-r border-slate-100 bg-white px-5 py-7 lg:block">
-        <div className="px-3">
+        <button type="button" className="block w-full px-3 text-left" onClick={handleBrandTap} aria-label="단지비교랩">
           <p className="text-xs font-semibold text-brand-600">APT PRICE COMPARE</p>
           <p className="mt-2 text-xl font-bold tracking-tight">단지비교랩</p>
           <p className="mt-2 text-sm font-medium text-slate-500">호가 분석 대시보드</p>
-        </div>
+        </button>
         <div className="mt-10">
-          <Navigation />
+          <Navigation unlocked={navigationUnlocked} />
         </div>
       </aside>
 
@@ -130,15 +132,15 @@ export function AppShell() {
       </main>
 
       <div className="fixed inset-x-0 bottom-0 z-20 border-t border-slate-100 bg-white lg:hidden">
-        <Navigation mobile unlocked={mobileNavigationUnlocked} />
+        <Navigation mobile unlocked={navigationUnlocked} />
       </div>
 
       {showUnlockDialog && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center px-6 lg:hidden" role="dialog" aria-modal="true" aria-label="관리 메뉴 열기">
+        <div className="fixed inset-0 z-50 flex items-center justify-center px-6" role="dialog" aria-modal="true" aria-label="추가 메뉴 열기">
           <button type="button" className="absolute inset-0 bg-slate-900/35" onClick={closeUnlockDialog} aria-label="닫기" />
           <form className="relative w-full max-w-sm rounded-3xl bg-white p-5 shadow-2xl" onSubmit={unlockNavigation}>
-            <h2 className="text-lg font-bold text-slate-900">관리 메뉴 열기</h2>
-            <p className="mt-1 text-sm text-slate-500">비밀번호를 입력하면 하단 메뉴가 표시됩니다.</p>
+            <h2 className="text-lg font-bold text-slate-900">추가 메뉴 열기</h2>
+            <p className="mt-1 text-sm text-slate-500">비밀번호를 입력하면 숨겨진 메뉴가 표시됩니다.</p>
             <input
               autoFocus
               className="mt-5 w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-base font-semibold outline-none focus:border-brand-400 focus:bg-white"
