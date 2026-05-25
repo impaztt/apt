@@ -1,0 +1,3444 @@
+{
+  "complex_id": "hwaseo-prugio-edu",
+  "complex_name": "화서역푸르지오더에듀포레",
+  "captured_date": "2026-05-25",
+  "listings": [
+    {
+      "id": "hwaseo-prugio-edu-listing-1",
+      "building_no": "108동",
+      "deal_type": "매매",
+      "price": 670000000,
+      "price_max": null,
+      "is_price_range": false,
+      "deposit": null,
+      "monthly_rent": null,
+      "supply_area_m2": 85,
+      "exclusive_area_m2": 59,
+      "supply_area_type": "85",
+      "exclusive_area_type": "59",
+      "area_pyeong": 26,
+      "exclusive_area_pyeong": 18,
+      "area_type": "85",
+      "floor_text": "2/25층",
+      "floor": 2,
+      "total_floor": 25,
+      "floor_group": "저층",
+      "direction": "남동향",
+      "verification_type": "집주인확인매물",
+      "verified_date": "2026-05-23",
+      "agent_name": null,
+      "agent_count": 7,
+      "source": "부동산 매물 목록 복사 텍스트",
+      "description": null,
+      "links": [
+        "매물목록 접기"
+      ],
+      "keyword_analysis": {
+        "occupancy_type": "없음",
+        "structure_type": "없음",
+        "condition_type": "없음"
+      },
+      "broker_details": [
+        {
+          "id": "1",
+          "price_text": "6억 7,000",
+          "verification_type": "집주인확인매물",
+          "verified_date": "2026-05-23",
+          "description": "본업소관리.25 기본.아이 키우기 좋은 필로티.채광좋은 남향.정상",
+          "agent_name": "천천에듀포레114(294-6900)공인중개사사무소",
+          "platform": "매경부동산",
+          "is_favorite": true,
+          "links": [
+            "매물 보러가기"
+          ],
+          "keyword_analysis": {
+            "occupancy_type": "정상입주",
+            "structure_type": "기본",
+            "condition_type": "없음"
+          }
+        },
+        {
+          "id": "2",
+          "price_text": "6억 7,000",
+          "verification_type": "집주인확인매물",
+          "verified_date": "2026-05-22",
+          "description": "25 귀한 필로티.4층 높이,채광좋은 남향,성대인접동,정상입주",
+          "agent_name": "친구(031-258-5050)푸르지오단지내공인중개사사무소",
+          "platform": "매경부동산",
+          "is_favorite": true,
+          "links": [
+            "매물 보러가기"
+          ],
+          "keyword_analysis": {
+            "occupancy_type": "정상입주",
+            "structure_type": "없음",
+            "condition_type": "없음"
+          }
+        },
+        {
+          "id": "3",
+          "price_text": "6억 7,000",
+          "verification_type": "확인매물",
+          "verified_date": "2026-05-23",
+          "description": "25 기본,남향,채광좋음,성대인접동,성대역이용편리,",
+          "agent_name": "더에듀포레(031-293-4455)공인중개사사무소",
+          "platform": "부동산뱅크",
+          "is_favorite": true,
+          "links": [
+            "매물 보러가기"
+          ],
+          "keyword_analysis": {
+            "occupancy_type": "없음",
+            "structure_type": "기본",
+            "condition_type": "없음"
+          }
+        },
+        {
+          "id": "4",
+          "price_text": "6억 7,000",
+          "verification_type": "확인매물",
+          "verified_date": "2026-05-21",
+          "description": "25 귀한필로티 4층높이, 채광좋은 남향집, 성대연구동인접동 입주협의",
+          "agent_name": "푸르지오뱅크(296-1800)천은택공인중개사사무소",
+          "platform": "매경부동산",
+          "is_favorite": true,
+          "links": [
+            "매물 보러가기"
+          ],
+          "keyword_analysis": {
+            "occupancy_type": "입주협의",
+            "structure_type": "없음",
+            "condition_type": "없음"
+          }
+        },
+        {
+          "id": "5",
+          "price_text": "6억 7,000",
+          "verification_type": "확인매물",
+          "verified_date": "2026-05-19",
+          "description": "48,기본,조망트임,채광좋아 밝음,성균관대 인접,성대역 이용편리,정상",
+          "agent_name": "푸르지오카페(298-4004)공인중개사사무소",
+          "platform": "부동산뱅크",
+          "is_favorite": true,
+          "links": [
+            "매물 보러가기"
+          ],
+          "keyword_analysis": {
+            "occupancy_type": "정상입주",
+            "structure_type": "기본",
+            "condition_type": "없음"
+          }
+        },
+        {
+          "id": "6",
+          "price_text": "6억 7,000",
+          "verification_type": "확인매물",
+          "verified_date": "2026-05-14",
+          "description": "25,남향,채광좋아 밝고환한 집,정상",
+          "agent_name": "더에듀포레(031-293-4455)공인중개사사무소",
+          "platform": "매경부동산",
+          "is_favorite": true,
+          "links": [
+            "매물 보러가기"
+          ],
+          "keyword_analysis": {
+            "occupancy_type": "정상입주",
+            "structure_type": "없음",
+            "condition_type": "없음"
+          }
+        },
+        {
+          "id": "7",
+          "price_text": "6억 7,000",
+          "verification_type": "확인매물",
+          "verified_date": "2026-04-27",
+          "description": "기본 성균관대인접한동",
+          "agent_name": "부동산랜드김인경공인중개사",
+          "platform": "부동산뱅크",
+          "is_favorite": true,
+          "links": [
+            "매물 보러가기"
+          ],
+          "keyword_analysis": {
+            "occupancy_type": "없음",
+            "structure_type": "기본",
+            "condition_type": "없음"
+          }
+        }
+      ],
+      "special_unit_type": null,
+      "is_special_unit": false,
+      "is_favorite": false,
+      "is_duplicate_candidate": false
+    },
+    {
+      "id": "hwaseo-prugio-edu-listing-2",
+      "building_no": "129동",
+      "deal_type": "매매",
+      "price": 830000000,
+      "price_max": null,
+      "is_price_range": false,
+      "deposit": null,
+      "monthly_rent": null,
+      "supply_area_m2": 110,
+      "exclusive_area_m2": 84,
+      "supply_area_type": "110E",
+      "exclusive_area_type": "84E",
+      "area_pyeong": 33,
+      "exclusive_area_pyeong": 25,
+      "area_type": "110E",
+      "floor_text": "3/15층",
+      "floor": 3,
+      "total_floor": 15,
+      "floor_group": "저층",
+      "direction": "남동향",
+      "verification_type": "집주인확인매물",
+      "verified_date": "2026-05-25",
+      "agent_name": null,
+      "agent_count": 8,
+      "source": "부동산 매물 목록 복사 텍스트",
+      "description": null,
+      "links": [
+        "매물목록 접기"
+      ],
+      "keyword_analysis": {
+        "occupancy_type": "없음",
+        "structure_type": "없음",
+        "condition_type": "없음"
+      },
+      "broker_details": [
+        {
+          "id": "1",
+          "price_text": "8억 3,000",
+          "verification_type": "집주인확인매물",
+          "verified_date": "2026-05-23",
+          "description": "33,확장,예쁜정원조망,채광양호,조용한 성대라인,깨끗,정상입주",
+          "agent_name": "푸르지오카페(298-4004)공인중개사사무소",
+          "platform": "부동산뱅크",
+          "is_favorite": true,
+          "links": [
+            "매물 보러가기"
+          ],
+          "keyword_analysis": {
+            "occupancy_type": "정상입주",
+            "structure_type": "확장",
+            "condition_type": "깨끗"
+          }
+        },
+        {
+          "id": "2",
+          "price_text": "8억 3,000",
+          "verification_type": "집주인확인매물",
+          "verified_date": "2026-05-23",
+          "description": "33 0확장0 예쁜정원뷰, 채광양호,조용한성대라인,깨끗이관리된집",
+          "agent_name": "더에듀포레(031-293-4455)공인중개사사무소",
+          "platform": "부동산뱅크",
+          "is_favorite": true,
+          "links": [
+            "매물 보러가기"
+          ],
+          "keyword_analysis": {
+            "occupancy_type": "없음",
+            "structure_type": "확장",
+            "condition_type": "깨끗"
+          }
+        },
+        {
+          "id": "3",
+          "price_text": "8억 3,000",
+          "verification_type": "집주인확인매물",
+          "verified_date": "2026-05-21",
+          "description": "33 확장 깨끗, 채광좋은 정원뷰, 조용한성대라인 정상입주",
+          "agent_name": "푸르지오뱅크(296-1800)천은택공인중개사사무소",
+          "platform": "매경부동산",
+          "is_favorite": true,
+          "links": [
+            "매물 보러가기"
+          ],
+          "keyword_analysis": {
+            "occupancy_type": "정상입주",
+            "structure_type": "확장",
+            "condition_type": "깨끗"
+          }
+        },
+        {
+          "id": "4",
+          "price_text": "8억 3,000",
+          "verification_type": "집주인확인매물",
+          "verified_date": "2026-05-21",
+          "description": "33 확장,성대인접동,단지내 정원뷰,채광양호,깨끗하게 관리된집,정상입주",
+          "agent_name": "친구(031-258-5050)푸르지오단지내공인중개사사무소",
+          "platform": "매경부동산",
+          "is_favorite": true,
+          "links": [
+            "매물 보러가기"
+          ],
+          "keyword_analysis": {
+            "occupancy_type": "정상입주",
+            "structure_type": "확장",
+            "condition_type": "깨끗"
+          }
+        },
+        {
+          "id": "5",
+          "price_text": "8억 3,000",
+          "verification_type": "집주인확인매물",
+          "verified_date": "2026-05-12",
+          "description": "33 확장 .밝은 저층 .성대라인 .적극 조율. 정상",
+          "agent_name": "천천에듀포레114(294-6900)공인중개사사무소",
+          "platform": "매경부동산",
+          "is_favorite": true,
+          "links": [
+            "매물 보러가기"
+          ],
+          "keyword_analysis": {
+            "occupancy_type": "정상입주",
+            "structure_type": "확장",
+            "condition_type": "없음"
+          }
+        },
+        {
+          "id": "6",
+          "price_text": "8억 3,000",
+          "verification_type": "집주인확인매물",
+          "verified_date": "2026-05-15",
+          "description": "확장 정원조망 채광양호 랜드관리 조정가능",
+          "agent_name": "부동산랜드김인경공인중개사",
+          "platform": "부동산뱅크",
+          "is_favorite": true,
+          "links": [
+            "매물 보러가기"
+          ],
+          "keyword_analysis": {
+            "occupancy_type": "없음",
+            "structure_type": "확장",
+            "condition_type": "없음"
+          }
+        },
+        {
+          "id": "7",
+          "price_text": "8억 3,000",
+          "verification_type": "확인매물",
+          "verified_date": "2026-05-12",
+          "description": "33 거실.방1확장,수목원인접동,성대라인 조용",
+          "agent_name": "천천푸르지오우리공인중개사사무소",
+          "platform": "부동산써브",
+          "is_favorite": true,
+          "links": [
+            "매물 보러가기"
+          ],
+          "keyword_analysis": {
+            "occupancy_type": "없음",
+            "structure_type": "방1확장",
+            "condition_type": "없음"
+          }
+        },
+        {
+          "id": "8",
+          "price_text": "8억 3,000",
+          "verification_type": "확인매물",
+          "verified_date": "2026-05-16",
+          "description": "조용한 성대라인 유치원앞동 ,성대 정문 N센터 종합연구동5분거리",
+          "agent_name": "천천써브공인중개사",
+          "platform": "부동산써브",
+          "is_favorite": true,
+          "links": [
+            "매물 보러가기"
+          ],
+          "keyword_analysis": {
+            "occupancy_type": "없음",
+            "structure_type": "없음",
+            "condition_type": "없음"
+          }
+        },
+        {
+          "id": "9",
+          "price_text": "8억 3,000",
+          "verification_type": "집주인확인매물",
+          "verified_date": "2026-04-24",
+          "description": "적극조율. 초품아. 대단지. 조용한 주거라인. 실거주 추천.",
+          "agent_name": "그린맨션부동산공인중개사사무소",
+          "platform": "매경부동산",
+          "is_favorite": true,
+          "links": [
+            "매물 보러가기"
+          ],
+          "keyword_analysis": {
+            "occupancy_type": "없음",
+            "structure_type": "없음",
+            "condition_type": "없음"
+          }
+        }
+      ],
+      "special_unit_type": null,
+      "is_special_unit": false,
+      "is_favorite": false,
+      "is_duplicate_candidate": false
+    },
+    {
+      "id": "hwaseo-prugio-edu-listing-3",
+      "building_no": "130동",
+      "deal_type": "매매",
+      "price": 900000000,
+      "price_max": null,
+      "is_price_range": false,
+      "deposit": null,
+      "monthly_rent": null,
+      "supply_area_m2": 160,
+      "exclusive_area_m2": 129,
+      "supply_area_type": "160C",
+      "exclusive_area_type": "129C",
+      "area_pyeong": 48,
+      "exclusive_area_pyeong": 39,
+      "area_type": "160C",
+      "floor_text": "5/15층",
+      "floor": 5,
+      "total_floor": 15,
+      "floor_group": "저층",
+      "direction": "남향",
+      "verification_type": "집주인확인매물",
+      "verified_date": "2026-05-23",
+      "agent_name": null,
+      "agent_count": 8,
+      "source": "부동산 매물 목록 복사 텍스트",
+      "description": null,
+      "links": [
+        "매물목록 접기"
+      ],
+      "keyword_analysis": {
+        "occupancy_type": "없음",
+        "structure_type": "없음",
+        "condition_type": "없음"
+      },
+      "broker_details": [
+        {
+          "id": "1",
+          "price_text": "9억",
+          "verification_type": "집주인확인매물",
+          "verified_date": "2026-05-23",
+          "description": "48형 방4개 최신올인테리어된집 조망권 채광 굿 정상입주",
+          "agent_name": "푸르지오뱅크(296-1800)천은택공인중개사사무소",
+          "platform": "매경부동산",
+          "is_favorite": true,
+          "links": [
+            "매물 보러가기"
+          ],
+          "keyword_analysis": {
+            "occupancy_type": "정상입주",
+            "structure_type": "없음",
+            "condition_type": "올인테리어"
+          }
+        },
+        {
+          "id": "2",
+          "price_text": "9억",
+          "verification_type": "집주인확인매물",
+          "verified_date": "2026-05-22",
+          "description": "48 최신인테리어,일조권 굿 ,수목원 도서관 인접,마을버스이용편리,정상",
+          "agent_name": "친구(031-258-5050)푸르지오단지내공인중개사사무소",
+          "platform": "매경부동산",
+          "is_favorite": true,
+          "links": [
+            "매물 보러가기"
+          ],
+          "keyword_analysis": {
+            "occupancy_type": "정상입주",
+            "structure_type": "없음",
+            "condition_type": "인테리어"
+          }
+        },
+        {
+          "id": "3",
+          "price_text": "9억",
+          "verification_type": "집주인확인매물",
+          "verified_date": "2026-05-20",
+          "description": "48 로얄동.화이트 인테리어.일월수목원.도서관 인접동.",
+          "agent_name": "천천에듀포레114(294-6900)공인중개사사무소",
+          "platform": "매경부동산",
+          "is_favorite": true,
+          "links": [
+            "매물 보러가기"
+          ],
+          "keyword_analysis": {
+            "occupancy_type": "없음",
+            "structure_type": "없음",
+            "condition_type": "인테리어"
+          }
+        },
+        {
+          "id": "4",
+          "price_text": "9억",
+          "verification_type": "확인매물",
+          "verified_date": "2026-05-23",
+          "description": "48,기본,최근인테리어,채광좋음,일월수목원 인접,정상입주",
+          "agent_name": "푸르지오카페(298-4004)공인중개사사무소",
+          "platform": "부동산뱅크",
+          "is_favorite": true,
+          "links": [
+            "매물 보러가기"
+          ],
+          "keyword_analysis": {
+            "occupancy_type": "정상입주",
+            "structure_type": "기본",
+            "condition_type": "인테리어"
+          }
+        },
+        {
+          "id": "5",
+          "price_text": "9억",
+          "verification_type": "확인매물",
+          "verified_date": "2026-05-19",
+          "description": "48 기본, 채광좋아밝고환한집,도서관인접,",
+          "agent_name": "더에듀포레(031-293-4455)공인중개사사무소",
+          "platform": "부동산뱅크",
+          "is_favorite": true,
+          "links": [
+            "매물 보러가기"
+          ],
+          "keyword_analysis": {
+            "occupancy_type": "없음",
+            "structure_type": "기본",
+            "condition_type": "없음"
+          }
+        },
+        {
+          "id": "6",
+          "price_text": "9억",
+          "verification_type": "확인매물",
+          "verified_date": "2026-05-20",
+          "description": "48,비확장,최근 올인테리어, 조망권 및 일조권 훌륭함",
+          "agent_name": "정천합동공인중개사사무소",
+          "platform": "부동산뱅크",
+          "is_favorite": true,
+          "links": [
+            "매물 보러가기"
+          ],
+          "keyword_analysis": {
+            "occupancy_type": "없음",
+            "structure_type": "비확장",
+            "condition_type": "올인테리어"
+          }
+        },
+        {
+          "id": "7",
+          "price_text": "9억",
+          "verification_type": "집주인확인매물",
+          "verified_date": "2026-04-29",
+          "description": "최근 올인테리어, 기본, 정상, 깨끗, 조망권.일조권 좋아요",
+          "agent_name": "부동산랜드김인경공인중개사",
+          "platform": "부동산뱅크",
+          "is_favorite": true,
+          "links": [
+            "매물 보러가기"
+          ],
+          "keyword_analysis": {
+            "occupancy_type": "정상입주",
+            "structure_type": "기본",
+            "condition_type": "올인테리어"
+          }
+        },
+        {
+          "id": "8",
+          "price_text": "9억",
+          "verification_type": "집주인확인매물",
+          "verified_date": "2026-04-28",
+          "description": "48 최근인테리어,기본,깨끗,일월수목원인접동,정상입주",
+          "agent_name": "천천푸르지오우리공인중개사사무소",
+          "platform": "부동산써브",
+          "is_favorite": true,
+          "links": [
+            "매물 보러가기"
+          ],
+          "keyword_analysis": {
+            "occupancy_type": "정상입주",
+            "structure_type": "기본",
+            "condition_type": "인테리어"
+          }
+        }
+      ],
+      "special_unit_type": null,
+      "is_special_unit": false,
+      "is_favorite": false,
+      "is_duplicate_candidate": false
+    },
+    {
+      "id": "hwaseo-prugio-edu-listing-4",
+      "building_no": "124동",
+      "deal_type": "매매",
+      "price": 820000000,
+      "price_max": null,
+      "is_price_range": false,
+      "deposit": null,
+      "monthly_rent": null,
+      "supply_area_m2": 110,
+      "exclusive_area_m2": 84,
+      "supply_area_type": "110E",
+      "exclusive_area_type": "84E",
+      "area_pyeong": 33,
+      "exclusive_area_pyeong": 25,
+      "area_type": "110E",
+      "floor_text": "8/10층",
+      "floor": 8,
+      "total_floor": 10,
+      "floor_group": "중층",
+      "direction": "남동향",
+      "verification_type": "집주인확인매물",
+      "verified_date": "2026-05-25",
+      "agent_name": null,
+      "agent_count": 6,
+      "source": "부동산 매물 목록 복사 텍스트",
+      "description": null,
+      "links": [
+        "매물목록 접기"
+      ],
+      "keyword_analysis": {
+        "occupancy_type": "없음",
+        "structure_type": "없음",
+        "condition_type": "없음"
+      },
+      "broker_details": [
+        {
+          "id": "1",
+          "price_text": "8억 2,000",
+          "verification_type": "집주인확인매물",
+          "verified_date": "2026-05-22",
+          "description": "33,본업소관리,기본,조용한 성대라인,성대역 이용편리,정상입주",
+          "agent_name": "푸르지오카페(298-4004)공인중개사사무소",
+          "platform": "부동산뱅크",
+          "is_favorite": true,
+          "links": [
+            "매물 보러가기"
+          ],
+          "keyword_analysis": {
+            "occupancy_type": "정상입주",
+            "structure_type": "기본",
+            "condition_type": "없음"
+          }
+        },
+        {
+          "id": "2",
+          "price_text": "8억 2,000",
+          "verification_type": "집주인확인매물",
+          "verified_date": "2026-05-22",
+          "description": "기본형 주인거주로 관리잘된 집 정상입주",
+          "agent_name": "부동산랜드김인경공인중개사",
+          "platform": "부동산뱅크",
+          "is_favorite": true,
+          "links": [
+            "매물 보러가기"
+          ],
+          "keyword_analysis": {
+            "occupancy_type": "정상입주",
+            "structure_type": "기본",
+            "condition_type": "깨끗"
+          }
+        },
+        {
+          "id": "3",
+          "price_text": "8억 2,000",
+          "verification_type": "집주인확인매물",
+          "verified_date": "2026-05-20",
+          "description": "33 본업소관리.비확장 .성균관대 인접동.입주일협의.",
+          "agent_name": "천천에듀포레114(294-6900)공인중개사사무소",
+          "platform": "매경부동산",
+          "is_favorite": true,
+          "links": [
+            "매물 보러가기"
+          ],
+          "keyword_analysis": {
+            "occupancy_type": "입주협의",
+            "structure_type": "비확장",
+            "condition_type": "없음"
+          }
+        },
+        {
+          "id": "4",
+          "price_text": "8억 2,000",
+          "verification_type": "확인매물",
+          "verified_date": "2026-05-21",
+          "description": "33 비확장,성균관대 인접동,채광양호,정상입주",
+          "agent_name": "친구(031-258-5050)푸르지오단지내공인중개사사무소",
+          "platform": "매경부동산",
+          "is_favorite": true,
+          "links": [
+            "매물 보러가기"
+          ],
+          "keyword_analysis": {
+            "occupancy_type": "정상입주",
+            "structure_type": "비확장",
+            "condition_type": "없음"
+          }
+        },
+        {
+          "id": "5",
+          "price_text": "8억 2,000",
+          "verification_type": "확인매물",
+          "verified_date": "2026-05-20",
+          "description": "33형 기본 조용한 성대라인,성대역 이용편리,정상입주",
+          "agent_name": "푸르지오뱅크(296-1800)천은택공인중개사사무소",
+          "platform": "매경부동산",
+          "is_favorite": true,
+          "links": [
+            "매물 보러가기"
+          ],
+          "keyword_analysis": {
+            "occupancy_type": "정상입주",
+            "structure_type": "기본",
+            "condition_type": "없음"
+          }
+        },
+        {
+          "id": "6",
+          "price_text": "8억 2,000",
+          "verification_type": "확인매물",
+          "verified_date": "2026-05-18",
+          "description": "기본 ,성대라인 성대 유일한 연구동 5분거리,",
+          "agent_name": "천천써브공인중개사",
+          "platform": "부동산써브",
+          "is_favorite": true,
+          "links": [
+            "매물 보러가기"
+          ],
+          "keyword_analysis": {
+            "occupancy_type": "없음",
+            "structure_type": "기본",
+            "condition_type": "없음"
+          }
+        }
+      ],
+      "special_unit_type": null,
+      "is_special_unit": false,
+      "is_favorite": false,
+      "is_duplicate_candidate": false
+    },
+    {
+      "id": "hwaseo-prugio-edu-listing-5",
+      "building_no": "122동",
+      "deal_type": "매매",
+      "price": 840000000,
+      "price_max": null,
+      "is_price_range": false,
+      "deposit": null,
+      "monthly_rent": null,
+      "supply_area_m2": 141,
+      "exclusive_area_m2": 113,
+      "supply_area_type": "141B",
+      "exclusive_area_type": "113B",
+      "area_pyeong": 43,
+      "exclusive_area_pyeong": 34,
+      "area_type": "141B",
+      "floor_text": "2/25층",
+      "floor": 2,
+      "total_floor": 25,
+      "floor_group": "저층",
+      "direction": "남향",
+      "verification_type": "집주인확인매물",
+      "verified_date": "2026-05-19",
+      "agent_name": "세종공인중개사",
+      "agent_count": null,
+      "source": "아실",
+      "description": "가격조정 가능, 조용한 동, 거주 만족도 높은 라인",
+      "links": [
+        "Npay 부동산에서 보기",
+        "매물 보러가기"
+      ],
+      "keyword_analysis": {
+        "occupancy_type": "없음",
+        "structure_type": "없음",
+        "condition_type": "없음"
+      },
+      "broker_details": [],
+      "special_unit_type": null,
+      "is_special_unit": false,
+      "is_favorite": true,
+      "is_duplicate_candidate": false
+    },
+    {
+      "id": "hwaseo-prugio-edu-listing-6",
+      "building_no": "110동",
+      "deal_type": "매매",
+      "price": 890000000,
+      "price_max": null,
+      "is_price_range": false,
+      "deposit": null,
+      "monthly_rent": null,
+      "supply_area_m2": 161,
+      "exclusive_area_m2": 129,
+      "supply_area_type": "161A",
+      "exclusive_area_type": "129A",
+      "area_pyeong": 49,
+      "exclusive_area_pyeong": 39,
+      "area_type": "161A",
+      "floor_text": "중/25층",
+      "floor": null,
+      "total_floor": 25,
+      "floor_group": "중층",
+      "direction": "남동향",
+      "verification_type": "집주인확인매물",
+      "verified_date": "2026-05-25",
+      "agent_name": null,
+      "agent_count": 7,
+      "source": "부동산 매물 목록 복사 텍스트",
+      "description": null,
+      "links": [
+        "매물목록 접기"
+      ],
+      "keyword_analysis": {
+        "occupancy_type": "없음",
+        "structure_type": "없음",
+        "condition_type": "없음"
+      },
+      "broker_details": [
+        {
+          "id": "1",
+          "price_text": "8억 9,000",
+          "verification_type": "집주인확인매물",
+          "verified_date": "2026-05-23",
+          "description": "48 0올확장0 전망굿,채광굿,탁트인공원뷰,정상입주",
+          "agent_name": "더에듀포레(031-293-4455)공인중개사사무소",
+          "platform": "부동산뱅크",
+          "is_favorite": true,
+          "links": [
+            "매물 보러가기"
+          ],
+          "keyword_analysis": {
+            "occupancy_type": "정상입주",
+            "structure_type": "올확장",
+            "condition_type": "없음"
+          }
+        },
+        {
+          "id": "2",
+          "price_text": "8억 9,000",
+          "verification_type": "집주인확인매물",
+          "verified_date": "2026-05-22",
+          "description": "확장, 햇살좋은 트인 전망, 깨끗한집 .",
+          "agent_name": "천천써브공인중개사",
+          "platform": "부동산써브",
+          "is_favorite": true,
+          "links": [
+            "매물 보러가기"
+          ],
+          "keyword_analysis": {
+            "occupancy_type": "없음",
+            "structure_type": "확장",
+            "condition_type": "깨끗"
+          }
+        },
+        {
+          "id": "3",
+          "price_text": "8억 9,000",
+          "verification_type": "집주인확인매물",
+          "verified_date": "2026-05-15",
+          "description": "48 올확장.판상A형.열린뷰.공원전망 좋아요.넓은 동간거리.정상",
+          "agent_name": "천천에듀포레114(294-6900)공인중개사사무소",
+          "platform": "매경부동산",
+          "is_favorite": true,
+          "links": [
+            "매물 보러가기"
+          ],
+          "keyword_analysis": {
+            "occupancy_type": "정상입주",
+            "structure_type": "올확장",
+            "condition_type": "없음"
+          }
+        },
+        {
+          "id": "4",
+          "price_text": "8억 9,000",
+          "verification_type": "확인매물",
+          "verified_date": "2026-05-23",
+          "description": "48,올확장,판상형,중앙공원조망,채광좋아 밝음,넓은동간거리,정상입주",
+          "agent_name": "푸르지오카페(298-4004)공인중개사사무소",
+          "platform": "부동산뱅크",
+          "is_favorite": true,
+          "links": [
+            "매물 보러가기"
+          ],
+          "keyword_analysis": {
+            "occupancy_type": "정상입주",
+            "structure_type": "올확장",
+            "condition_type": "없음"
+          }
+        },
+        {
+          "id": "5",
+          "price_text": "8억 9,000",
+          "verification_type": "확인매물",
+          "verified_date": "2026-05-22",
+          "description": "48 올확장,판상형,동간거리 넓어 채광양호,유즈센타연결,깨끗,정상입주",
+          "agent_name": "친구(031-258-5050)푸르지오단지내공인중개사사무소",
+          "platform": "매경부동산",
+          "is_favorite": true,
+          "links": [
+            "매물 보러가기"
+          ],
+          "keyword_analysis": {
+            "occupancy_type": "정상입주",
+            "structure_type": "올확장",
+            "condition_type": "깨끗"
+          }
+        },
+        {
+          "id": "6",
+          "price_text": "8억 9,000",
+          "verification_type": "확인매물",
+          "verified_date": "2026-05-20",
+          "description": "48 A타입 올확장 넓은 동간거리 채광조망굿 정상입주",
+          "agent_name": "푸르지오뱅크(296-1800)천은택공인중개사사무소",
+          "platform": "매경부동산",
+          "is_favorite": true,
+          "links": [
+            "매물 보러가기"
+          ],
+          "keyword_analysis": {
+            "occupancy_type": "정상입주",
+            "structure_type": "올확장",
+            "condition_type": "없음"
+          }
+        },
+        {
+          "id": "7",
+          "price_text": "8억 9,000",
+          "verification_type": "집주인확인매물",
+          "verified_date": "2026-04-29",
+          "description": "판상형, 올확장, 유즈센터연결, 본업소랜드관리, 깨끗",
+          "agent_name": "부동산랜드김인경공인중개사",
+          "platform": "부동산뱅크",
+          "is_favorite": true,
+          "links": [
+            "매물 보러가기"
+          ],
+          "keyword_analysis": {
+            "occupancy_type": "없음",
+            "structure_type": "올확장",
+            "condition_type": "깨끗"
+          }
+        }
+      ],
+      "special_unit_type": null,
+      "is_special_unit": false,
+      "is_favorite": false,
+      "is_duplicate_candidate": false
+    },
+    {
+      "id": "hwaseo-prugio-edu-listing-7",
+      "building_no": "119동",
+      "deal_type": "매매",
+      "price": 950000000,
+      "price_max": null,
+      "is_price_range": false,
+      "deposit": null,
+      "monthly_rent": null,
+      "supply_area_m2": 182,
+      "exclusive_area_m2": 148,
+      "supply_area_type": "182B",
+      "exclusive_area_type": "148B",
+      "area_pyeong": 55,
+      "exclusive_area_pyeong": 45,
+      "area_type": "182B",
+      "floor_text": "저/30층",
+      "floor": null,
+      "total_floor": 30,
+      "floor_group": "저층",
+      "direction": "남서향",
+      "verification_type": "집주인확인매물",
+      "verified_date": "2026-05-25",
+      "agent_name": null,
+      "agent_count": 7,
+      "source": "부동산 매물 목록 복사 텍스트",
+      "description": null,
+      "links": [
+        "매물목록 접기"
+      ],
+      "keyword_analysis": {
+        "occupancy_type": "없음",
+        "structure_type": "없음",
+        "condition_type": "없음"
+      },
+      "broker_details": [
+        {
+          "id": "1",
+          "price_text": "9억 5,000",
+          "verification_type": "집주인확인매물",
+          "verified_date": "2026-05-23",
+          "description": "55 기본,채광굿,전망굿,유즈센타옆동,정상입주,",
+          "agent_name": "더에듀포레(031-293-4455)공인중개사사무소",
+          "platform": "부동산뱅크",
+          "is_favorite": true,
+          "links": [
+            "매물 보러가기"
+          ],
+          "keyword_analysis": {
+            "occupancy_type": "정상입주",
+            "structure_type": "기본",
+            "condition_type": "없음"
+          }
+        },
+        {
+          "id": "2",
+          "price_text": "9억 5,000",
+          "verification_type": "집주인확인매물",
+          "verified_date": "2026-05-23",
+          "description": "55 기본,일조권 ,조망권 좋아요,관리잘 된집,정상입주",
+          "agent_name": "친구(031-258-5050)푸르지오단지내공인중개사사무소",
+          "platform": "매경부동산",
+          "is_favorite": true,
+          "links": [
+            "매물 보러가기"
+          ],
+          "keyword_analysis": {
+            "occupancy_type": "정상입주",
+            "structure_type": "기본",
+            "condition_type": "없음"
+          }
+        },
+        {
+          "id": "3",
+          "price_text": "9억 5,000",
+          "verification_type": "집주인확인매물",
+          "verified_date": "2026-05-23",
+          "description": "55 기본형 채광조망굿 조용한중앙동 정상입주 이사협의",
+          "agent_name": "푸르지오뱅크(296-1800)천은택공인중개사사무소",
+          "platform": "매경부동산",
+          "is_favorite": true,
+          "links": [
+            "매물 보러가기"
+          ],
+          "keyword_analysis": {
+            "occupancy_type": "정상입주",
+            "structure_type": "기본",
+            "condition_type": "없음"
+          }
+        },
+        {
+          "id": "4",
+          "price_text": "9억 5,000",
+          "verification_type": "확인매물",
+          "verified_date": "2026-05-23",
+          "description": "55 기본.채광 좋은집.유즈센터 이용편리.정상입주",
+          "agent_name": "천천에듀포레114(294-6900)공인중개사사무소",
+          "platform": "매경부동산",
+          "is_favorite": true,
+          "links": [
+            "매물 보러가기"
+          ],
+          "keyword_analysis": {
+            "occupancy_type": "정상입주",
+            "structure_type": "기본",
+            "condition_type": "없음"
+          }
+        },
+        {
+          "id": "5",
+          "price_text": "9억 5,000",
+          "verification_type": "확인매물",
+          "verified_date": "2026-05-20",
+          "description": "55,기본형,인기동,유즈센타 인접,채광조망 양호,관리되어 깨끗,정상입주",
+          "agent_name": "푸르지오카페(298-4004)공인중개사사무소",
+          "platform": "매경부동산",
+          "is_favorite": true,
+          "links": [
+            "매물 보러가기"
+          ],
+          "keyword_analysis": {
+            "occupancy_type": "정상입주",
+            "structure_type": "기본",
+            "condition_type": "깨끗"
+          }
+        },
+        {
+          "id": "6",
+          "price_text": "9억 5,000",
+          "verification_type": "확인매물",
+          "verified_date": "2026-05-18",
+          "description": "기본,전원주택분위기 깔끔한 집 ,성대 종합연구동5분거리",
+          "agent_name": "천천써브공인중개사",
+          "platform": "부동산써브",
+          "is_favorite": true,
+          "links": [
+            "매물 보러가기"
+          ],
+          "keyword_analysis": {
+            "occupancy_type": "없음",
+            "structure_type": "기본",
+            "condition_type": "깨끗"
+          }
+        },
+        {
+          "id": "7",
+          "price_text": "9억 5,000",
+          "verification_type": "집주인확인매물",
+          "verified_date": "2026-04-29",
+          "description": "55 기본, 일조권.조망권 좋아요, 주인거주, 깨끗, 유즈센터옆동",
+          "agent_name": "부동산랜드김인경공인중개사",
+          "platform": "부동산뱅크",
+          "is_favorite": true,
+          "links": [
+            "매물 보러가기"
+          ],
+          "keyword_analysis": {
+            "occupancy_type": "없음",
+            "structure_type": "기본",
+            "condition_type": "깨끗"
+          }
+        }
+      ],
+      "special_unit_type": null,
+      "is_special_unit": false,
+      "is_favorite": false,
+      "is_duplicate_candidate": false
+    },
+    {
+      "id": "hwaseo-prugio-edu-listing-8",
+      "building_no": "130동",
+      "deal_type": "매매",
+      "price": 900000000,
+      "price_max": null,
+      "is_price_range": false,
+      "deposit": null,
+      "monthly_rent": null,
+      "supply_area_m2": 160,
+      "exclusive_area_m2": 129,
+      "supply_area_type": "160C",
+      "exclusive_area_type": "129C",
+      "area_pyeong": 48,
+      "exclusive_area_pyeong": 39,
+      "area_type": "160C",
+      "floor_text": "저/15층",
+      "floor": null,
+      "total_floor": 15,
+      "floor_group": "저층",
+      "direction": "남서향",
+      "verification_type": "집주인확인매물",
+      "verified_date": "2026-05-25",
+      "agent_name": null,
+      "agent_count": 7,
+      "source": "부동산 매물 목록 복사 텍스트",
+      "description": null,
+      "links": [
+        "매물목록 접기"
+      ],
+      "keyword_analysis": {
+        "occupancy_type": "없음",
+        "structure_type": "없음",
+        "condition_type": "없음"
+      },
+      "broker_details": [
+        {
+          "id": "1",
+          "price_text": "9억",
+          "verification_type": "집주인확인매물",
+          "verified_date": "2026-05-23",
+          "description": "48 기본,최근인테리어,일월수목원옆동,깨끗이관리된집,정상입주,",
+          "agent_name": "더에듀포레(031-293-4455)공인중개사사무소",
+          "platform": "부동산뱅크",
+          "is_favorite": true,
+          "links": [
+            "매물 보러가기"
+          ],
+          "keyword_analysis": {
+            "occupancy_type": "정상입주",
+            "structure_type": "기본",
+            "condition_type": "인테리어"
+          }
+        },
+        {
+          "id": "2",
+          "price_text": "9억",
+          "verification_type": "집주인확인매물",
+          "verified_date": "2026-05-23",
+          "description": "48,기본형,정원조망,채광양호,여유로운 주차공간,정상입주",
+          "agent_name": "푸르지오카페(298-4004)공인중개사사무소",
+          "platform": "부동산뱅크",
+          "is_favorite": true,
+          "links": [
+            "매물 보러가기"
+          ],
+          "keyword_analysis": {
+            "occupancy_type": "정상입주",
+            "structure_type": "기본",
+            "condition_type": "없음"
+          }
+        },
+        {
+          "id": "3",
+          "price_text": "9억",
+          "verification_type": "집주인확인매물",
+          "verified_date": "2026-05-19",
+          "description": "확장 여유로운주차공간 초품아안심학군",
+          "agent_name": "부동산랜드김인경공인중개사",
+          "platform": "부동산뱅크",
+          "is_favorite": true,
+          "links": [
+            "매물 보러가기"
+          ],
+          "keyword_analysis": {
+            "occupancy_type": "없음",
+            "structure_type": "확장",
+            "condition_type": "없음"
+          }
+        },
+        {
+          "id": "4",
+          "price_text": "9억",
+          "verification_type": "집주인확인매물",
+          "verified_date": "2026-05-18",
+          "description": "성대정문 N센터 ,종합연구동 ,일월수목원 일월도서관 ,일월호수 5분거리",
+          "agent_name": "천천써브공인중개사",
+          "platform": "부동산써브",
+          "is_favorite": true,
+          "links": [
+            "매물 보러가기"
+          ],
+          "keyword_analysis": {
+            "occupancy_type": "없음",
+            "structure_type": "없음",
+            "condition_type": "없음"
+          }
+        },
+        {
+          "id": "5",
+          "price_text": "9억",
+          "verification_type": "확인매물",
+          "verified_date": "2026-05-22",
+          "description": "48 비확장 .일월수목원 인접동. 밝고환한 저층매물.정상",
+          "agent_name": "천천에듀포레114(294-6900)공인중개사사무소",
+          "platform": "매경부동산",
+          "is_favorite": true,
+          "links": [
+            "매물 보러가기"
+          ],
+          "keyword_analysis": {
+            "occupancy_type": "정상입주",
+            "structure_type": "비확장",
+            "condition_type": "없음"
+          }
+        },
+        {
+          "id": "6",
+          "price_text": "9억",
+          "verification_type": "확인매물",
+          "verified_date": "2026-05-19",
+          "description": "48 일월수목원 인접동,채광양호 ,마을버스이용편리,깨끗,정상",
+          "agent_name": "친구(031-258-5050)푸르지오단지내공인중개사사무소",
+          "platform": "매경부동산",
+          "is_favorite": true,
+          "links": [
+            "매물 보러가기"
+          ],
+          "keyword_analysis": {
+            "occupancy_type": "정상입주",
+            "structure_type": "없음",
+            "condition_type": "깨끗"
+          }
+        },
+        {
+          "id": "7",
+          "price_text": "9억",
+          "verification_type": "확인매물",
+          "verified_date": "2026-05-19",
+          "description": "48 일월수목원 가까운동 성대옆 정원조망 채광좋고 깔끔 정상입주",
+          "agent_name": "푸르지오뱅크(296-1800)천은택공인중개사사무소",
+          "platform": "매경부동산",
+          "is_favorite": true,
+          "links": [
+            "매물 보러가기"
+          ],
+          "keyword_analysis": {
+            "occupancy_type": "정상입주",
+            "structure_type": "없음",
+            "condition_type": "깨끗"
+          }
+        }
+      ],
+      "special_unit_type": null,
+      "is_special_unit": false,
+      "is_favorite": false,
+      "is_duplicate_candidate": false
+    },
+    {
+      "id": "hwaseo-prugio-edu-listing-9",
+      "building_no": "108동",
+      "deal_type": "매매",
+      "price": 680000000,
+      "price_max": null,
+      "is_price_range": false,
+      "deposit": null,
+      "monthly_rent": null,
+      "supply_area_m2": 85,
+      "exclusive_area_m2": 59,
+      "supply_area_type": "85",
+      "exclusive_area_type": "59",
+      "area_pyeong": 26,
+      "exclusive_area_pyeong": 18,
+      "area_type": "85",
+      "floor_text": "저/25층",
+      "floor": null,
+      "total_floor": 25,
+      "floor_group": "저층",
+      "direction": "남향",
+      "verification_type": "집주인확인매물",
+      "verified_date": "2026-05-25",
+      "agent_name": null,
+      "agent_count": 6,
+      "source": "부동산 매물 목록 복사 텍스트",
+      "description": null,
+      "links": [
+        "매물목록 접기"
+      ],
+      "keyword_analysis": {
+        "occupancy_type": "없음",
+        "structure_type": "없음",
+        "condition_type": "없음"
+      },
+      "broker_details": [
+        {
+          "id": "1",
+          "price_text": "6억 8,000",
+          "verification_type": "집주인확인매물",
+          "verified_date": "2026-05-23",
+          "description": "25 기본,남향,성대교직원강추,성대역이용편리,",
+          "agent_name": "더에듀포레(031-293-4455)공인중개사사무소",
+          "platform": "부동산뱅크",
+          "is_favorite": true,
+          "links": [
+            "매물 보러가기"
+          ],
+          "keyword_analysis": {
+            "occupancy_type": "없음",
+            "structure_type": "기본",
+            "condition_type": "없음"
+          }
+        },
+        {
+          "id": "2",
+          "price_text": "6억 8,000",
+          "verification_type": "집주인확인매물",
+          "verified_date": "2026-05-19",
+          "description": "25 본업소관리. 밝고환한 남향.입주일협의.성대역 편리동.",
+          "agent_name": "천천에듀포레114(294-6900)공인중개사사무소",
+          "platform": "매경부동산",
+          "is_favorite": true,
+          "links": [
+            "매물 보러가기"
+          ],
+          "keyword_analysis": {
+            "occupancy_type": "입주협의",
+            "structure_type": "없음",
+            "condition_type": "없음"
+          }
+        },
+        {
+          "id": "3",
+          "price_text": "6억 8,000",
+          "verification_type": "확인매물",
+          "verified_date": "2026-05-22",
+          "description": "기본 채광좋은 남향집 중층높이 정상입주",
+          "agent_name": "부동산랜드김인경공인중개사",
+          "platform": "부동산뱅크",
+          "is_favorite": true,
+          "links": [
+            "매물 보러가기"
+          ],
+          "keyword_analysis": {
+            "occupancy_type": "정상입주",
+            "structure_type": "기본",
+            "condition_type": "없음"
+          }
+        },
+        {
+          "id": "4",
+          "price_text": "6억 8,000",
+          "verification_type": "확인매물",
+          "verified_date": "2026-05-21",
+          "description": "25 기본형 밝은남향 성대인접동 깨끗 정상입주",
+          "agent_name": "푸르지오뱅크(296-1800)천은택공인중개사사무소",
+          "platform": "매경부동산",
+          "is_favorite": true,
+          "links": [
+            "매물 보러가기"
+          ],
+          "keyword_analysis": {
+            "occupancy_type": "정상입주",
+            "structure_type": "기본",
+            "condition_type": "깨끗"
+          }
+        },
+        {
+          "id": "5",
+          "price_text": "6억 8,000",
+          "verification_type": "확인매물",
+          "verified_date": "2026-05-21",
+          "description": "25,기본형,남향으로 채광양호,성대역이용편리,입주협의",
+          "agent_name": "푸르지오카페(298-4004)공인중개사사무소",
+          "platform": "부동산뱅크",
+          "is_favorite": true,
+          "links": [
+            "매물 보러가기"
+          ],
+          "keyword_analysis": {
+            "occupancy_type": "입주협의",
+            "structure_type": "기본",
+            "condition_type": "없음"
+          }
+        },
+        {
+          "id": "6",
+          "price_text": "6억 8,000",
+          "verification_type": "확인매물",
+          "verified_date": "2026-05-19",
+          "description": "25 성대인접동,일조권 좋은 남향,깨끗,정상입주",
+          "agent_name": "친구(031-258-5050)푸르지오단지내공인중개사사무소",
+          "platform": "매경부동산",
+          "is_favorite": true,
+          "links": [
+            "매물 보러가기"
+          ],
+          "keyword_analysis": {
+            "occupancy_type": "정상입주",
+            "structure_type": "없음",
+            "condition_type": "깨끗"
+          }
+        }
+      ],
+      "special_unit_type": null,
+      "is_special_unit": false,
+      "is_favorite": false,
+      "is_duplicate_candidate": false
+    },
+    {
+      "id": "hwaseo-prugio-edu-listing-10",
+      "building_no": "109동",
+      "deal_type": "매매",
+      "price": 900000000,
+      "price_max": null,
+      "is_price_range": false,
+      "deposit": null,
+      "monthly_rent": null,
+      "supply_area_m2": 160,
+      "exclusive_area_m2": 129,
+      "supply_area_type": "160C",
+      "exclusive_area_type": "129C",
+      "area_pyeong": 48,
+      "exclusive_area_pyeong": 39,
+      "area_type": "160C",
+      "floor_text": "고/25층",
+      "floor": null,
+      "total_floor": 25,
+      "floor_group": "고층",
+      "direction": "남서향",
+      "verification_type": "집주인확인매물",
+      "verified_date": "2026-05-25",
+      "agent_name": null,
+      "agent_count": 6,
+      "source": "부동산 매물 목록 복사 텍스트",
+      "description": null,
+      "links": [
+        "매물목록 접기"
+      ],
+      "keyword_analysis": {
+        "occupancy_type": "없음",
+        "structure_type": "없음",
+        "condition_type": "없음"
+      },
+      "broker_details": [
+        {
+          "id": "1",
+          "price_text": "9억",
+          "verification_type": "집주인확인매물",
+          "verified_date": "2026-05-23",
+          "description": "48,확장,트인조망,채광좋아 밝음,유즈센타연결,정상입주",
+          "agent_name": "푸르지오카페(298-4004)공인중개사사무소",
+          "platform": "매경부동산",
+          "is_favorite": true,
+          "links": [
+            "매물 보러가기"
+          ],
+          "keyword_analysis": {
+            "occupancy_type": "정상입주",
+            "structure_type": "확장",
+            "condition_type": "없음"
+          }
+        },
+        {
+          "id": "2",
+          "price_text": "9억",
+          "verification_type": "집주인확인매물",
+          "verified_date": "2026-05-23",
+          "description": "48 0확장0 유즈센타연결동,전망굿,채광굿,정상입주",
+          "agent_name": "더에듀포레(031-293-4455)공인중개사사무소",
+          "platform": "부동산뱅크",
+          "is_favorite": true,
+          "links": [
+            "매물 보러가기"
+          ],
+          "keyword_analysis": {
+            "occupancy_type": "정상입주",
+            "structure_type": "확장",
+            "condition_type": "없음"
+          }
+        },
+        {
+          "id": "3",
+          "price_text": "9억",
+          "verification_type": "집주인확인매물",
+          "verified_date": "2026-05-21",
+          "description": "48확장형 조망권 굿 채광굿 이사정상 협의가능",
+          "agent_name": "푸르지오뱅크(296-1800)천은택공인중개사사무소",
+          "platform": "매경부동산",
+          "is_favorite": true,
+          "links": [
+            "매물 보러가기"
+          ],
+          "keyword_analysis": {
+            "occupancy_type": "정상입주",
+            "structure_type": "확장",
+            "condition_type": "없음"
+          }
+        },
+        {
+          "id": "4",
+          "price_text": "9억",
+          "verification_type": "집주인확인매물",
+          "verified_date": "2026-05-21",
+          "description": "48 확장형 ,조망 일조권좋은집,관리 잘된집,유즈센타연결,깨끗,정상입주",
+          "agent_name": "친구(031-258-5050)푸르지오단지내공인중개사사무소",
+          "platform": "매경부동산",
+          "is_favorite": true,
+          "links": [
+            "매물 보러가기"
+          ],
+          "keyword_analysis": {
+            "occupancy_type": "정상입주",
+            "structure_type": "확장",
+            "condition_type": "깨끗"
+          }
+        },
+        {
+          "id": "5",
+          "price_text": "9억",
+          "verification_type": "집주인확인매물",
+          "verified_date": "2026-05-16",
+          "description": "48 확장.채광 좋은집.전망굿.유즈센터 연결동.정상",
+          "agent_name": "천천에듀포레114(294-6900)공인중개사사무소",
+          "platform": "매경부동산",
+          "is_favorite": true,
+          "links": [
+            "매물 보러가기"
+          ],
+          "keyword_analysis": {
+            "occupancy_type": "정상입주",
+            "structure_type": "확장",
+            "condition_type": "없음"
+          }
+        },
+        {
+          "id": "6",
+          "price_text": "9억",
+          "verification_type": "집주인확인매물",
+          "verified_date": "2026-05-13",
+          "description": "48확장 트인전망, 채광좋음, 유즈센터연결동, 관리잘된집",
+          "agent_name": "부동산랜드김인경공인중개사",
+          "platform": "부동산뱅크",
+          "is_favorite": true,
+          "links": [
+            "매물 보러가기"
+          ],
+          "keyword_analysis": {
+            "occupancy_type": "없음",
+            "structure_type": "확장",
+            "condition_type": "깨끗"
+          }
+        }
+      ],
+      "special_unit_type": null,
+      "is_special_unit": false,
+      "is_favorite": false,
+      "is_duplicate_candidate": false
+    },
+    {
+      "id": "hwaseo-prugio-edu-listing-11",
+      "building_no": "117동",
+      "deal_type": "매매",
+      "price": 850000000,
+      "price_max": null,
+      "is_price_range": false,
+      "deposit": null,
+      "monthly_rent": null,
+      "supply_area_m2": 141,
+      "exclusive_area_m2": 113,
+      "supply_area_type": "141C",
+      "exclusive_area_type": "113C",
+      "area_pyeong": 43,
+      "exclusive_area_pyeong": 34,
+      "area_type": "141C",
+      "floor_text": "저/30층",
+      "floor": null,
+      "total_floor": 30,
+      "floor_group": "저층",
+      "direction": "남동향",
+      "verification_type": "집주인확인매물",
+      "verified_date": "2026-05-25",
+      "agent_name": null,
+      "agent_count": 8,
+      "source": "부동산 매물 목록 복사 텍스트",
+      "description": null,
+      "links": [
+        "매물목록 접기"
+      ],
+      "keyword_analysis": {
+        "occupancy_type": "없음",
+        "structure_type": "없음",
+        "condition_type": "없음"
+      },
+      "broker_details": [
+        {
+          "id": "1",
+          "price_text": "8억 5,000",
+          "verification_type": "집주인확인매물",
+          "verified_date": "2026-05-23",
+          "description": "42 채광굿,탁트인뷰폭30M도로,초교상가옆,광역버스정거장근처,",
+          "agent_name": "더에듀포레(031-293-4455)공인중개사사무소",
+          "platform": "부동산뱅크",
+          "is_favorite": true,
+          "links": [
+            "매물 보러가기"
+          ],
+          "keyword_analysis": {
+            "occupancy_type": "없음",
+            "structure_type": "없음",
+            "condition_type": "없음"
+          }
+        },
+        {
+          "id": "2",
+          "price_text": "8억 5,000",
+          "verification_type": "집주인확인매물",
+          "verified_date": "2026-05-22",
+          "description": "기본형 채광양호 학교상가 인접한 인기동 정상입주",
+          "agent_name": "부동산랜드김인경공인중개사",
+          "platform": "부동산뱅크",
+          "is_favorite": true,
+          "links": [
+            "매물 보러가기"
+          ],
+          "keyword_analysis": {
+            "occupancy_type": "정상입주",
+            "structure_type": "기본",
+            "condition_type": "없음"
+          }
+        },
+        {
+          "id": "3",
+          "price_text": "8억 5,000",
+          "verification_type": "확인매물",
+          "verified_date": "2026-05-23",
+          "description": "42,기본형,조망트임,채광양호,학교 상가 인접,대중교통 이용편리",
+          "agent_name": "푸르지오카페(298-4004)공인중개사사무소",
+          "platform": "부동산뱅크",
+          "is_favorite": true,
+          "links": [
+            "매물 보러가기"
+          ],
+          "keyword_analysis": {
+            "occupancy_type": "없음",
+            "structure_type": "기본",
+            "condition_type": "없음"
+          }
+        },
+        {
+          "id": "4",
+          "price_text": "8억 5,000",
+          "verification_type": "확인매물",
+          "verified_date": "2026-05-22",
+          "description": "42 방4개구조 시원한뷰 채광굿 초교옆선호동 광역버스이용편리 정상입주",
+          "agent_name": "푸르지오뱅크(296-1800)천은택공인중개사사무소",
+          "platform": "매경부동산",
+          "is_favorite": true,
+          "links": [
+            "매물 보러가기"
+          ],
+          "keyword_analysis": {
+            "occupancy_type": "정상입주",
+            "structure_type": "없음",
+            "condition_type": "없음"
+          }
+        },
+        {
+          "id": "5",
+          "price_text": "8억 5,000",
+          "verification_type": "확인매물",
+          "verified_date": "2026-05-20",
+          "description": "42 기본,트인조망,채광양호,학교상가인접 편리동,깨끗,정상",
+          "agent_name": "친구(031-258-5050)푸르지오단지내공인중개사사무소",
+          "platform": "매경부동산",
+          "is_favorite": true,
+          "links": [
+            "매물 보러가기"
+          ],
+          "keyword_analysis": {
+            "occupancy_type": "정상입주",
+            "structure_type": "기본",
+            "condition_type": "깨끗"
+          }
+        },
+        {
+          "id": "6",
+          "price_text": "8억 5,000",
+          "verification_type": "확인매물",
+          "verified_date": "2026-05-18",
+          "description": "앞트인 햇살좋은집. 학교,상가 버스정류장 근접거리.기본",
+          "agent_name": "천천써브공인중개사",
+          "platform": "부동산써브",
+          "is_favorite": true,
+          "links": [
+            "매물 보러가기"
+          ],
+          "keyword_analysis": {
+            "occupancy_type": "없음",
+            "structure_type": "기본",
+            "condition_type": "없음"
+          }
+        },
+        {
+          "id": "7",
+          "price_text": "8억 5,000",
+          "verification_type": "확인매물",
+          "verified_date": "2026-05-12",
+          "description": "42.비확장 .선호동 .초등학교바로앞.단지공원뷰.정상",
+          "agent_name": "천천에듀포레114(294-6900)공인중개사사무소",
+          "platform": "매경부동산",
+          "is_favorite": true,
+          "links": [
+            "매물 보러가기"
+          ],
+          "keyword_analysis": {
+            "occupancy_type": "정상입주",
+            "structure_type": "비확장",
+            "condition_type": "없음"
+          }
+        },
+        {
+          "id": "8",
+          "price_text": "8억 5,000",
+          "verification_type": "집주인확인매물",
+          "verified_date": "2026-04-27",
+          "description": "42, 단지 맨 앞쪽 인기동,초,중,고편리,광역버스편리,채광좋아 밝은 집",
+          "agent_name": "더에듀포레(031-293-4455)공인중개사사무소",
+          "platform": "매경부동산",
+          "is_favorite": true,
+          "links": [
+            "매물 보러가기"
+          ],
+          "keyword_analysis": {
+            "occupancy_type": "없음",
+            "structure_type": "없음",
+            "condition_type": "없음"
+          }
+        }
+      ],
+      "special_unit_type": null,
+      "is_special_unit": false,
+      "is_favorite": false,
+      "is_duplicate_candidate": false
+    },
+    {
+      "id": "hwaseo-prugio-edu-listing-12",
+      "building_no": "120동",
+      "deal_type": "매매",
+      "price": 1000000000,
+      "price_max": null,
+      "is_price_range": false,
+      "deposit": null,
+      "monthly_rent": null,
+      "supply_area_m2": 182,
+      "exclusive_area_m2": 148,
+      "supply_area_type": "182B",
+      "exclusive_area_type": "148B",
+      "area_pyeong": 55,
+      "exclusive_area_pyeong": 45,
+      "area_type": "182B",
+      "floor_text": "고/30층",
+      "floor": null,
+      "total_floor": 30,
+      "floor_group": "고층",
+      "direction": "남동향",
+      "verification_type": "집주인확인매물",
+      "verified_date": "2026-05-23",
+      "agent_name": null,
+      "agent_count": 5,
+      "source": "부동산 매물 목록 복사 텍스트",
+      "description": null,
+      "links": [
+        "매물목록 접기"
+      ],
+      "keyword_analysis": {
+        "occupancy_type": "없음",
+        "structure_type": "없음",
+        "condition_type": "없음"
+      },
+      "broker_details": [
+        {
+          "id": "1",
+          "price_text": "10억",
+          "verification_type": "집주인확인매물",
+          "verified_date": "2026-05-23",
+          "description": "55형 방1확장, 채광 조망 굿, 초중고 인접동, 관리잘된깨긋한집",
+          "agent_name": "푸르지오뱅크(296-1800)천은택공인중개사사무소",
+          "platform": "매경부동산",
+          "is_favorite": true,
+          "links": [
+            "매물 보러가기"
+          ],
+          "keyword_analysis": {
+            "occupancy_type": "없음",
+            "structure_type": "방1확장",
+            "condition_type": "깨끗"
+          }
+        },
+        {
+          "id": "2",
+          "price_text": "10억",
+          "verification_type": "집주인확인매물",
+          "verified_date": "2026-05-22",
+          "description": "55 조망 일조권좋은집,초중고 인접,유즈센타이용편리,깨끗,정상입주",
+          "agent_name": "친구(031-258-5050)푸르지오단지내공인중개사사무소",
+          "platform": "매경부동산",
+          "is_favorite": true,
+          "links": [
+            "매물 보러가기"
+          ],
+          "keyword_analysis": {
+            "occupancy_type": "정상입주",
+            "structure_type": "없음",
+            "condition_type": "깨끗"
+          }
+        },
+        {
+          "id": "3",
+          "price_text": "10억",
+          "verification_type": "집주인확인매물",
+          "verified_date": "2026-05-18",
+          "description": "55 기본.방1확장.중앙동.유즈센터 연결동.넓은 발코니.열린뷰",
+          "agent_name": "천천에듀포레114(294-6900)공인중개사사무소",
+          "platform": "매경부동산",
+          "is_favorite": true,
+          "links": [
+            "매물 보러가기"
+          ],
+          "keyword_analysis": {
+            "occupancy_type": "없음",
+            "structure_type": "방1확장",
+            "condition_type": "없음"
+          }
+        },
+        {
+          "id": "4",
+          "price_text": "10억",
+          "verification_type": "집주인확인매물",
+          "verified_date": "2026-05-15",
+          "description": "55 0방1확장0 유즈센타이용편리,채광굿,전망굿,정상입주,",
+          "agent_name": "더에듀포레(031-293-4455)공인중개사사무소",
+          "platform": "부동산뱅크",
+          "is_favorite": true,
+          "links": [
+            "매물 보러가기"
+          ],
+          "keyword_analysis": {
+            "occupancy_type": "정상입주",
+            "structure_type": "방1확장",
+            "condition_type": "없음"
+          }
+        },
+        {
+          "id": "5",
+          "price_text": "10억",
+          "verification_type": "집주인확인매물",
+          "verified_date": "2026-05-02",
+          "description": "방1확장, 조망권.일조권 좋아요, 정상입주, 깨끗해요",
+          "agent_name": "부동산랜드김인경공인중개사",
+          "platform": "부동산뱅크",
+          "is_favorite": true,
+          "links": [
+            "매물 보러가기"
+          ],
+          "keyword_analysis": {
+            "occupancy_type": "정상입주",
+            "structure_type": "방1확장",
+            "condition_type": "깨끗"
+          }
+        }
+      ],
+      "special_unit_type": null,
+      "is_special_unit": false,
+      "is_favorite": false,
+      "is_duplicate_candidate": false
+    },
+    {
+      "id": "hwaseo-prugio-edu-listing-13",
+      "building_no": "119동",
+      "deal_type": "매매",
+      "price": 1000000000,
+      "price_max": null,
+      "is_price_range": false,
+      "deposit": null,
+      "monthly_rent": null,
+      "supply_area_m2": 182,
+      "exclusive_area_m2": 148,
+      "supply_area_type": "182B",
+      "exclusive_area_type": "148B",
+      "area_pyeong": 55,
+      "exclusive_area_pyeong": 45,
+      "area_type": "182B",
+      "floor_text": "중/30층",
+      "floor": null,
+      "total_floor": 30,
+      "floor_group": "중층",
+      "direction": "남동향",
+      "verification_type": "집주인확인매물",
+      "verified_date": "2026-05-23",
+      "agent_name": null,
+      "agent_count": 6,
+      "source": "부동산 매물 목록 복사 텍스트",
+      "description": null,
+      "links": [
+        "매물목록 접기"
+      ],
+      "keyword_analysis": {
+        "occupancy_type": "없음",
+        "structure_type": "없음",
+        "condition_type": "없음"
+      },
+      "broker_details": [
+        {
+          "id": "1",
+          "price_text": "10억",
+          "verification_type": "집주인확인매물",
+          "verified_date": "2026-05-23",
+          "description": "55 채광좋은집,유즈센타이용편리,깨끗,정상입주",
+          "agent_name": "친구(031-258-5050)푸르지오단지내공인중개사사무소",
+          "platform": "매경부동산",
+          "is_favorite": true,
+          "links": [
+            "매물 보러가기"
+          ],
+          "keyword_analysis": {
+            "occupancy_type": "정상입주",
+            "structure_type": "없음",
+            "condition_type": "깨끗"
+          }
+        },
+        {
+          "id": "2",
+          "price_text": "10억",
+          "verification_type": "집주인확인매물",
+          "verified_date": "2026-05-06",
+          "description": "수리되고 깨끗하게 관리잘된 전망좋은집, 유즈센터이용편리 랜드관리소음무",
+          "agent_name": "부동산랜드김인경공인중개사",
+          "platform": "부동산뱅크",
+          "is_favorite": true,
+          "links": [
+            "매물 보러가기"
+          ],
+          "keyword_analysis": {
+            "occupancy_type": "없음",
+            "structure_type": "없음",
+            "condition_type": "수리"
+          }
+        },
+        {
+          "id": "3",
+          "price_text": "10억",
+          "verification_type": "확인매물",
+          "verified_date": "2026-05-15",
+          "description": "25,확장,탁트인 공원조망,채광좋아 밝음,유즈센터 인접,깨끗,정상입주",
+          "agent_name": "푸르지오카페(298-4004)공인중개사사무소",
+          "platform": "부동산뱅크",
+          "is_favorite": true,
+          "links": [
+            "매물 보러가기"
+          ],
+          "keyword_analysis": {
+            "occupancy_type": "정상입주",
+            "structure_type": "확장",
+            "condition_type": "깨끗"
+          }
+        },
+        {
+          "id": "4",
+          "price_text": "10억",
+          "verification_type": "확인매물",
+          "verified_date": "2026-05-11",
+          "description": "55 0수리된집0 채광굿,전망굿,깨끗,유즈센타이용편리,정상입주",
+          "agent_name": "더에듀포레(031-293-4455)공인중개사사무소",
+          "platform": "부동산뱅크",
+          "is_favorite": true,
+          "links": [
+            "매물 보러가기"
+          ],
+          "keyword_analysis": {
+            "occupancy_type": "정상입주",
+            "structure_type": "없음",
+            "condition_type": "수리"
+          }
+        },
+        {
+          "id": "5",
+          "price_text": "10억",
+          "verification_type": "집주인확인매물",
+          "verified_date": "2026-04-28",
+          "description": "55 조용한동, 주인거주 관리잘된 집, 성균관대역.화서역 이용,초중고인접",
+          "agent_name": "천천푸르지오우리공인중개사사무소",
+          "platform": "부동산써브",
+          "is_favorite": true,
+          "links": [
+            "매물 보러가기"
+          ],
+          "keyword_analysis": {
+            "occupancy_type": "없음",
+            "structure_type": "없음",
+            "condition_type": "깨끗"
+          }
+        },
+        {
+          "id": "6",
+          "price_text": "10억",
+          "verification_type": "확인매물",
+          "verified_date": "2026-05-07",
+          "description": "55 기본형 열린뷰 채광좋은집 정상입주",
+          "agent_name": "푸르지오뱅크(296-1800)천은택공인중개사사무소",
+          "platform": "매경부동산",
+          "is_favorite": true,
+          "links": [
+            "매물 보러가기"
+          ],
+          "keyword_analysis": {
+            "occupancy_type": "정상입주",
+            "structure_type": "기본",
+            "condition_type": "없음"
+          }
+        }
+      ],
+      "special_unit_type": null,
+      "is_special_unit": false,
+      "is_favorite": false,
+      "is_duplicate_candidate": false
+    },
+    {
+      "id": "hwaseo-prugio-edu-listing-14",
+      "building_no": "109동",
+      "deal_type": "매매",
+      "price": 900000000,
+      "price_max": null,
+      "is_price_range": false,
+      "deposit": null,
+      "monthly_rent": null,
+      "supply_area_m2": 161,
+      "exclusive_area_m2": 129,
+      "supply_area_type": "161B",
+      "exclusive_area_type": "129B",
+      "area_pyeong": 49,
+      "exclusive_area_pyeong": 39,
+      "area_type": "161B",
+      "floor_text": "중/25층",
+      "floor": null,
+      "total_floor": 25,
+      "floor_group": "중층",
+      "direction": "남향",
+      "verification_type": "집주인확인매물",
+      "verified_date": "2026-05-25",
+      "agent_name": "더에듀포레(031-293-4455)공인중개사사무소",
+      "agent_count": null,
+      "source": "부동산뱅크",
+      "description": "48 0확장0남향 0 화단덮개0 유즈센타연결동,채광굿,전망굿,정상입주",
+      "links": [
+        "매물 보러가기"
+      ],
+      "keyword_analysis": {
+        "occupancy_type": "정상입주",
+        "structure_type": "확장",
+        "condition_type": "없음"
+      },
+      "broker_details": [],
+      "special_unit_type": null,
+      "is_special_unit": false,
+      "is_favorite": true,
+      "is_duplicate_candidate": false
+    },
+    {
+      "id": "hwaseo-prugio-edu-listing-15",
+      "building_no": "106동",
+      "deal_type": "매매",
+      "price": 780000000,
+      "price_max": null,
+      "is_price_range": false,
+      "deposit": null,
+      "monthly_rent": null,
+      "supply_area_m2": 111,
+      "exclusive_area_m2": 84,
+      "supply_area_type": "111A",
+      "exclusive_area_type": "84A",
+      "area_pyeong": 34,
+      "exclusive_area_pyeong": 25,
+      "area_type": "111A",
+      "floor_text": "저/25층",
+      "floor": null,
+      "total_floor": 25,
+      "floor_group": "저층",
+      "direction": "남동향",
+      "verification_type": "집주인확인매물",
+      "verified_date": "2026-05-22",
+      "agent_name": null,
+      "agent_count": 6,
+      "source": "부동산 매물 목록 복사 텍스트",
+      "description": null,
+      "links": [
+        "매물목록 접기"
+      ],
+      "keyword_analysis": {
+        "occupancy_type": "없음",
+        "structure_type": "없음",
+        "condition_type": "없음"
+      },
+      "broker_details": [
+        {
+          "id": "1",
+          "price_text": "7억 8,000",
+          "verification_type": "집주인확인매물",
+          "verified_date": "2026-05-22",
+          "description": "33본업소관리, 방1확장,조정가,상가초교앞 선호동,채광좋은집,깨끗,정상",
+          "agent_name": "친구(031-258-5050)푸르지오단지내공인중개사사무소",
+          "platform": "매경부동산",
+          "is_favorite": true,
+          "links": [
+            "매물 보러가기"
+          ],
+          "keyword_analysis": {
+            "occupancy_type": "정상입주",
+            "structure_type": "방1확장",
+            "condition_type": "깨끗"
+          }
+        },
+        {
+          "id": "2",
+          "price_text": "7억 8,000",
+          "verification_type": "확인매물",
+          "verified_date": "2026-05-23",
+          "description": "33,방1확장,학교 상가 인접,채광양호,관리되어 깨끗,정상입주",
+          "agent_name": "푸르지오카페(298-4004)공인중개사사무소",
+          "platform": "부동산뱅크",
+          "is_favorite": true,
+          "links": [
+            "매물 보러가기"
+          ],
+          "keyword_analysis": {
+            "occupancy_type": "정상입주",
+            "structure_type": "방1확장",
+            "condition_type": "깨끗"
+          }
+        },
+        {
+          "id": "3",
+          "price_text": "7억 8,000",
+          "verification_type": "확인매물",
+          "verified_date": "2026-05-23",
+          "description": "33 0방1확장0 상가,초교옆동,깨끗이관리된집,",
+          "agent_name": "더에듀포레(031-293-4455)공인중개사사무소",
+          "platform": "부동산뱅크",
+          "is_favorite": true,
+          "links": [
+            "매물 보러가기"
+          ],
+          "keyword_analysis": {
+            "occupancy_type": "없음",
+            "structure_type": "방1확장",
+            "condition_type": "깨끗"
+          }
+        },
+        {
+          "id": "4",
+          "price_text": "7억 8,000",
+          "verification_type": "확인매물",
+          "verified_date": "2026-05-23",
+          "description": "33 방1확장 초교상가인접 선호동 주인거주깨끗",
+          "agent_name": "푸르지오뱅크(296-1800)천은택공인중개사사무소",
+          "platform": "매경부동산",
+          "is_favorite": true,
+          "links": [
+            "매물 보러가기"
+          ],
+          "keyword_analysis": {
+            "occupancy_type": "없음",
+            "structure_type": "방1확장",
+            "condition_type": "깨끗"
+          }
+        },
+        {
+          "id": "5",
+          "price_text": "7억 8,000",
+          "verification_type": "확인매물",
+          "verified_date": "2026-05-16",
+          "description": "33 확장 .판상A타입.초등학교인접동.아이가 행복한 1층 매물",
+          "agent_name": "천천에듀포레114(294-6900)공인중개사사무소",
+          "platform": "매경부동산",
+          "is_favorite": true,
+          "links": [
+            "매물 보러가기"
+          ],
+          "keyword_analysis": {
+            "occupancy_type": "없음",
+            "structure_type": "확장",
+            "condition_type": "없음"
+          }
+        },
+        {
+          "id": "6",
+          "price_text": "7억 8,000",
+          "verification_type": "확인매물",
+          "verified_date": "2026-05-15",
+          "description": "방1확장 학교 상가 인접 채광좋은집 정상입주",
+          "agent_name": "부동산랜드김인경공인중개사",
+          "platform": "부동산뱅크",
+          "is_favorite": true,
+          "links": [
+            "매물 보러가기"
+          ],
+          "keyword_analysis": {
+            "occupancy_type": "정상입주",
+            "structure_type": "방1확장",
+            "condition_type": "없음"
+          }
+        }
+      ],
+      "special_unit_type": null,
+      "is_special_unit": false,
+      "is_favorite": false,
+      "is_duplicate_candidate": false
+    },
+    {
+      "id": "hwaseo-prugio-edu-listing-16",
+      "building_no": "111동",
+      "deal_type": "매매",
+      "price": 1000000000,
+      "price_max": null,
+      "is_price_range": false,
+      "deposit": null,
+      "monthly_rent": null,
+      "supply_area_m2": 161,
+      "exclusive_area_m2": 129,
+      "supply_area_type": "161B",
+      "exclusive_area_type": "129B",
+      "area_pyeong": 49,
+      "exclusive_area_pyeong": 39,
+      "area_type": "161B",
+      "floor_text": "저/30층",
+      "floor": null,
+      "total_floor": 30,
+      "floor_group": "저층",
+      "direction": "남향",
+      "verification_type": "집주인확인매물",
+      "verified_date": "2026-05-22",
+      "agent_name": null,
+      "agent_count": 3,
+      "source": "부동산 매물 목록 복사 텍스트",
+      "description": null,
+      "links": [
+        "매물목록 접기"
+      ],
+      "keyword_analysis": {
+        "occupancy_type": "없음",
+        "structure_type": "없음",
+        "condition_type": "없음"
+      },
+      "broker_details": [
+        {
+          "id": "1",
+          "price_text": "10억",
+          "verification_type": "집주인확인매물",
+          "verified_date": "2026-05-22",
+          "description": "48 확장형,일조권좋은남향집,유즈센타연결,깨끗,정상입주",
+          "agent_name": "친구(031-258-5050)푸르지오단지내공인중개사사무소",
+          "platform": "매경부동산",
+          "is_favorite": true,
+          "links": [
+            "매물 보러가기"
+          ],
+          "keyword_analysis": {
+            "occupancy_type": "정상입주",
+            "structure_type": "확장",
+            "condition_type": "깨끗"
+          }
+        },
+        {
+          "id": "2",
+          "price_text": "10억",
+          "verification_type": "집주인확인매물",
+          "verified_date": "2026-05-16",
+          "description": "48 확장형 햇살좋은남향집 중앙공원정원뷰 유즈센타연결동 정상입주",
+          "agent_name": "푸르지오뱅크(296-1800)천은택공인중개사사무소",
+          "platform": "매경부동산",
+          "is_favorite": true,
+          "links": [
+            "매물 보러가기"
+          ],
+          "keyword_analysis": {
+            "occupancy_type": "정상입주",
+            "structure_type": "확장",
+            "condition_type": "없음"
+          }
+        },
+        {
+          "id": "3",
+          "price_text": "10억",
+          "verification_type": "집주인확인매물",
+          "verified_date": "2026-05-15",
+          "description": "48 0확장형0 중앙공원이 보이는 예쁜정원뷰,채광굿,깨끗,정상입주",
+          "agent_name": "더에듀포레(031-293-4455)공인중개사사무소",
+          "platform": "부동산뱅크",
+          "is_favorite": true,
+          "links": [
+            "매물 보러가기"
+          ],
+          "keyword_analysis": {
+            "occupancy_type": "정상입주",
+            "structure_type": "확장",
+            "condition_type": "깨끗"
+          }
+        }
+      ],
+      "special_unit_type": null,
+      "is_special_unit": false,
+      "is_favorite": false,
+      "is_duplicate_candidate": false
+    },
+    {
+      "id": "hwaseo-prugio-edu-listing-17",
+      "building_no": "111동",
+      "deal_type": "매매",
+      "price": 900000000,
+      "price_max": null,
+      "is_price_range": false,
+      "deposit": null,
+      "monthly_rent": null,
+      "supply_area_m2": 160,
+      "exclusive_area_m2": 129,
+      "supply_area_type": "160C",
+      "exclusive_area_type": "129C",
+      "area_pyeong": 48,
+      "exclusive_area_pyeong": 39,
+      "area_type": "160C",
+      "floor_text": "저/30층",
+      "floor": null,
+      "total_floor": 30,
+      "floor_group": "저층",
+      "direction": "남동향",
+      "verification_type": "집주인확인매물",
+      "verified_date": "2026-05-21",
+      "agent_name": null,
+      "agent_count": 6,
+      "source": "부동산 매물 목록 복사 텍스트",
+      "description": null,
+      "links": [
+        "매물목록 접기"
+      ],
+      "keyword_analysis": {
+        "occupancy_type": "없음",
+        "structure_type": "없음",
+        "condition_type": "없음"
+      },
+      "broker_details": [
+        {
+          "id": "1",
+          "price_text": "9억",
+          "verification_type": "집주인확인매물",
+          "verified_date": "2026-05-21",
+          "description": "48 확장형 유즈센타 연결동 넓은 동간거리 정상입주",
+          "agent_name": "푸르지오뱅크(296-1800)천은택공인중개사사무소",
+          "platform": "매경부동산",
+          "is_favorite": true,
+          "links": [
+            "매물 보러가기"
+          ],
+          "keyword_analysis": {
+            "occupancy_type": "정상입주",
+            "structure_type": "확장",
+            "condition_type": "없음"
+          }
+        },
+        {
+          "id": "2",
+          "price_text": "9억",
+          "verification_type": "확인매물",
+          "verified_date": "2026-05-23",
+          "description": "48,확장,유즈센타연결동,학교 상가 인접,깨끗,정상입주",
+          "agent_name": "푸르지오카페(298-4004)공인중개사사무소",
+          "platform": "부동산뱅크",
+          "is_favorite": true,
+          "links": [
+            "매물 보러가기"
+          ],
+          "keyword_analysis": {
+            "occupancy_type": "정상입주",
+            "structure_type": "확장",
+            "condition_type": "깨끗"
+          }
+        },
+        {
+          "id": "3",
+          "price_text": "9억",
+          "verification_type": "확인매물",
+          "verified_date": "2026-05-22",
+          "description": "48 확장,유즈센타연결동,학교 상가 인접편리,깨끗,정상입주",
+          "agent_name": "친구(031-258-5050)푸르지오단지내공인중개사사무소",
+          "platform": "매경부동산",
+          "is_favorite": true,
+          "links": [
+            "매물 보러가기"
+          ],
+          "keyword_analysis": {
+            "occupancy_type": "정상입주",
+            "structure_type": "확장",
+            "condition_type": "깨끗"
+          }
+        },
+        {
+          "id": "4",
+          "price_text": "9억",
+          "verification_type": "집주인확인매물",
+          "verified_date": "2026-05-06",
+          "description": "확장, 유즈센터연결, 정상입주, 깨끗, 초교.상가 인접동",
+          "agent_name": "부동산랜드김인경공인중개사",
+          "platform": "부동산뱅크",
+          "is_favorite": true,
+          "links": [
+            "매물 보러가기"
+          ],
+          "keyword_analysis": {
+            "occupancy_type": "정상입주",
+            "structure_type": "확장",
+            "condition_type": "깨끗"
+          }
+        },
+        {
+          "id": "5",
+          "price_text": "9억",
+          "verification_type": "확인매물",
+          "verified_date": "2026-05-15",
+          "description": "48 확장.채광 좋은집.열린뷰.단지 중앙동.유즈센터 연결.정상",
+          "agent_name": "천천에듀포레114(294-6900)공인중개사사무소",
+          "platform": "매경부동산",
+          "is_favorite": true,
+          "links": [
+            "매물 보러가기"
+          ],
+          "keyword_analysis": {
+            "occupancy_type": "정상입주",
+            "structure_type": "확장",
+            "condition_type": "없음"
+          }
+        },
+        {
+          "id": "6",
+          "price_text": "9억",
+          "verification_type": "확인매물",
+          "verified_date": "2026-05-11",
+          "description": "48,확장,유즈센터연결동, 상가학교편리",
+          "agent_name": "더에듀포레(031-293-4455)공인중개사사무소",
+          "platform": "매경부동산",
+          "is_favorite": true,
+          "links": [
+            "매물 보러가기"
+          ],
+          "keyword_analysis": {
+            "occupancy_type": "없음",
+            "structure_type": "확장",
+            "condition_type": "없음"
+          }
+        }
+      ],
+      "special_unit_type": null,
+      "is_special_unit": false,
+      "is_favorite": false,
+      "is_duplicate_candidate": false
+    },
+    {
+      "id": "hwaseo-prugio-edu-listing-18",
+      "building_no": "108동",
+      "deal_type": "매매",
+      "price": 700000000,
+      "price_max": null,
+      "is_price_range": false,
+      "deposit": null,
+      "monthly_rent": null,
+      "supply_area_m2": 85,
+      "exclusive_area_m2": 59,
+      "supply_area_type": "85",
+      "exclusive_area_type": "59",
+      "area_pyeong": 26,
+      "exclusive_area_pyeong": 18,
+      "area_type": "85",
+      "floor_text": "저/25층",
+      "floor": null,
+      "total_floor": 25,
+      "floor_group": "저층",
+      "direction": "남향",
+      "verification_type": "집주인확인매물",
+      "verified_date": "2026-05-21",
+      "agent_name": null,
+      "agent_count": 6,
+      "source": "부동산 매물 목록 복사 텍스트",
+      "description": null,
+      "links": [
+        "매물목록 접기"
+      ],
+      "keyword_analysis": {
+        "occupancy_type": "없음",
+        "structure_type": "없음",
+        "condition_type": "없음"
+      },
+      "broker_details": [
+        {
+          "id": "1",
+          "price_text": "7억",
+          "verification_type": "집주인확인매물",
+          "verified_date": "2026-05-21",
+          "description": "25,기본형,남향으로 채광좋음,성대역이용편리,정상입주",
+          "agent_name": "푸르지오카페(298-4004)공인중개사사무소",
+          "platform": "매경부동산",
+          "is_favorite": true,
+          "links": [
+            "매물 보러가기"
+          ],
+          "keyword_analysis": {
+            "occupancy_type": "정상입주",
+            "structure_type": "기본",
+            "condition_type": "없음"
+          }
+        },
+        {
+          "id": "2",
+          "price_text": "7억",
+          "verification_type": "확인매물",
+          "verified_date": "2026-05-22",
+          "description": "25,남향,채광좋아 밝고환한 집,정상",
+          "agent_name": "더에듀포레(031-293-4455)공인중개사사무소",
+          "platform": "매경부동산",
+          "is_favorite": true,
+          "links": [
+            "매물 보러가기"
+          ],
+          "keyword_analysis": {
+            "occupancy_type": "정상입주",
+            "structure_type": "없음",
+            "condition_type": "없음"
+          }
+        },
+        {
+          "id": "3",
+          "price_text": "7억",
+          "verification_type": "확인매물",
+          "verified_date": "2026-05-22",
+          "description": "25형 비확장,성대인접동,채광좋은 남향집,관리 잘된 깨끗한집",
+          "agent_name": "푸르지오뱅크(296-1800)천은택공인중개사사무소",
+          "platform": "매경부동산",
+          "is_favorite": true,
+          "links": [
+            "매물 보러가기"
+          ],
+          "keyword_analysis": {
+            "occupancy_type": "없음",
+            "structure_type": "비확장",
+            "condition_type": "깨끗"
+          }
+        },
+        {
+          "id": "4",
+          "price_text": "7억",
+          "verification_type": "확인매물",
+          "verified_date": "2026-05-22",
+          "description": "25기본형,성대인접동,채광좋은 남향집,관리 잘된 깨끗한집,정상입주",
+          "agent_name": "친구(031-258-5050)푸르지오단지내공인중개사사무소",
+          "platform": "매경부동산",
+          "is_favorite": true,
+          "links": [
+            "매물 보러가기"
+          ],
+          "keyword_analysis": {
+            "occupancy_type": "정상입주",
+            "structure_type": "기본",
+            "condition_type": "깨끗"
+          }
+        },
+        {
+          "id": "5",
+          "price_text": "7억",
+          "verification_type": "확인매물",
+          "verified_date": "2026-05-22",
+          "description": "기본 채광좋은 남향집 중층높이 정상입주",
+          "agent_name": "부동산랜드김인경공인중개사",
+          "platform": "부동산뱅크",
+          "is_favorite": true,
+          "links": [
+            "매물 보러가기"
+          ],
+          "keyword_analysis": {
+            "occupancy_type": "정상입주",
+            "structure_type": "기본",
+            "condition_type": "없음"
+          }
+        },
+        {
+          "id": "6",
+          "price_text": "7억",
+          "verification_type": "확인매물",
+          "verified_date": "2026-05-22",
+          "description": "25 비확장.관리가 잘된집.성균관대 인접동.정상.밝고 환한남향.",
+          "agent_name": "천천에듀포레114(294-6900)공인중개사사무소",
+          "platform": "매경부동산",
+          "is_favorite": true,
+          "links": [
+            "매물 보러가기"
+          ],
+          "keyword_analysis": {
+            "occupancy_type": "정상입주",
+            "structure_type": "비확장",
+            "condition_type": "없음"
+          }
+        }
+      ],
+      "special_unit_type": null,
+      "is_special_unit": false,
+      "is_favorite": false,
+      "is_duplicate_candidate": false
+    },
+    {
+      "id": "hwaseo-prugio-edu-listing-19",
+      "building_no": "102동",
+      "deal_type": "매매",
+      "price": 880000000,
+      "price_max": null,
+      "is_price_range": false,
+      "deposit": null,
+      "monthly_rent": null,
+      "supply_area_m2": 112,
+      "exclusive_area_m2": 84,
+      "supply_area_type": "112B",
+      "exclusive_area_type": "84B",
+      "area_pyeong": 34,
+      "exclusive_area_pyeong": 25,
+      "area_type": "112B",
+      "floor_text": "저/25층",
+      "floor": null,
+      "total_floor": 25,
+      "floor_group": "저층",
+      "direction": "남동향",
+      "verification_type": "집주인확인매물",
+      "verified_date": "2026-05-22",
+      "agent_name": null,
+      "agent_count": 2,
+      "source": "부동산 매물 목록 복사 텍스트",
+      "description": null,
+      "links": [
+        "매물목록 접기"
+      ],
+      "keyword_analysis": {
+        "occupancy_type": "없음",
+        "structure_type": "없음",
+        "condition_type": "없음"
+      },
+      "broker_details": [
+        {
+          "id": "1",
+          "price_text": "8억 8,000",
+          "verification_type": "집주인확인매물",
+          "verified_date": "2026-05-22",
+          "description": "I 내집처럼 꼼꼼하게 I 사계절 예쁜정원뷰,거실안방방1확장,인덕션,중문",
+          "agent_name": "화서역파크푸르지오공인중개사사무소",
+          "platform": "부동산써브",
+          "is_favorite": true,
+          "links": [
+            "매물 보러가기"
+          ],
+          "keyword_analysis": {
+            "occupancy_type": "없음",
+            "structure_type": "방1확장",
+            "condition_type": "없음"
+          }
+        },
+        {
+          "id": "2",
+          "price_text": "8억 8,000",
+          "verification_type": "집주인확인매물",
+          "verified_date": "2026-05-22",
+          "description": "I대박I 초록의 예쁜 조경뷰. 확장형. 거실마루 도배새로.부분수리.인덕션",
+          "agent_name": "대박(227-9000)화서역푸르지오 공인중개사사무소",
+          "platform": "매경부동산",
+          "is_favorite": true,
+          "links": [
+            "매물 보러가기"
+          ],
+          "keyword_analysis": {
+            "occupancy_type": "없음",
+            "structure_type": "확장",
+            "condition_type": "수리"
+          }
+        }
+      ],
+      "special_unit_type": null,
+      "is_special_unit": false,
+      "is_favorite": false,
+      "is_duplicate_candidate": false
+    },
+    {
+      "id": "hwaseo-prugio-edu-listing-20",
+      "building_no": "132동",
+      "deal_type": "매매",
+      "price": 835000000,
+      "price_max": null,
+      "is_price_range": false,
+      "deposit": null,
+      "monthly_rent": null,
+      "supply_area_m2": 110,
+      "exclusive_area_m2": 84,
+      "supply_area_type": "110E",
+      "exclusive_area_type": "84E",
+      "area_pyeong": 33,
+      "exclusive_area_pyeong": 25,
+      "area_type": "110E",
+      "floor_text": "저/25층",
+      "floor": null,
+      "total_floor": 25,
+      "floor_group": "저층",
+      "direction": "남동향",
+      "verification_type": "집주인확인매물",
+      "verified_date": "2026-05-25",
+      "agent_name": null,
+      "agent_count": 6,
+      "source": "부동산 매물 목록 복사 텍스트",
+      "description": null,
+      "links": [
+        "매물목록 접기"
+      ],
+      "keyword_analysis": {
+        "occupancy_type": "없음",
+        "structure_type": "없음",
+        "condition_type": "없음"
+      },
+      "broker_details": [
+        {
+          "id": "1",
+          "price_text": "8억 3,500",
+          "verification_type": "집주인확인매물",
+          "verified_date": "2026-05-20",
+          "description": "33 확장,조망 채광좋은집,초중고인접,대중교통이용편리,깨끗,정상입주",
+          "agent_name": "친구(031-258-5050)푸르지오단지내공인중개사사무소",
+          "platform": "매경부동산",
+          "is_favorite": true,
+          "links": [
+            "매물 보러가기"
+          ],
+          "keyword_analysis": {
+            "occupancy_type": "정상입주",
+            "structure_type": "확장",
+            "condition_type": "깨끗"
+          }
+        },
+        {
+          "id": "2",
+          "price_text": "8억 3,500",
+          "verification_type": "집주인확인매물",
+          "verified_date": "2026-05-19",
+          "description": "33 확장 트인뷰 채광굿 초중고가까운동 광역버스이용편리 정상입주",
+          "agent_name": "푸르지오뱅크(296-1800)천은택공인중개사사무소",
+          "platform": "매경부동산",
+          "is_favorite": true,
+          "links": [
+            "매물 보러가기"
+          ],
+          "keyword_analysis": {
+            "occupancy_type": "정상입주",
+            "structure_type": "확장",
+            "condition_type": "없음"
+          }
+        },
+        {
+          "id": "3",
+          "price_text": "8억 3,500",
+          "verification_type": "집주인확인매물",
+          "verified_date": "2026-05-12",
+          "description": "확장 조망 채광 좋은집 대중교통이용편리",
+          "agent_name": "부동산랜드김인경공인중개사",
+          "platform": "부동산뱅크",
+          "is_favorite": true,
+          "links": [
+            "매물 보러가기"
+          ],
+          "keyword_analysis": {
+            "occupancy_type": "없음",
+            "structure_type": "확장",
+            "condition_type": "없음"
+          }
+        },
+        {
+          "id": "4",
+          "price_text": "8억 3,500",
+          "verification_type": "확인매물",
+          "verified_date": "2026-05-22",
+          "description": "33,확장,조망 채광양호,일월도서관 및 대중교통 이용편리,정상입주",
+          "agent_name": "푸르지오카페(298-4004)공인중개사사무소",
+          "platform": "부동산뱅크",
+          "is_favorite": true,
+          "links": [
+            "매물 보러가기"
+          ],
+          "keyword_analysis": {
+            "occupancy_type": "정상입주",
+            "structure_type": "확장",
+            "condition_type": "없음"
+          }
+        },
+        {
+          "id": "5",
+          "price_text": "8억 3,500",
+          "verification_type": "확인매물",
+          "verified_date": "2026-05-15",
+          "description": "33 확장.초중고 가까운동.일월도서관인접.광역버스 이용편리.정상",
+          "agent_name": "천천에듀포레114(294-6900)공인중개사사무소",
+          "platform": "매경부동산",
+          "is_favorite": true,
+          "links": [
+            "매물 보러가기"
+          ],
+          "keyword_analysis": {
+            "occupancy_type": "정상입주",
+            "structure_type": "확장",
+            "condition_type": "없음"
+          }
+        },
+        {
+          "id": "6",
+          "price_text": "8억 3,500",
+          "verification_type": "확인매물",
+          "verified_date": "2026-04-28",
+          "description": "33,확장,시원한뷰,초중고인접동,광역버스편리한동",
+          "agent_name": "더에듀포레(031-293-4455)공인중개사사무소",
+          "platform": "매경부동산",
+          "is_favorite": true,
+          "links": [
+            "매물 보러가기"
+          ],
+          "keyword_analysis": {
+            "occupancy_type": "없음",
+            "structure_type": "확장",
+            "condition_type": "없음"
+          }
+        }
+      ],
+      "special_unit_type": null,
+      "is_special_unit": false,
+      "is_favorite": false,
+      "is_duplicate_candidate": false
+    },
+    {
+      "id": "hwaseo-prugio-edu-listing-21",
+      "building_no": "111동",
+      "deal_type": "매매",
+      "price": 1200000000,
+      "price_max": null,
+      "is_price_range": false,
+      "deposit": null,
+      "monthly_rent": null,
+      "supply_area_m2": 161,
+      "exclusive_area_m2": 129,
+      "supply_area_type": "161B",
+      "exclusive_area_type": "129B",
+      "area_pyeong": 49,
+      "exclusive_area_pyeong": 39,
+      "area_type": "161B",
+      "floor_text": "중/30층",
+      "floor": null,
+      "total_floor": 30,
+      "floor_group": "중층",
+      "direction": "남향",
+      "verification_type": "집주인확인매물",
+      "verified_date": "2026-05-15",
+      "agent_name": null,
+      "agent_count": 3,
+      "source": "부동산 매물 목록 복사 텍스트",
+      "description": null,
+      "links": [
+        "매물목록 접기"
+      ],
+      "keyword_analysis": {
+        "occupancy_type": "없음",
+        "structure_type": "없음",
+        "condition_type": "없음"
+      },
+      "broker_details": [
+        {
+          "id": "1",
+          "price_text": "12억",
+          "verification_type": "집주인확인매물",
+          "verified_date": "2026-05-15",
+          "description": "48 0확장0 전망굿,채광굿,유즈센타연결동,깨끗이관리된집,",
+          "agent_name": "더에듀포레(031-293-4455)공인중개사사무소",
+          "platform": "부동산뱅크",
+          "is_favorite": true,
+          "links": [
+            "매물 보러가기"
+          ],
+          "keyword_analysis": {
+            "occupancy_type": "없음",
+            "structure_type": "확장",
+            "condition_type": "깨끗"
+          }
+        },
+        {
+          "id": "2",
+          "price_text": "12억",
+          "verification_type": "집주인확인매물",
+          "verified_date": "2026-05-04",
+          "description": "주인거주 깨끗하게 관리가 아주잘된집",
+          "agent_name": "성대리치부동산 공인중개사사무소",
+          "platform": "부동산써브",
+          "is_favorite": true,
+          "links": [
+            "매물 보러가기"
+          ],
+          "keyword_analysis": {
+            "occupancy_type": "없음",
+            "structure_type": "없음",
+            "condition_type": "깨끗"
+          }
+        },
+        {
+          "id": "3",
+          "price_text": "12억",
+          "verification_type": "집주인확인매물",
+          "verified_date": "2026-05-02",
+          "description": "확장, 일조권.조망권 좋아요, 정상입주, 유즈센터연결, 깨끗",
+          "agent_name": "부동산랜드김인경공인중개사",
+          "platform": "부동산뱅크",
+          "is_favorite": true,
+          "links": [
+            "매물 보러가기"
+          ],
+          "keyword_analysis": {
+            "occupancy_type": "정상입주",
+            "structure_type": "확장",
+            "condition_type": "깨끗"
+          }
+        }
+      ],
+      "special_unit_type": null,
+      "is_special_unit": false,
+      "is_favorite": false,
+      "is_duplicate_candidate": false
+    },
+    {
+      "id": "hwaseo-prugio-edu-listing-22",
+      "building_no": "107동",
+      "deal_type": "매매",
+      "price": 750000000,
+      "price_max": null,
+      "is_price_range": false,
+      "deposit": null,
+      "monthly_rent": null,
+      "supply_area_m2": 85,
+      "exclusive_area_m2": 59,
+      "supply_area_type": "85",
+      "exclusive_area_type": "59",
+      "area_pyeong": 26,
+      "exclusive_area_pyeong": 18,
+      "area_type": "85",
+      "floor_text": "중/25층",
+      "floor": null,
+      "total_floor": 25,
+      "floor_group": "중층",
+      "direction": "남서향",
+      "verification_type": "집주인확인매물",
+      "verified_date": "2026-05-15",
+      "agent_name": "푸르지오카페(298-4004)공인중개사사무소",
+      "agent_count": null,
+      "source": "매경부동산",
+      "description": "25,확장,학교 상가 인접,채광좋아 밝음,깨끗",
+      "links": [
+        "매물 보러가기"
+      ],
+      "keyword_analysis": {
+        "occupancy_type": "없음",
+        "structure_type": "확장",
+        "condition_type": "깨끗"
+      },
+      "broker_details": [],
+      "special_unit_type": null,
+      "is_special_unit": false,
+      "is_favorite": true,
+      "is_duplicate_candidate": false
+    },
+    {
+      "id": "hwaseo-prugio-edu-listing-23",
+      "building_no": "120동",
+      "deal_type": "매매",
+      "price": 1000000000,
+      "price_max": null,
+      "is_price_range": false,
+      "deposit": null,
+      "monthly_rent": null,
+      "supply_area_m2": 182,
+      "exclusive_area_m2": 148,
+      "supply_area_type": "182B",
+      "exclusive_area_type": "148B",
+      "area_pyeong": 55,
+      "exclusive_area_pyeong": 45,
+      "area_type": "182B",
+      "floor_text": "중/30층",
+      "floor": null,
+      "total_floor": 30,
+      "floor_group": "중층",
+      "direction": "남동향",
+      "verification_type": "집주인확인매물",
+      "verified_date": "2026-05-14",
+      "agent_name": null,
+      "agent_count": 6,
+      "source": "부동산 매물 목록 복사 텍스트",
+      "description": null,
+      "links": [
+        "매물목록 접기"
+      ],
+      "keyword_analysis": {
+        "occupancy_type": "없음",
+        "structure_type": "없음",
+        "condition_type": "없음"
+      },
+      "broker_details": [
+        {
+          "id": "1",
+          "price_text": "10억",
+          "verification_type": "집주인확인매물",
+          "verified_date": "2026-05-14",
+          "description": "55,확장,인테리어,화단철거,관리되어 깨끗,정상입주",
+          "agent_name": "푸르지오카페(298-4004)공인중개사사무소",
+          "platform": "매경부동산",
+          "is_favorite": true,
+          "links": [
+            "매물 보러가기"
+          ],
+          "keyword_analysis": {
+            "occupancy_type": "정상입주",
+            "structure_type": "확장",
+            "condition_type": "인테리어"
+          }
+        },
+        {
+          "id": "2",
+          "price_text": "10억",
+          "verification_type": "확인매물",
+          "verified_date": "2026-05-22",
+          "description": "55 확장,인테리어, 조망권 일조권 양호,화단철거 깨끗하게 관리된집,정상",
+          "agent_name": "친구(031-258-5050)푸르지오단지내공인중개사사무소",
+          "platform": "매경부동산",
+          "is_favorite": true,
+          "links": [
+            "매물 보러가기"
+          ],
+          "keyword_analysis": {
+            "occupancy_type": "정상입주",
+            "structure_type": "확장",
+            "condition_type": "인테리어"
+          }
+        },
+        {
+          "id": "3",
+          "price_text": "10억",
+          "verification_type": "확인매물",
+          "verified_date": "2026-05-22",
+          "description": "확장 인테리어 화단철거 정상입주",
+          "agent_name": "부동산랜드김인경공인중개사",
+          "platform": "부동산뱅크",
+          "is_favorite": true,
+          "links": [
+            "매물 보러가기"
+          ],
+          "keyword_analysis": {
+            "occupancy_type": "정상입주",
+            "structure_type": "확장",
+            "condition_type": "인테리어"
+          }
+        },
+        {
+          "id": "4",
+          "price_text": "10억",
+          "verification_type": "확인매물",
+          "verified_date": "2026-05-20",
+          "description": "55 확장.인테리어.화단철거.관리가잘된집.유즈센터 인접동.정상입주",
+          "agent_name": "천천에듀포레114(294-6900)공인중개사사무소",
+          "platform": "매경부동산",
+          "is_favorite": true,
+          "links": [
+            "매물 보러가기"
+          ],
+          "keyword_analysis": {
+            "occupancy_type": "정상입주",
+            "structure_type": "확장",
+            "condition_type": "인테리어"
+          }
+        },
+        {
+          "id": "5",
+          "price_text": "10억",
+          "verification_type": "확인매물",
+          "verified_date": "2026-05-11",
+          "description": "55 0확장0인테리어0화단철거, 깨끗,관리굿,정상입주",
+          "agent_name": "더에듀포레(031-293-4455)공인중개사사무소",
+          "platform": "부동산뱅크",
+          "is_favorite": true,
+          "links": [
+            "매물 보러가기"
+          ],
+          "keyword_analysis": {
+            "occupancy_type": "정상입주",
+            "structure_type": "확장",
+            "condition_type": "인테리어"
+          }
+        },
+        {
+          "id": "6",
+          "price_text": "10억",
+          "verification_type": "확인매물",
+          "verified_date": "2026-05-07",
+          "description": "55확장형 인테리어 화단철거 열린조망 관리잘된깨끗한집 정상입주",
+          "agent_name": "푸르지오뱅크(296-1800)천은택공인중개사사무소",
+          "platform": "매경부동산",
+          "is_favorite": true,
+          "links": [
+            "매물 보러가기"
+          ],
+          "keyword_analysis": {
+            "occupancy_type": "정상입주",
+            "structure_type": "확장",
+            "condition_type": "인테리어"
+          }
+        }
+      ],
+      "special_unit_type": null,
+      "is_special_unit": false,
+      "is_favorite": false,
+      "is_duplicate_candidate": false
+    },
+    {
+      "id": "hwaseo-prugio-edu-listing-24",
+      "building_no": "120동",
+      "deal_type": "매매",
+      "price": 1000000000,
+      "price_max": null,
+      "is_price_range": false,
+      "deposit": null,
+      "monthly_rent": null,
+      "supply_area_m2": 182,
+      "exclusive_area_m2": 148,
+      "supply_area_type": "182A",
+      "exclusive_area_type": "148A",
+      "area_pyeong": 55,
+      "exclusive_area_pyeong": 45,
+      "area_type": "182A",
+      "floor_text": "중/30층",
+      "floor": null,
+      "total_floor": 30,
+      "floor_group": "중층",
+      "direction": "남향",
+      "verification_type": "집주인확인매물",
+      "verified_date": "2026-05-14",
+      "agent_name": null,
+      "agent_count": 4,
+      "source": "부동산 매물 목록 복사 텍스트",
+      "description": null,
+      "links": [
+        "매물목록 접기"
+      ],
+      "keyword_analysis": {
+        "occupancy_type": "없음",
+        "structure_type": "없음",
+        "condition_type": "없음"
+      },
+      "broker_details": [
+        {
+          "id": "1",
+          "price_text": "10억",
+          "verification_type": "집주인확인매물",
+          "verified_date": "2026-05-14",
+          "description": "확장, 일조권.조망권 좋아요, 랜드관리, 정상입주, 조정가",
+          "agent_name": "부동산랜드김인경공인중개사",
+          "platform": "부동산뱅크",
+          "is_favorite": true,
+          "links": [
+            "매물 보러가기"
+          ],
+          "keyword_analysis": {
+            "occupancy_type": "정상입주",
+            "structure_type": "확장",
+            "condition_type": "없음"
+          }
+        },
+        {
+          "id": "2",
+          "price_text": "10억",
+          "verification_type": "확인매물",
+          "verified_date": "2026-05-15",
+          "description": "55 확장.A타입.채광 전망 좋은집.유즈센터 인접동.조정가능",
+          "agent_name": "천천에듀포레114(294-6900)공인중개사사무소",
+          "platform": "매경부동산",
+          "is_favorite": true,
+          "links": [
+            "매물 보러가기"
+          ],
+          "keyword_analysis": {
+            "occupancy_type": "없음",
+            "structure_type": "확장",
+            "condition_type": "없음"
+          }
+        },
+        {
+          "id": "3",
+          "price_text": "10억",
+          "verification_type": "확인매물",
+          "verified_date": "2026-05-15",
+          "description": "33,기본,판상형 인기타입,동간거리 넓어 채광좋음,조망트임,정상입주",
+          "agent_name": "푸르지오카페(298-4004)공인중개사사무소",
+          "platform": "부동산뱅크",
+          "is_favorite": true,
+          "links": [
+            "매물 보러가기"
+          ],
+          "keyword_analysis": {
+            "occupancy_type": "정상입주",
+            "structure_type": "기본",
+            "condition_type": "없음"
+          }
+        },
+        {
+          "id": "4",
+          "price_text": "10억",
+          "verification_type": "확인매물",
+          "verified_date": "2026-05-11",
+          "description": "55 0확장0 전망굿,채광굿,유즈센타이용편리,정상입주",
+          "agent_name": "더에듀포레(031-293-4455)공인중개사사무소",
+          "platform": "부동산뱅크",
+          "is_favorite": true,
+          "links": [
+            "매물 보러가기"
+          ],
+          "keyword_analysis": {
+            "occupancy_type": "정상입주",
+            "structure_type": "확장",
+            "condition_type": "없음"
+          }
+        }
+      ],
+      "special_unit_type": null,
+      "is_special_unit": false,
+      "is_favorite": false,
+      "is_duplicate_candidate": false
+    },
+    {
+      "id": "hwaseo-prugio-edu-listing-25",
+      "building_no": "123동",
+      "deal_type": "매매",
+      "price": 850000000,
+      "price_max": null,
+      "is_price_range": false,
+      "deposit": null,
+      "monthly_rent": null,
+      "supply_area_m2": 141,
+      "exclusive_area_m2": 113,
+      "supply_area_type": "141A",
+      "exclusive_area_type": "113A",
+      "area_pyeong": 43,
+      "exclusive_area_pyeong": 34,
+      "area_type": "141A",
+      "floor_text": "저/25층",
+      "floor": null,
+      "total_floor": 25,
+      "floor_group": "저층",
+      "direction": "남향",
+      "verification_type": "확인매물",
+      "verified_date": "2026-05-19",
+      "agent_name": null,
+      "agent_count": 2,
+      "source": "부동산 매물 목록 복사 텍스트",
+      "description": null,
+      "links": [
+        "매물목록 접기"
+      ],
+      "keyword_analysis": {
+        "occupancy_type": "없음",
+        "structure_type": "없음",
+        "condition_type": "없음"
+      },
+      "broker_details": [
+        {
+          "id": "1",
+          "price_text": "8억 5,000",
+          "verification_type": "확인매물",
+          "verified_date": "2026-05-19",
+          "description": "거실 방확장 방4개 내집정원같은집",
+          "agent_name": "진흥공인중개사사무소",
+          "platform": "부동산렛츠",
+          "is_favorite": true,
+          "links": [
+            "매물 보러가기"
+          ],
+          "keyword_analysis": {
+            "occupancy_type": "없음",
+            "structure_type": "확장",
+            "condition_type": "없음"
+          }
+        },
+        {
+          "id": "2",
+          "price_text": "8억 5,000",
+          "verification_type": "확인매물",
+          "verified_date": "2026-04-30",
+          "description": "거실 방확장 선호하는 판상형구조",
+          "agent_name": "진흥공인중개사사무소",
+          "platform": "한경부동산",
+          "is_favorite": true,
+          "links": [
+            "매물 보러가기"
+          ],
+          "keyword_analysis": {
+            "occupancy_type": "없음",
+            "structure_type": "확장",
+            "condition_type": "없음"
+          }
+        }
+      ],
+      "special_unit_type": null,
+      "is_special_unit": false,
+      "is_favorite": false,
+      "is_duplicate_candidate": false
+    },
+    {
+      "id": "hwaseo-prugio-edu-listing-26",
+      "building_no": "117동",
+      "deal_type": "매매",
+      "price": 1000000000,
+      "price_max": null,
+      "is_price_range": false,
+      "deposit": null,
+      "monthly_rent": null,
+      "supply_area_m2": 141,
+      "exclusive_area_m2": 113,
+      "supply_area_type": "141C",
+      "exclusive_area_type": "113C",
+      "area_pyeong": 43,
+      "exclusive_area_pyeong": 34,
+      "area_type": "141C",
+      "floor_text": "중/30층",
+      "floor": null,
+      "total_floor": 30,
+      "floor_group": "중층",
+      "direction": "남동향",
+      "verification_type": "등록",
+      "verified_date": "2026-05-11",
+      "agent_name": "호반스마트부동산공인중개사사무소",
+      "agent_count": null,
+      "source": "한국공인중개사협회",
+      "description": "방4 I 초품아 I 강남행 광역버스 정류장 인근",
+      "links": [
+        "매물 보러가기"
+      ],
+      "keyword_analysis": {
+        "occupancy_type": "없음",
+        "structure_type": "없음",
+        "condition_type": "없음"
+      },
+      "broker_details": [],
+      "special_unit_type": null,
+      "is_special_unit": false,
+      "is_favorite": true,
+      "is_duplicate_candidate": false
+    },
+    {
+      "id": "hwaseo-prugio-edu-listing-27",
+      "building_no": "119동",
+      "deal_type": "매매",
+      "price": 1000000000,
+      "price_max": null,
+      "is_price_range": false,
+      "deposit": null,
+      "monthly_rent": null,
+      "supply_area_m2": 182,
+      "exclusive_area_m2": 148,
+      "supply_area_type": "182B",
+      "exclusive_area_type": "148B",
+      "area_pyeong": 55,
+      "exclusive_area_pyeong": 45,
+      "area_type": "182B",
+      "floor_text": "중/30층",
+      "floor": null,
+      "total_floor": 30,
+      "floor_group": "중층",
+      "direction": "남동향",
+      "verification_type": "등록",
+      "verified_date": "2026-04-29",
+      "agent_name": "천천푸르지오우리공인중개사사무소",
+      "agent_count": null,
+      "source": "한국공인중개사협회",
+      "description": "55 로얄동,로얄층,유즈센터연결,주인거주로관리잘된집",
+      "links": [
+        "매물 보러가기"
+      ],
+      "keyword_analysis": {
+        "occupancy_type": "없음",
+        "structure_type": "없음",
+        "condition_type": "깨끗"
+      },
+      "broker_details": [],
+      "special_unit_type": null,
+      "is_special_unit": false,
+      "is_favorite": true,
+      "is_duplicate_candidate": false
+    },
+    {
+      "id": "hwaseo-prugio-edu-listing-28",
+      "building_no": "119동",
+      "deal_type": "매매",
+      "price": 900000000,
+      "price_max": null,
+      "is_price_range": false,
+      "deposit": null,
+      "monthly_rent": null,
+      "supply_area_m2": 182,
+      "exclusive_area_m2": 148,
+      "supply_area_type": "182A",
+      "exclusive_area_type": "148A",
+      "area_pyeong": 55,
+      "exclusive_area_pyeong": 45,
+      "area_type": "182A",
+      "floor_text": "저/30층",
+      "floor": null,
+      "total_floor": 30,
+      "floor_group": "저층",
+      "direction": "남향",
+      "verification_type": "등록",
+      "verified_date": "2026-04-27",
+      "agent_name": "정천합동공인중개사사무소",
+      "agent_count": null,
+      "source": "한국공인중개사협회",
+      "description": "55,확장",
+      "links": [],
+      "keyword_analysis": {
+        "occupancy_type": "없음",
+        "structure_type": "확장",
+        "condition_type": "없음"
+      },
+      "broker_details": [],
+      "special_unit_type": null,
+      "is_special_unit": false,
+      "is_favorite": true,
+      "is_duplicate_candidate": false
+    }
+  ]
+}
