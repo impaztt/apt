@@ -23,7 +23,7 @@ import { formatDate } from '../shared/utils/date';
 import { formatPrice } from '../shared/utils/price';
 
 export function DashboardPage() {
-  const { complexes, listings, groups, memberships, latestCapturedDates, loading, error } = useAppData();
+  const { complexes, listings, groups, memberships, latestCapturedDates, displaySettings, loading, error } = useAppData();
   const [areaGroup, setAreaGroup] = useState<AreaSelection>('all');
   const [selectedComplexIds, setSelectedComplexIds] = useState<string[]>([]);
   const [includeSpecialUnits, setIncludeSpecialUnits] = useState(false);
@@ -69,8 +69,9 @@ export function DashboardPage() {
   }, [areaGroup, areaOptions]);
 
   useEffect(() => {
-    setSelectedComplexIds(groupComplexIds);
-  }, [activeGroup?.id]);
+    const savedComplexIds = groupComplexIds.filter((id) => displaySettings.default_dashboard_complex_ids.includes(id));
+    setSelectedComplexIds(savedComplexIds.length ? savedComplexIds : groupComplexIds);
+  }, [activeGroup?.id, displaySettings.default_dashboard_complex_ids]);
 
   function toggleComplex(complexId: string) {
     setSelectedComplexIds((current) => {

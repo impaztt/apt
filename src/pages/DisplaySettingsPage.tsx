@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { ArrowLeft, Plus, Trash2 } from 'lucide-react';
+import { ArrowLeft, Check, Plus, Trash2 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import type { AreaDisplayRule } from '../features/settings/types';
 import { DEFAULT_COMPLEX_COLORS, formatDisplayAreaLabel } from '../features/settings/display';
@@ -42,6 +42,10 @@ export function DisplaySettingsPage() {
   const [colors, setColors] = useState<Record<string, string>>(() =>
     Object.fromEntries(complexes.map((complex) => [complex.id, displaySettings.complex_colors[complex.id] ?? complex.color])),
   );
+  const [defaultDashboardComplexIds, setDefaultDashboardComplexIds] = useState<string[]>(() => {
+    const savedIds = displaySettings.default_dashboard_complex_ids.filter((id) => complexes.some((complex) => complex.id === id));
+    return savedIds.length ? savedIds : complexes.map((complex) => complex.id);
+  });
   const [rules, setRules] = useState<AreaDisplayRule[]>(displaySettings.area_groups);
   const [adminKey, setAdminKey] = useState('');
   const [saving, setSaving] = useState(false);
@@ -58,6 +62,15 @@ export function DisplaySettingsPage() {
           : rule,
       ),
     );
+  }
+
+  function toggleDefaultDashboardComplex(complexId: string) {
+    setDefaultDashboardComplexIds((current) => {
+      if (current.includes(complexId)) {
+        return current.length === 1 ? current : current.filter((id) => id !== complexId);
+      }
+      return [...current, complexId];
+    });
   }
 
   async function saveSettings() {
@@ -81,6 +94,7 @@ export function DisplaySettingsPage() {
           settings: {
             updated_at: new Date().toISOString().slice(0, 10),
             complex_colors: colors,
+            default_dashboard_complex_ids: defaultDashboardComplexIds,
             area_groups: rules,
           },
         }),
@@ -102,8 +116,46 @@ export function DisplaySettingsPage() {
       </Link>
       <PageHeader
         title="표시 설정"
-        description="단지별 색상과 서로 다른 공급평 표기를 하나의 비교 평형으로 묶습니다. 저장 후 자동 배포가 완료되면 분석 화면 전체에 반영됩니다."
+        description="대시보드의 초기 표시 단지, 단지별 색상, 비교 평형 묶음을 설정합니다. 저장 후 자동 배포가 완료되면 분석 화면에 반영됩니다."
       />
+
+      <Card className="p-4 sm:p-6">
+        <div className="flex items-start justify-between gap-3">
+          <div>
+            <h2 className="text-base font-bold">대시보드 기본 표시 단지</h2>
+            <p className="mt-1 text-xs leading-5 text-slate-500">
+              처음 대시보드에 들어왔을 때 켜져 있을 단지를 선택합니다. 이후 화면에서 단지를 추가하거나 해제할 수 있습니다.
+            </p>
+          </div>
+          <button
+            type="button"
+            className="shrink-0 rounded-xl bg-brand-50 px-3 py-2 text-xs font-semibold text-brand-700"
+            onClick={() => setDefaultDashboardComplexIds(complexes.map((complex) => complex.id))}
+          >
+            전체 선택
+          </button>
+        </div>
+        <div className="mt-4 flex flex-wrap gap-2">
+          {complexes.map((complex) => {
+            const selected = defaultDashboardComplexIds.includes(complex.id);
+            return (
+              <button
+                key={complex.id}
+                type="button"
+                className={`inline-flex max-w-full items-center gap-2 rounded-xl border px-3 py-2 text-left text-xs font-semibold transition ${
+                  selected ? 'border-transparent bg-slate-900 text-white' : 'border-slate-200 bg-white text-slate-500'
+                }`}
+                onClick={() => toggleDefaultDashboardComplex(complex.id)}
+              >
+                <span className="h-2.5 w-2.5 shrink-0 rounded-full" style={{ backgroundColor: colors[complex.id] ?? complex.color }} />
+                <span className="break-keep">{complex.name}</span>
+                {selected && <Check className="h-3.5 w-3.5 shrink-0" />}
+              </button>
+            );
+          })}
+        </div>
+        <p className="mt-3 text-[11px] font-medium text-slate-400">최소 1개 단지는 기본 표시 상태로 유지됩니다.</p>
+      </Card>
 
       <Card className="p-4 sm:p-6">
         <h2 className="text-base font-bold">단지별 표현 색상</h2>
@@ -221,7 +273,7 @@ export function DisplaySettingsPage() {
         >
           {saving ? '저장 중...' : '표시 설정 저장'}
         </button>
-        <p className="mt-3 text-xs leading-5 text-slate-400">저장하면 GitHub 설정 파일이 변경되고 Cloudflare 재배포 후 대시보드, 비교, 변화 탭에 표시 규칙이 반영됩니다.</p>
+        <p className="mt-3 text-xs leading-5 text-slate-400">저장하면 GitHub 설정 파일이 변경되고 Cloudflare 재배포 후 대시보드 기본 선택, 색상, 평형 표시 규칙이 반영됩니다.</p>
       </Card>
     </div>
   );

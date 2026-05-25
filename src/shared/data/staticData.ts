@@ -173,6 +173,7 @@ export function parseDisplaySettings(raw: unknown): DisplaySettings {
   return {
     updated_at: normalizedDate(source.updated_at) ?? new Date().toISOString().slice(0, 10),
     complex_colors: complexColors,
+    default_dashboard_complex_ids: [...new Set(optionalTextArray(source.default_dashboard_complex_ids))],
     area_groups: sortedGroups,
   };
 }

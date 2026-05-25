@@ -82,6 +82,15 @@ function validateDisplaySettings(data) {
       if (!/^#[0-9a-f]{6}$/i.test(text(color))) errors.push(`${id}: 색상은 #RRGGBB 형식이어야 합니다.`);
     });
   }
+  if (data.default_dashboard_complex_ids !== undefined) {
+    if (!Array.isArray(data.default_dashboard_complex_ids)) {
+      errors.push('default_dashboard_complex_ids는 배열이어야 합니다.');
+    } else {
+      const ids = data.default_dashboard_complex_ids.map((id) => text(id));
+      if (!ids.length || ids.some((id) => !id)) errors.push('초기 표시 단지를 하나 이상 선택해 주세요.');
+      if (new Set(ids).size !== ids.length) errors.push('초기 표시 단지는 중복될 수 없습니다.');
+    }
+  }
   if (!Array.isArray(data.area_groups)) {
     errors.push('area_groups는 배열이어야 합니다.');
     return errors;
@@ -278,7 +287,7 @@ async function saveDisplaySettings(context, body) {
   const saved = await putFile(context, DISPLAY_SETTINGS_PATH, settings, 'Update dashboard display settings');
   if (saved.error) return json({ message: saved.error }, 502);
   return json({
-    message: '표시 설정을 GitHub에 저장했습니다. Cloudflare 재배포 후 색상과 평형 그룹이 분석 화면에 반영됩니다.',
+    message: '표시 설정을 GitHub에 저장했습니다. Cloudflare 재배포 후 초기 표시 단지, 색상, 평형 그룹이 분석 화면에 반영됩니다.',
     filePath: DISPLAY_SETTINGS_PATH,
     commitUrl: saved.commitUrl,
   });

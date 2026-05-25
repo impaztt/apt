@@ -9,5 +9,6 @@ export interface AreaDisplayRule {
 export interface DisplaySettings {
   updated_at: string;
   complex_colors: Record<string, string>;
+  default_dashboard_complex_ids: string[];
   area_groups: AreaDisplayRule[];
 }

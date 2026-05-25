@@ -32,7 +32,7 @@ export function AppDataProvider({ children }: PropsWithChildren) {
         latestCapturedDates: {},
         groups: [],
         memberships: [],
-        displaySettings: { updated_at: '', complex_colors: {}, area_groups: [] },
+        displaySettings: { updated_at: '', complex_colors: {}, default_dashboard_complex_ids: [], area_groups: [] },
         loading: false,
         error: caught instanceof Error ? caught.message : 'JSON 데이터를 불러오지 못했습니다.',
       };
