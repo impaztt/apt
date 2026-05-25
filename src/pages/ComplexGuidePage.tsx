@@ -27,29 +27,31 @@ export function ComplexGuidePage() {
 
   return (
     <div className="space-y-4 sm:space-y-6">
-      <Card className="overflow-hidden bg-slate-900 p-0 text-white">
-        <div className="bg-[radial-gradient(circle_at_90%_10%,rgba(49,130,246,0.42),transparent_42%)] p-5 sm:p-7">
-          <p className="text-xs font-semibold text-blue-200">{guide.subtitle}</p>
-          <h1 className="mt-2 text-xl font-extrabold tracking-tight sm:text-3xl">{guide.title}</h1>
-          <p className="mt-3 text-xs leading-5 text-slate-300 sm:max-w-xl sm:text-sm">{guide.introduction}</p>
-          <p className="mt-4 text-[11px] font-medium text-slate-400">정보 업데이트 {guide.updated_at.replace(/-/g, '.')}</p>
+      <Card className="p-4 sm:p-6">
+        <div className="flex items-start justify-between gap-3">
+          <div className="min-w-0">
+            <h1 className="break-keep text-lg font-extrabold tracking-tight text-slate-900 sm:text-2xl">{guide.title}</h1>
+            <p className="mt-1 break-keep text-xs text-slate-500">{guide.contact.address}</p>
+          </div>
+          <span className="shrink-0 rounded-full bg-slate-50 px-2.5 py-1 text-[10px] font-semibold text-slate-400">
+            {guide.updated_at.replace(/-/g, '.')} 기준
+          </span>
+        </div>
+        <div className="mt-4 grid grid-cols-3 gap-2">
+          <a href={`tel:${guide.contact.office_phone.replace(/-/g, '')}`} className="rounded-2xl bg-brand-50 p-3 text-center">
+            <Phone className="mx-auto h-5 w-5 text-brand-600" />
+            <p className="mt-2 text-[11px] font-bold text-brand-700">관리사무소</p>
+          </a>
+          <a href={guide.contact.homepage_url} target="_blank" rel="noreferrer" className="rounded-2xl bg-slate-50 p-3 text-center">
+            <BookOpen className="mx-auto h-5 w-5 text-slate-600" />
+            <p className="mt-2 text-[11px] font-bold text-slate-700">공식 홈페이지</p>
+          </a>
+          <a href={guide.contact.map_url} target="_blank" rel="noreferrer" className="rounded-2xl bg-slate-50 p-3 text-center">
+            <MapPinned className="mx-auto h-5 w-5 text-slate-600" />
+            <p className="mt-2 text-[11px] font-bold text-slate-700">지도 보기</p>
+          </a>
         </div>
       </Card>
-
-      <div className="grid grid-cols-3 gap-2">
-        <a href={`tel:${guide.contact.office_phone.replace(/-/g, '')}`} className="rounded-2xl bg-white p-3 text-center shadow-card">
-          <Phone className="mx-auto h-5 w-5 text-brand-600" />
-          <p className="mt-2 text-[11px] font-bold text-slate-700">관리사무소</p>
-        </a>
-        <a href={guide.contact.homepage_url} target="_blank" rel="noreferrer" className="rounded-2xl bg-white p-3 text-center shadow-card">
-          <BookOpen className="mx-auto h-5 w-5 text-brand-600" />
-          <p className="mt-2 text-[11px] font-bold text-slate-700">공식 홈페이지</p>
-        </a>
-        <a href={guide.contact.map_url} target="_blank" rel="noreferrer" className="rounded-2xl bg-white p-3 text-center shadow-card">
-          <MapPinned className="mx-auto h-5 w-5 text-brand-600" />
-          <p className="mt-2 text-[11px] font-bold text-slate-700">지도 보기</p>
-        </a>
-      </div>
 
       <nav className="flex gap-2 overflow-x-auto pb-1 text-xs font-semibold text-slate-600">
         {[
