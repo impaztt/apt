@@ -61,18 +61,20 @@ export function ComplexGuidePage() {
         </div>
       </Card>
 
-      <nav className="flex gap-2 overflow-x-auto pb-1 text-xs font-semibold text-slate-600">
-        {[
-          ['입주 준비', 'move-in'],
-          ['생활 안내', 'living'],
-          ['시설', 'facilities'],
-          ['단지 지도', 'site-map'],
-          ['주변 생활', 'nearby'],
-          ['FAQ', 'faq'],
-        ].map(([label, id]) => (
-          <a key={id} href={`#${id}`} className="shrink-0 rounded-full bg-white px-3 py-2 shadow-card">{label}</a>
-        ))}
-      </nav>
+      <div className="sticky top-[74px] z-[8] -mx-3.5 border-b border-slate-100 bg-canvas/95 px-3.5 py-2 backdrop-blur lg:static lg:mx-0 lg:border-b-0 lg:bg-transparent lg:px-0 lg:py-0">
+        <nav className="flex gap-2 overflow-x-auto pb-1 text-xs font-semibold text-slate-600">
+          {[
+            ['입주 준비', 'move-in'],
+            ['생활 안내', 'living'],
+            ['시설', 'facilities'],
+            ['단지 지도', 'site-map'],
+            ['주변 생활', 'nearby'],
+            ['FAQ', 'faq'],
+          ].map(([label, id]) => (
+            <a key={id} href={`#${id}`} className="shrink-0 rounded-full bg-white px-3 py-2 shadow-card">{label}</a>
+          ))}
+        </nav>
+      </div>
 
       <Card className="p-4 sm:p-6">
         <div className="flex items-start gap-3">
