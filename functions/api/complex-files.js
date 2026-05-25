@@ -9,6 +9,7 @@ const GUIDE_IMAGE_EXTENSIONS = {
   'image/png': 'png',
   'image/webp': 'webp',
 };
+const GUIDE_IMAGE_KINDS = new Set(['site-map', 'use-center-price']);
 const DEFAULT_OWNER = 'impaztt';
 const DEFAULT_REPO = 'apt';
 const DEFAULT_BRANCH = 'main';
@@ -156,6 +157,27 @@ function validateComplexGuide(data) {
     else data.site_map.links.forEach((link, index) => {
       if (!link || !text(link.label) || !text(link.url)) errors.push(`가이드 지도 링크 ${index + 1}의 label과 url을 입력해 주세요.`);
     });
+  }
+  if (data.use_center !== undefined) {
+    if (!data.use_center || typeof data.use_center !== 'object' || Array.isArray(data.use_center)) {
+      errors.push('가이드 use_center는 객체여야 합니다.');
+    } else {
+      ['title', 'description', 'price_image_caption'].forEach((field) => {
+        if (!text(data.use_center[field])) errors.push(`가이드 use_center.${field} 값은 필수입니다.`);
+      });
+      if (data.use_center.price_image_url !== null && data.use_center.price_image_url !== undefined && !text(data.use_center.price_image_url)) {
+        errors.push('가이드 use_center.price_image_url을 확인해 주세요.');
+      }
+      if (!Array.isArray(data.use_center.facilities)) {
+        errors.push('가이드 use_center.facilities는 배열이어야 합니다.');
+      } else {
+        data.use_center.facilities.forEach((item, index) => {
+          if (!item || !text(item.name) || !text(item.category) || !text(item.description)) {
+            errors.push(`가이드 유즈센터 시설 ${index + 1} 내용을 입력해 주세요.`);
+          }
+        });
+      }
+    }
   }
   ['overview', 'move_in_sections', 'living_guides', 'facilities', 'building_notes', 'nearby_places', 'faqs', 'sources'].forEach((field) => {
     if (!Array.isArray(data[field])) errors.push(`가이드 ${field}는 배열이어야 합니다.`);
@@ -346,8 +368,8 @@ function hasGuideImageSignature(content, contentType) {
 
 function managedGuideImagePath(complexId, imageUrl) {
   const cleanUrl = text(imageUrl).split('?')[0];
-  const match = cleanUrl.match(new RegExp(`^/guides/${complexId}/site-map\\.(jpg|png|webp)$`));
-  return match ? `${GUIDE_IMAGE_DIRECTORY}/${complexId}/site-map.${match[1]}` : null;
+  const match = cleanUrl.match(new RegExp(`^/guides/${complexId}/(site-map|use-center-price)\\.(jpg|png|webp)$`));
+  return match ? `${GUIDE_IMAGE_DIRECTORY}/${complexId}/${match[1]}.${match[2]}` : null;
 }
 
 async function saveGuideImage(context, body) {
@@ -355,19 +377,21 @@ async function saveGuideImage(context, body) {
   if (!/^[a-z0-9][a-z0-9-]*$/.test(complexId)) return json({ message: '이미지를 저장할 단지 ID가 올바르지 않습니다.' }, 400);
   const contentType = text(body.content_type);
   const extension = GUIDE_IMAGE_EXTENSIONS[contentType];
-  if (!extension) return json({ message: '지도 이미지는 JPG, PNG, WEBP 파일만 업로드할 수 있습니다.' }, 400);
+  const imageKind = text(body.image_kind) || 'site-map';
+  if (!GUIDE_IMAGE_KINDS.has(imageKind)) return json({ message: '저장할 가이드 이미지 종류가 올바르지 않습니다.' }, 400);
+  if (!extension) return json({ message: '가이드 이미지는 JPG, PNG, WEBP 파일만 업로드할 수 있습니다.' }, 400);
   const content = text(body.content_base64).replace(/\s/g, '');
   const byteLength = guideImageByteLength(content);
   if (byteLength === null) return json({ message: '지도 이미지 파일을 읽을 수 없습니다.' }, 400);
-  if (byteLength > MAX_GUIDE_IMAGE_BYTES) return json({ message: '지도 이미지는 4MB 이하로 업로드해 주세요.' }, 400);
+  if (byteLength > MAX_GUIDE_IMAGE_BYTES) return json({ message: '가이드 이미지는 4MB 이하로 업로드해 주세요.' }, 400);
   if (!hasGuideImageSignature(content, contentType)) return json({ message: '선택한 파일이 올바른 이미지 형식인지 확인해 주세요.' }, 400);
 
-  const filePath = `${GUIDE_IMAGE_DIRECTORY}/${complexId}/site-map.${extension}`;
-  const saved = await putBase64File(context, filePath, content, `Update site map image for ${complexId}`);
+  const filePath = `${GUIDE_IMAGE_DIRECTORY}/${complexId}/${imageKind}.${extension}`;
+  const saved = await putBase64File(context, filePath, content, `Update ${imageKind} image for ${complexId}`);
   if (saved.error) return json({ message: saved.error }, 502);
   return json({
-    message: '단지 지도 이미지를 저장했습니다. 가이드 저장을 완료하면 공개 화면에 반영됩니다.',
-    imageUrl: `/guides/${complexId}/site-map.${extension}?v=${Date.now()}`,
+    message: '가이드 이미지를 저장했습니다. 가이드 저장을 완료하면 공개 화면에 반영됩니다.',
+    imageUrl: `/guides/${complexId}/${imageKind}.${extension}?v=${Date.now()}`,
     commitUrl: saved.commitUrl,
   });
 }
@@ -376,15 +400,15 @@ async function deleteGuideImage(context, body) {
   const complexId = text(body.complex_id);
   if (!/^[a-z0-9][a-z0-9-]*$/.test(complexId)) return json({ message: '이미지를 삭제할 단지 ID가 올바르지 않습니다.' }, 400);
   const filePath = managedGuideImagePath(complexId, body.image_url);
-  if (!filePath) return json({ message: '관리 화면에서 업로드한 지도 이미지 파일만 삭제할 수 있습니다.' }, 400);
+  if (!filePath) return json({ message: '관리 화면에서 업로드한 가이드 이미지 파일만 삭제할 수 있습니다.' }, 400);
 
   const current = await getEntry(context, filePath);
-  if (current.response.status === 404) return json({ message: '기존 지도 이미지 파일이 이미 삭제되어 있습니다.' });
-  if (!current.response.ok) return json({ message: await failureMessage(current.response, '지도 이미지 파일을 조회하지 못했습니다.') }, 502);
+  if (current.response.status === 404) return json({ message: '기존 가이드 이미지 파일이 이미 삭제되어 있습니다.' });
+  if (!current.response.ok) return json({ message: await failureMessage(current.response, '가이드 이미지 파일을 조회하지 못했습니다.') }, 502);
   const entry = await current.response.json();
   const deleted = await deleteFile(context, filePath, entry.sha, `Delete site map image for ${complexId}`);
   if (typeof deleted === 'string') return json({ message: deleted }, 502);
-  return json({ message: '기존 단지 지도 이미지 파일을 삭제했습니다.', commitUrl: deleted.commitUrl });
+  return json({ message: '기존 가이드 이미지 파일을 삭제했습니다.', commitUrl: deleted.commitUrl });
 }
 
 async function saveLegacyComplex(context, data) {

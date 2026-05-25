@@ -8,7 +8,7 @@ const items = [
   { to: '/data/input', icon: FileJson, title: 'JSON 입력', description: '수집일을 선택해 매물 데이터 저장' },
   { to: '/groups', icon: Layers3, title: '비교 그룹', description: '현재 비교 대상 단지 구성 확인' },
   { to: '/settings/display', icon: Palette, title: '표시 설정', description: '단지 색상과 평형 그룹 기준 수정' },
-  { to: '/guide/edit', icon: BookOpen, title: '우리 단지 콘텐츠 관리', description: '입주·생활·시설·지도 이미지·주변 생활·FAQ 편집' },
+  { to: '/guide/edit', icon: BookOpen, title: '우리 단지 콘텐츠 관리', description: '입주·유즈센터 가격표·시설·지도 이미지·주변 생활·FAQ 편집' },
 ];
 
 export function ManagementPage() {

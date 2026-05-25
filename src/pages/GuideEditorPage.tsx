@@ -40,7 +40,7 @@ function linesToItems(value: string): string[] {
 function managedImageAsset(url: string | null): string | null {
   if (!url) return null;
   const cleanUrl = url.split('?')[0];
-  return /^\/guides\/[a-z0-9-]+\/site-map\.(jpg|png|webp)$/.test(cleanUrl) ? cleanUrl : null;
+  return /^\/guides\/[a-z0-9-]+\/(site-map|use-center-price)\.(jpg|png|webp)$/.test(cleanUrl) ? cleanUrl : null;
 }
 
 function SectionCard({
@@ -200,6 +200,9 @@ export function GuideEditorPage() {
   const [publishedImageUrl, setPublishedImageUrl] = useState<string | null>(() => existingGuide?.site_map.image_url ?? null);
   const [mapPreviewUrl, setMapPreviewUrl] = useState<string | null>(() => existingGuide?.site_map.image_url ?? null);
   const [pendingMapFile, setPendingMapFile] = useState<File | null>(null);
+  const [publishedPriceImageUrl, setPublishedPriceImageUrl] = useState<string | null>(() => existingGuide?.use_center.price_image_url ?? null);
+  const [pricePreviewUrl, setPricePreviewUrl] = useState<string | null>(() => existingGuide?.use_center.price_image_url ?? null);
+  const [pendingPriceFile, setPendingPriceFile] = useState<File | null>(null);
   const [adminKey, setAdminKey] = useState('');
   const [saving, setSaving] = useState(false);
   const [feedback, setFeedback] = useState<Feedback | null>(null);
@@ -248,6 +251,31 @@ export function GuideEditorPage() {
     changeDraft((current) => ({ ...current, site_map: { ...current.site_map, image_url: null } }));
   }
 
+  function selectPriceImage(event: ChangeEvent<HTMLInputElement>) {
+    const file = event.target.files?.[0];
+    event.target.value = '';
+    if (!file) return;
+    if (!['image/jpeg', 'image/png', 'image/webp'].includes(file.type)) {
+      setFeedback({ tone: 'error', message: '가격표 이미지는 JPG, PNG, WEBP 파일만 선택할 수 있습니다.' });
+      return;
+    }
+    if (file.size > MAX_IMAGE_SIZE) {
+      setFeedback({ tone: 'error', message: '가격표 이미지는 4MB 이하로 선택해 주세요.' });
+      return;
+    }
+    if (pricePreviewUrl?.startsWith('blob:')) URL.revokeObjectURL(pricePreviewUrl);
+    setPendingPriceFile(file);
+    setPricePreviewUrl(URL.createObjectURL(file));
+    setFeedback({ tone: 'success', message: '새 가격표 이미지를 선택했습니다. 아래 저장 버튼을 누르면 공개 화면에 반영됩니다.' });
+  }
+
+  function removePriceImage() {
+    if (pricePreviewUrl?.startsWith('blob:')) URL.revokeObjectURL(pricePreviewUrl);
+    setPendingPriceFile(null);
+    setPricePreviewUrl(null);
+    changeDraft((current) => ({ ...current, use_center: { ...current.use_center, price_image_url: null } }));
+  }
+
   async function saveGuide() {
     if (validationError) {
       setFeedback({ tone: 'error', message: validationError });
@@ -269,11 +297,23 @@ export function GuideEditorPage() {
         const imageResult = await postAdminRequest(adminKey, {
           operation: 'save_guide_image',
           complex_id: guideToSave.complex_id,
+          image_kind: 'site-map',
           content_type: pendingMapFile.type,
           content_base64: await fileToBase64(pendingMapFile),
         });
         if (!imageResult.imageUrl) throw new Error('업로드한 이미지 주소를 받지 못했습니다.');
         guideToSave = { ...guideToSave, site_map: { ...guideToSave.site_map, image_url: imageResult.imageUrl } };
+      }
+      if (pendingPriceFile) {
+        const imageResult = await postAdminRequest(adminKey, {
+          operation: 'save_guide_image',
+          complex_id: guideToSave.complex_id,
+          image_kind: 'use-center-price',
+          content_type: pendingPriceFile.type,
+          content_base64: await fileToBase64(pendingPriceFile),
+        });
+        if (!imageResult.imageUrl) throw new Error('업로드한 가격표 이미지 주소를 받지 못했습니다.');
+        guideToSave = { ...guideToSave, use_center: { ...guideToSave.use_center, price_image_url: imageResult.imageUrl } };
       }
 
       const result = await postAdminRequest(adminKey, { operation: 'save_complex_guide', guide: guideToSave });
@@ -291,11 +331,27 @@ export function GuideEditorPage() {
           cleanupNotice = ' 기존 이미지 파일 정리는 실패했지만 공개 화면에서는 제거됩니다.';
         }
       }
+      const previousPriceAsset = managedImageAsset(publishedPriceImageUrl);
+      const nextPriceAsset = managedImageAsset(guideToSave.use_center.price_image_url);
+      if (previousPriceAsset && previousPriceAsset !== nextPriceAsset) {
+        try {
+          await postAdminRequest(adminKey, {
+            operation: 'delete_guide_image',
+            complex_id: guideToSave.complex_id,
+            image_url: publishedPriceImageUrl,
+          });
+        } catch {
+          cleanupNotice = `${cleanupNotice} 기존 가격표 파일 정리는 실패했지만 공개 화면에서는 제거됩니다.`;
+        }
+      }
 
       setDraft(guideToSave);
       setPublishedImageUrl(guideToSave.site_map.image_url);
       setPendingMapFile(null);
       setMapPreviewUrl(guideToSave.site_map.image_url);
+      setPublishedPriceImageUrl(guideToSave.use_center.price_image_url);
+      setPendingPriceFile(null);
+      setPricePreviewUrl(guideToSave.use_center.price_image_url);
       setAdvancedJson(JSON.stringify(guideToSave, null, 2));
       setFeedback({ tone: 'success', message: `${result.message ?? '우리 단지 가이드를 저장했습니다.'}${cleanupNotice}` });
     } catch (caught) {
@@ -311,6 +367,8 @@ export function GuideEditorPage() {
       setDraft(parsed);
       setPendingMapFile(null);
       setMapPreviewUrl(parsed.site_map.image_url);
+      setPendingPriceFile(null);
+      setPricePreviewUrl(parsed.use_center.price_image_url);
       setFeedback({ tone: 'success', message: 'JSON 내용을 폼에 적용했습니다. 공개 반영을 위해 저장 버튼을 눌러 주세요.' });
     } catch (caught) {
       setFeedback({ tone: 'error', message: caught instanceof Error ? caught.message : 'JSON 내용을 확인해 주세요.' });
@@ -337,6 +395,7 @@ export function GuideEditorPage() {
           {[
             ['기본 정보', 'guide-basic'],
             ['입주 준비', 'guide-move-in'],
+            ['유즈센터', 'guide-use-center'],
             ['생활 안내', 'guide-living'],
             ['시설', 'guide-facilities'],
             ['단지 지도', 'guide-map'],
@@ -397,6 +456,62 @@ export function GuideEditorPage() {
         items={draft.move_in_sections}
         onChange={(items) => changeDraft((current) => ({ ...current, move_in_sections: items as GuideChecklistSection[] }))}
       />
+      <SectionCard
+        id="guide-use-center"
+        title="유즈센터"
+        description="공개 화면에서 입주 준비 다음에 표시되는 커뮤니티 시설과 이용 가격표를 관리합니다."
+        onAdd={() => changeDraft((current) => ({ ...current, use_center: { ...current.use_center, facilities: [...current.use_center.facilities, { name: '', category: '', description: '', location: null, hours: null }] } }))}
+        addLabel="시설 추가"
+      >
+        <Field label="섹션 제목" value={draft.use_center.title} onChange={(value) => changeDraft((current) => ({ ...current, use_center: { ...current.use_center, title: value } }))} />
+        <Field label="소개 문구" multiline value={draft.use_center.description} onChange={(value) => changeDraft((current) => ({ ...current, use_center: { ...current.use_center, description: value } }))} />
+        <div className="rounded-2xl border border-slate-100 bg-slate-50 p-3 sm:p-4">
+          <p className="text-xs font-bold text-slate-700">이용 가격표 이미지</p>
+          <p className="mt-1 text-[11px] leading-5 text-slate-500">
+            저장 시 `public/guides/{draft.complex_id}/use-center-price.*` 경로에 업로드됩니다.
+          </p>
+          {pricePreviewUrl ? (
+            <img src={pricePreviewUrl} alt="유즈센터 가격표 미리보기" className="mt-3 max-h-[32rem] w-full rounded-2xl bg-white object-contain" />
+          ) : (
+            <div className="mt-3 rounded-2xl border border-dashed border-slate-200 bg-white px-4 py-6 text-center text-xs text-slate-400">등록된 가격표 이미지가 없습니다.</div>
+          )}
+          <div className="mt-3 flex flex-wrap gap-2">
+            <label className="inline-flex cursor-pointer items-center gap-1 rounded-xl bg-brand-50 px-3 py-2 text-xs font-bold text-brand-700">
+              <ImagePlus className="h-3.5 w-3.5" /> 가격표 선택
+              <input type="file" accept="image/jpeg,image/png,image/webp" className="hidden" onChange={selectPriceImage} />
+            </label>
+            {pricePreviewUrl && (
+              <button type="button" className="inline-flex items-center gap-1 rounded-xl bg-red-50 px-3 py-2 text-xs font-bold text-red-600" onClick={removePriceImage}>
+                <Trash2 className="h-3.5 w-3.5" /> 가격표 제거
+              </button>
+            )}
+          </div>
+          {pendingPriceFile && <p className="mt-2 text-xs font-medium text-brand-700">선택 파일: {pendingPriceFile.name} - 화면 저장 시 업로드됩니다.</p>}
+          <div className="mt-3">
+            <Field
+              label="외부 가격표 이미지 URL - 파일을 선택하지 않는 경우 사용"
+              value={pendingPriceFile ? '' : (draft.use_center.price_image_url ?? '')}
+              onChange={(value) => {
+                setPendingPriceFile(null);
+                setPricePreviewUrl(value || null);
+                changeDraft((current) => ({ ...current, use_center: { ...current.use_center, price_image_url: value || null } }));
+              }}
+            />
+            <Field label="가격표 안내 문구" value={draft.use_center.price_image_caption} onChange={(value) => changeDraft((current) => ({ ...current, use_center: { ...current.use_center, price_image_caption: value } }))} />
+          </div>
+        </div>
+        {draft.use_center.facilities.map((facility: GuideFacility, index) => (
+          <ItemBox key={`use-center-${index}`} onRemove={() => changeDraft((current) => ({ ...current, use_center: { ...current.use_center, facilities: current.use_center.facilities.filter((_, itemIndex) => itemIndex !== index) } }))}>
+            <div className="grid gap-2 sm:grid-cols-2">
+              <Field label="시설명" value={facility.name} onChange={(value) => changeDraft((current) => ({ ...current, use_center: { ...current.use_center, facilities: replaceAt(current.use_center.facilities, index, { ...facility, name: value }) } }))} />
+              <Field label="분류" value={facility.category} onChange={(value) => changeDraft((current) => ({ ...current, use_center: { ...current.use_center, facilities: replaceAt(current.use_center.facilities, index, { ...facility, category: value }) } }))} />
+              <Field label="위치" value={facility.location ?? ''} onChange={(value) => changeDraft((current) => ({ ...current, use_center: { ...current.use_center, facilities: replaceAt(current.use_center.facilities, index, { ...facility, location: value || null }) } }))} />
+              <Field label="운영시간" value={facility.hours ?? ''} onChange={(value) => changeDraft((current) => ({ ...current, use_center: { ...current.use_center, facilities: replaceAt(current.use_center.facilities, index, { ...facility, hours: value || null }) } }))} />
+            </div>
+            <Field label="설명" multiline value={facility.description} onChange={(value) => changeDraft((current) => ({ ...current, use_center: { ...current.use_center, facilities: replaceAt(current.use_center.facilities, index, { ...facility, description: value }) } }))} />
+          </ItemBox>
+        ))}
+      </SectionCard>
       <TextListSection
         id="guide-living"
         title="생활 안내"

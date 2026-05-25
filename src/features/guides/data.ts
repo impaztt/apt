@@ -17,6 +17,23 @@ function requiredText(value: unknown, field: string, label: string): string {
   return value.trim();
 }
 
+function defaultUseCenter() {
+  return {
+    title: '유즈센터',
+    description: '단지 내 커뮤니티 공간입니다. 운영 시간과 이용 요금은 관리사무소 공지 또는 등록된 가격표를 확인해 주세요.',
+    price_image_url: null,
+    price_image_caption: '이용 가격표 이미지는 관리자 화면에서 등록할 수 있습니다.',
+    facilities: [
+      { name: '카페', category: '휴식', description: '입주민 휴식 공간', location: null, hours: null },
+      { name: '수영장', category: '운동', description: '입주민 운동 시설', location: null, hours: null },
+      { name: '헬스장', category: '운동', description: '입주민 운동 시설', location: null, hours: null },
+      { name: '사우나', category: '편의', description: '입주민 편의 시설', location: null, hours: null },
+      { name: '골프', category: '운동', description: '입주민 연습 시설', location: null, hours: null },
+      { name: '독서실', category: '학습', description: '입주민 학습 공간', location: null, hours: null },
+    ],
+  };
+}
+
 export function parseComplexGuide(raw: unknown, label = '우리 단지 가이드'): ComplexGuide {
   const source = recordValue(raw, label);
   requiredText(source.complex_id, 'complex_id', label);
@@ -34,6 +51,16 @@ export function parseComplexGuide(raw: unknown, label = '우리 단지 가이드
     if (!Array.isArray(source[field])) throw new Error(`${label}: ${field}는 배열이어야 합니다.`);
   });
   if (!Array.isArray(siteMap.links)) throw new Error(`${label}: site_map.links는 배열이어야 합니다.`);
+  const useCenter = source.use_center === undefined
+    ? defaultUseCenter()
+    : recordValue(source.use_center, `${label} use_center`);
+  requiredText(useCenter.title, 'title', `${label} use_center`);
+  requiredText(useCenter.description, 'description', `${label} use_center`);
+  requiredText(useCenter.price_image_caption, 'price_image_caption', `${label} use_center`);
+  if (useCenter.price_image_url !== null && useCenter.price_image_url !== undefined) {
+    requiredText(useCenter.price_image_url, 'price_image_url', `${label} use_center`);
+  }
+  if (!Array.isArray(useCenter.facilities)) throw new Error(`${label}: use_center.facilities는 배열이어야 합니다.`);
 
   (source.overview as unknown[]).forEach((value, index) => {
     const item = recordValue(value, `${label} overview ${index + 1}`);
@@ -51,6 +78,10 @@ export function parseComplexGuide(raw: unknown, label = '우리 단지 가이드
   (source.facilities as unknown[]).forEach((value, index) => {
     const item = recordValue(value, `${label} 시설 ${index + 1}`);
     ['name', 'category', 'description'].forEach((field) => requiredText(item[field], field, `${label} 시설 ${index + 1}`));
+  });
+  (useCenter.facilities as unknown[]).forEach((value, index) => {
+    const item = recordValue(value, `${label} 유즈센터 시설 ${index + 1}`);
+    ['name', 'category', 'description'].forEach((field) => requiredText(item[field], field, `${label} 유즈센터 시설 ${index + 1}`));
   });
   (source.building_notes as unknown[]).forEach((value, index) => {
     const item = recordValue(value, `${label} 동별 설명 ${index + 1}`);
@@ -78,7 +109,7 @@ export function parseComplexGuide(raw: unknown, label = '우리 단지 가이드
     requiredText(item.url, 'url', `${label} 출처 ${index + 1}`);
     requiredText(item.checked_at, 'checked_at', `${label} 출처 ${index + 1}`);
   });
-  return source as unknown as ComplexGuide;
+  return { ...source, use_center: useCenter } as unknown as ComplexGuide;
 }
 
 export function loadComplexGuides(): ComplexGuide[] {

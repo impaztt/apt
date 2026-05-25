@@ -42,6 +42,14 @@ export interface GuideSiteMap {
   links: GuideExternalLink[];
 }
 
+export interface GuideUseCenter {
+  title: string;
+  description: string;
+  price_image_url: string | null;
+  price_image_caption: string;
+  facilities: GuideFacility[];
+}
+
 export interface GuideBuildingNote {
   building_no: string;
   title: string;
@@ -77,6 +85,7 @@ export interface ComplexGuide {
   contact: GuideContact;
   overview: GuideOverviewItem[];
   move_in_sections: GuideChecklistSection[];
+  use_center: GuideUseCenter;
   living_guides: GuideContentCard[];
   facilities: GuideFacility[];
   site_map: GuideSiteMap;

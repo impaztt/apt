@@ -66,6 +66,56 @@
       ]
     }
   ],
+  "use_center": {
+    "title": "유즈센터",
+    "description": "단지 내 입주민을 위한 커뮤니티 공간입니다. 이용 대상, 운영 시간과 요금은 관리사무소 공지 또는 등록된 가격표를 기준으로 확인해 주세요.",
+    "price_image_url": null,
+    "price_image_caption": "유즈센터 이용 가격표 이미지는 관리자 화면에서 등록할 수 있습니다.",
+    "facilities": [
+      {
+        "name": "카페",
+        "category": "휴식",
+        "description": "입주민의 휴식과 교류를 위한 공간입니다.",
+        "location": null,
+        "hours": null
+      },
+      {
+        "name": "수영장",
+        "category": "운동",
+        "description": "수영 이용을 위한 커뮤니티 시설입니다.",
+        "location": null,
+        "hours": null
+      },
+      {
+        "name": "헬스장",
+        "category": "운동",
+        "description": "운동과 체력 관리를 위한 커뮤니티 시설입니다.",
+        "location": null,
+        "hours": null
+      },
+      {
+        "name": "사우나",
+        "category": "편의",
+        "description": "입주민 편의를 위한 커뮤니티 시설입니다.",
+        "location": null,
+        "hours": null
+      },
+      {
+        "name": "골프",
+        "category": "운동",
+        "description": "골프 연습을 위한 커뮤니티 시설입니다.",
+        "location": null,
+        "hours": null
+      },
+      {
+        "name": "독서실",
+        "category": "학습",
+        "description": "학습과 독서를 위한 커뮤니티 공간입니다.",
+        "location": null,
+        "hours": null
+      }
+    ]
+  },
   "living_guides": [
     {
       "title": "관리비 확인",

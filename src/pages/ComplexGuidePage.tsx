@@ -65,6 +65,7 @@ export function ComplexGuidePage() {
         <nav className="flex gap-2 overflow-x-auto pb-1 text-xs font-semibold text-slate-600">
           {[
             ['입주 준비', 'move-in'],
+            ['유즈센터', 'use-center'],
             ['생활 안내', 'living'],
             ['시설', 'facilities'],
             ['단지 지도', 'site-map'],
@@ -114,6 +115,50 @@ export function ComplexGuidePage() {
             </div>
           </Card>
         ))}
+      </section>
+
+      <section id="use-center" className="scroll-mt-36 space-y-3">
+        <div className="flex items-center justify-between gap-3 px-1">
+          <div>
+            <p className="text-[11px] font-bold text-brand-600">COMMUNITY</p>
+            <h2 className="mt-1 text-lg font-bold">{guide.use_center.title}</h2>
+          </div>
+          <span className="rounded-full bg-brand-50 px-3 py-1.5 text-[11px] font-bold text-brand-700">
+            {guide.use_center.facilities.length}개 시설
+          </span>
+        </div>
+        <Card className="overflow-hidden p-4 sm:p-6">
+          <p className="break-keep text-xs leading-6 text-slate-500">{guide.use_center.description}</p>
+          <div className="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-3">
+            {guide.use_center.facilities.map((facility) => (
+              <div key={facility.name} className="rounded-2xl bg-slate-50 p-3">
+                <span className="text-[10px] font-bold text-brand-600">{facility.category}</span>
+                <p className="mt-1 text-sm font-bold text-slate-900">{facility.name}</p>
+                <p className="mt-1 break-keep text-[11px] leading-5 text-slate-500">{facility.description}</p>
+                {(facility.location || facility.hours) && (
+                  <p className="mt-2 text-[10px] font-medium text-slate-400">{facility.location ?? ''} {facility.hours ?? ''}</p>
+                )}
+              </div>
+            ))}
+          </div>
+          <div className="mt-4 border-t border-slate-100 pt-4">
+            <h3 className="text-sm font-bold text-slate-900">이용 가격표</h3>
+            {guide.use_center.price_image_url ? (
+              <>
+                <img
+                  src={guide.use_center.price_image_url}
+                  alt={`${guide.use_center.title} 이용 가격표`}
+                  className="mt-3 w-full rounded-2xl border border-slate-100 object-contain"
+                />
+                <p className="mt-2 text-[11px] leading-5 text-slate-400">{guide.use_center.price_image_caption}</p>
+              </>
+            ) : (
+              <div className="mt-3 rounded-2xl border border-dashed border-slate-200 bg-slate-50 px-4 py-6 text-center">
+                <p className="text-xs leading-5 text-slate-500">{guide.use_center.price_image_caption}</p>
+              </div>
+            )}
+          </div>
+        </Card>
       </section>
 
       <section id="living" className="scroll-mt-36 space-y-3">
