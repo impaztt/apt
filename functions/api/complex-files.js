@@ -1,6 +1,7 @@
 const COMPLEX_DIRECTORY = 'src/data/complexes';
 const SNAPSHOT_DIRECTORY = 'src/data/snapshots';
 const DISPLAY_SETTINGS_PATH = 'src/data/display-settings.json';
+const GUIDE_DIRECTORY = 'src/data/guides';
 const DEFAULT_OWNER = 'impaztt';
 const DEFAULT_REPO = 'apt';
 const DEFAULT_BRANCH = 'main';
@@ -122,6 +123,65 @@ function validateDisplaySettings(data) {
   for (let index = 1; index < ranges.length; index += 1) {
     if (ranges[index].min <= ranges[index - 1].max) errors.push('평형 규칙의 원본 공급평 범위는 서로 겹칠 수 없습니다.');
   }
+  return errors;
+}
+
+function validateComplexGuide(data) {
+  const errors = [];
+  if (!data || typeof data !== 'object' || Array.isArray(data)) return ['우리 단지 가이드 데이터가 올바르지 않습니다.'];
+  const id = text(data.complex_id);
+  if (!/^[a-z0-9][a-z0-9-]*$/.test(id)) errors.push('가이드 complex_id는 영문 소문자, 숫자, 하이픈만 사용할 수 있습니다.');
+  ['title', 'subtitle', 'updated_at', 'introduction'].forEach((field) => {
+    if (!text(data[field])) errors.push(`가이드 ${field} 값은 필수입니다.`);
+  });
+  if (!data.contact || typeof data.contact !== 'object' || Array.isArray(data.contact)) {
+    errors.push('가이드 contact는 객체여야 합니다.');
+  } else {
+    ['address', 'office_phone', 'homepage_url', 'map_url'].forEach((field) => {
+      if (!text(data.contact[field])) errors.push(`가이드 contact.${field} 값은 필수입니다.`);
+    });
+  }
+  if (!data.site_map || typeof data.site_map !== 'object' || Array.isArray(data.site_map)) {
+    errors.push('가이드 site_map은 객체여야 합니다.');
+  } else {
+    if (!text(data.site_map.caption)) errors.push('가이드 site_map.caption 값은 필수입니다.');
+    if (!Array.isArray(data.site_map.links)) errors.push('가이드 site_map.links는 배열이어야 합니다.');
+    else data.site_map.links.forEach((link, index) => {
+      if (!link || !text(link.label) || !text(link.url)) errors.push(`가이드 지도 링크 ${index + 1}의 label과 url을 입력해 주세요.`);
+    });
+  }
+  ['overview', 'move_in_sections', 'living_guides', 'facilities', 'building_notes', 'nearby_places', 'faqs', 'sources'].forEach((field) => {
+    if (!Array.isArray(data[field])) errors.push(`가이드 ${field}는 배열이어야 합니다.`);
+  });
+  if (Array.isArray(data.overview)) data.overview.forEach((item, index) => {
+    if (!item || !text(item.label) || !text(item.value)) errors.push(`가이드 요약 ${index + 1}의 label과 value를 입력해 주세요.`);
+  });
+  ['move_in_sections', 'living_guides'].forEach((field) => {
+    if (Array.isArray(data[field])) data[field].forEach((item, index) => {
+      if (!item || !text(item.title) || !text(item.description) || !Array.isArray(item.items)) {
+        errors.push(`가이드 ${field} ${index + 1}의 title, description, items를 입력해 주세요.`);
+      }
+    });
+  });
+  if (Array.isArray(data.facilities)) data.facilities.forEach((item, index) => {
+    if (!item || !text(item.name) || !text(item.category) || !text(item.description)) errors.push(`가이드 시설 ${index + 1} 내용을 입력해 주세요.`);
+  });
+  if (Array.isArray(data.building_notes)) data.building_notes.forEach((item, index) => {
+    if (!item || !text(item.building_no) || !text(item.title) || !text(item.description) || !Array.isArray(item.tags)) {
+      errors.push(`가이드 동별 설명 ${index + 1} 내용을 입력해 주세요.`);
+    }
+  });
+  if (Array.isArray(data.nearby_places)) data.nearby_places.forEach((item, index) => {
+    if (!item || !text(item.name) || !text(item.category) || !text(item.description) || !text(item.url)) {
+      errors.push(`가이드 주변 생활 ${index + 1} 내용을 입력해 주세요.`);
+    }
+  });
+  if (Array.isArray(data.faqs)) data.faqs.forEach((item, index) => {
+    if (!item || !text(item.question) || !text(item.answer)) errors.push(`가이드 FAQ ${index + 1} 내용을 입력해 주세요.`);
+  });
+  if (Array.isArray(data.sources)) data.sources.forEach((item, index) => {
+    if (!item || !text(item.label) || !text(item.url) || !text(item.checked_at)) errors.push(`가이드 출처 ${index + 1} 내용을 입력해 주세요.`);
+  });
   return errors;
 }
 
@@ -293,6 +353,20 @@ async function saveDisplaySettings(context, body) {
   });
 }
 
+async function saveComplexGuide(context, body) {
+  const guide = body.guide;
+  const errors = validateComplexGuide(guide);
+  if (errors.length) return json({ message: errors.join(' ') }, 400);
+  const filePath = `${GUIDE_DIRECTORY}/${text(guide.complex_id)}.json`;
+  const saved = await putFile(context, filePath, guide, `Update resident guide for ${guide.title}`);
+  if (saved.error) return json({ message: saved.error }, 502);
+  return json({
+    message: `${guide.title} 생활 가이드를 GitHub에 저장했습니다. Cloudflare 재배포 후 우리 단지 탭에 반영됩니다.`,
+    filePath,
+    commitUrl: saved.commitUrl,
+  });
+}
+
 async function saveComplexFile(context) {
   const unauthorized = await authorize(context);
   if (unauthorized) return unauthorized;
@@ -304,6 +378,7 @@ async function saveComplexFile(context) {
   }
   if (body?.operation === 'save_snapshot') return saveSnapshot(context, body);
   if (body?.operation === 'save_display_settings') return saveDisplaySettings(context, body);
+  if (body?.operation === 'save_complex_guide') return saveComplexGuide(context, body);
   return saveLegacyComplex(context, body);
 }
 

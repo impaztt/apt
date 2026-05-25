@@ -12,6 +12,8 @@ const ComparisonPage = lazy(() => import('../pages/ComparisonPage').then((module
 const TrendPage = lazy(() => import('../pages/TrendPage').then((module) => ({ default: module.TrendPage })));
 const ManagementPage = lazy(() => import('../pages/ManagementPage').then((module) => ({ default: module.ManagementPage })));
 const DisplaySettingsPage = lazy(() => import('../pages/DisplaySettingsPage').then((module) => ({ default: module.DisplaySettingsPage })));
+const ComplexGuidePage = lazy(() => import('../pages/ComplexGuidePage').then((module) => ({ default: module.ComplexGuidePage })));
+const GuideEditorPage = lazy(() => import('../pages/GuideEditorPage').then((module) => ({ default: module.GuideEditorPage })));
 const NotFoundPage = lazy(() => import('../pages/NotFoundPage').then((module) => ({ default: module.NotFoundPage })));
 
 function suspend(element: ReactNode) {
@@ -23,6 +25,7 @@ export const router = createBrowserRouter([
     element: <AppShell />,
     children: [
       { path: '/', element: suspend(<DashboardPage />) },
+      { path: '/guide', element: suspend(<ComplexGuidePage />) },
       { path: '/complexes', element: suspend(<ComplexListPage />) },
       { path: '/complexes/:complexId', element: suspend(<ComplexDetailPage />) },
       { path: '/data/input', element: suspend(<ComplexDataInputPage />) },
@@ -33,6 +36,7 @@ export const router = createBrowserRouter([
       { path: '/trends', element: suspend(<TrendPage />) },
       { path: '/manage', element: suspend(<ManagementPage />) },
       { path: '/settings/display', element: suspend(<DisplaySettingsPage />) },
+      { path: '/guide/edit', element: suspend(<GuideEditorPage />) },
       { path: '*', element: suspend(<NotFoundPage />) },
     ],
   },

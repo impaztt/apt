@@ -1,5 +1,5 @@
 import { type FormEvent, useEffect, useState } from 'react';
-import { BarChart3, Building2, FileJson, Layers3, MoreHorizontal, Palette, Scale, TrendingUp } from 'lucide-react';
+import { BarChart3, BookOpen, Building2, FileJson, Layers3, MoreHorizontal, Palette, Pencil, Scale, TrendingUp } from 'lucide-react';
 import { NavLink, Outlet } from 'react-router-dom';
 import { KakaoBrowserNotice } from './KakaoBrowserNotice';
 
@@ -8,25 +8,28 @@ const MOBILE_NAV_PASSWORD = '3514';
 
 const desktopNavigation = [
   { to: '/', label: '대시보드', icon: BarChart3, end: true },
+  { to: '/guide', label: '우리 단지', icon: BookOpen },
   { to: '/complexes', label: '단지', icon: Building2 },
   { to: '/data/input', label: 'JSON 입력', icon: FileJson },
   { to: '/groups', label: '그룹', icon: Layers3 },
   { to: '/settings/display', label: '표시 설정', icon: Palette },
+  { to: '/guide/edit', label: '가이드 편집', icon: Pencil },
   { to: '/compare', label: '비교', icon: Scale },
   { to: '/trends', label: '변화', icon: TrendingUp },
 ];
 
 const mobileNavigation = [
   { to: '/', label: '대시보드', icon: BarChart3, end: true },
+  { to: '/guide', label: '우리 단지', icon: BookOpen },
   { to: '/compare', label: '비교', icon: Scale },
   { to: '/trends', label: '변화', icon: TrendingUp },
   { to: '/manage', label: '관리', icon: MoreHorizontal },
 ];
 
 function Navigation({ mobile = false, unlocked = true }: { mobile?: boolean; unlocked?: boolean }) {
-  const navigation = mobile ? (unlocked ? mobileNavigation : mobileNavigation.slice(0, 1)) : desktopNavigation;
+  const navigation = mobile ? (unlocked ? mobileNavigation : mobileNavigation.slice(0, 2)) : desktopNavigation;
   return (
-    <nav className={mobile ? (unlocked ? 'grid grid-cols-4 px-3' : 'mx-auto grid w-24 grid-cols-1') : 'space-y-1'}>
+    <nav className={mobile ? (unlocked ? 'grid grid-cols-5 px-1' : 'mx-auto grid max-w-48 grid-cols-2') : 'space-y-1'}>
       {navigation.map(({ to, label, icon: Icon, end }) => (
         <NavLink
           key={to}
