@@ -69,7 +69,7 @@
   "use_center": {
     "title": "유즈센터",
     "description": "단지 내 입주민을 위한 커뮤니티 공간입니다. 이용 대상, 운영 시간과 요금은 관리사무소 공지 또는 등록된 가격표를 기준으로 확인해 주세요.",
-    "price_image_url": null,
+    "price_image_url": "/guides/hwaseo-prugio-edu/use-center-price.png?v=1779713836354",
     "price_image_caption": "유즈센터 이용 가격표 이미지는 관리자 화면에서 등록할 수 있습니다.",
     "facilities": [
       {
