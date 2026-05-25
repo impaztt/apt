@@ -106,10 +106,13 @@ export function AppShell() {
     <div className="min-h-screen bg-canvas">
       <KakaoBrowserNotice />
       <aside className="fixed inset-y-0 left-0 hidden w-64 border-r border-slate-100 bg-white px-5 py-7 lg:block">
-        <button type="button" className="block w-full px-3 text-left" onClick={handleBrandTap} aria-label="단지비교랩">
-          <p className="text-xs font-semibold text-brand-600">APT PRICE COMPARE</p>
-          <p className="mt-2 text-xl font-bold tracking-tight">단지비교랩</p>
-          <p className="mt-2 text-sm font-medium text-slate-500">호가 분석 대시보드</p>
+        <button type="button" className="flex w-full items-center gap-3 px-3 text-left" onClick={handleBrandTap} aria-label="단지비교">
+          <img className="h-12 w-12 shrink-0 rounded-2xl" src="/brand/logo-mark.svg" alt="" />
+          <span>
+            <span className="block text-xs font-semibold text-brand-600">APT PRICE COMPARE</span>
+            <span className="mt-1 block text-xl font-bold tracking-tight">단지비교</span>
+            <span className="mt-1 block text-xs font-medium text-slate-500">호가 분석 대시보드</span>
+          </span>
         </button>
         <div className="mt-10">
           <Navigation unlocked={navigationUnlocked} />
@@ -117,9 +120,12 @@ export function AppShell() {
       </aside>
 
       <header className="sticky top-0 z-10 flex items-center justify-between border-b border-slate-100 bg-white/90 px-5 py-3.5 backdrop-blur lg:hidden">
-        <button type="button" className="text-left" onClick={handleBrandTap} aria-label="단지비교랩">
-          <p className="text-xl font-extrabold tracking-tight text-slate-900">단지비교랩</p>
-          <p className="mt-0.5 text-xs font-medium text-slate-500">호가 분석 대시보드</p>
+        <button type="button" className="flex items-center gap-2.5 text-left" onClick={handleBrandTap} aria-label="단지비교">
+          <img className="h-10 w-10 shrink-0 rounded-xl" src="/brand/logo-mark.svg" alt="" />
+          <span>
+            <span className="block text-xl font-extrabold tracking-tight text-slate-900">단지비교</span>
+            <span className="mt-0.5 block text-xs font-medium text-slate-500">호가 분석 대시보드</span>
+          </span>
         </button>
         <span className="inline-flex items-center gap-1.5 rounded-full bg-rose-50 px-2.5 py-1 text-[11px] font-bold uppercase tracking-wide text-rose-600">
           <span className="h-1.5 w-1.5 rounded-full bg-rose-500" />

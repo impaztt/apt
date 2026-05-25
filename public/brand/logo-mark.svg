@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="단지비교">
+  <rect width="64" height="64" rx="18" fill="#eff6ff"/>
+  <rect x="13" y="17" width="17" height="30" rx="2.5" fill="#0f172a"/>
+  <rect x="34" y="21" width="17" height="26" rx="2.5" fill="#2563eb"/>
+  <path d="M16 17h14v-4.5l-14 6.2z" fill="#0f172a"/>
+  <path d="M37 21h14v-4.2L37 23z" fill="#2563eb"/>
+  <g fill="#fff">
+    <path d="M18 25h7v2.6h-7zm0 6.3h7v2.6h-7zm0 6.3h7v2.6h-7z"/>
+    <path d="M39 28h7v2.6h-7zm0 6.3h7v2.6h-7zm0 6.3h7v2.6h-7z" opacity=".85"/>
+  </g>
+  <path d="M10 50h44" stroke="#93c5fd" stroke-width="3" stroke-linecap="round"/>
+  <path d="M13 50h18m9 0h11" stroke="#2563eb" stroke-width="3" stroke-linecap="round"/>
+  <circle cx="31" cy="50" r="4" fill="#0f172a" stroke="#fff" stroke-width="2"/>
+  <circle cx="40" cy="50" r="4" fill="#2563eb" stroke="#fff" stroke-width="2"/>
+</svg>
